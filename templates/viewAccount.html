@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlutterTalk</title>
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+    />
+    <!-- Own JavaScript -->
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/script.js') }}"
+    ></script>
+    <!-- Own homepage stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/style.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Own navbar stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/navbar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Own sidebar stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/sidebar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+  </head>
+  <body>
+    <nav>
+      <button id="account_button" title="Log out or switch from account.">
+        <img
+          src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+          alt="The profile picture of your account."
+        />
+        <span id="account_button_text">
+          <b>{{ displayName }}</b>
+          <p>{{ accountName }}</p>
+        </span>
+      </button>
+      <button class="nav_button" id="home_button" title="Go to homepage.">
+        <i class="bi bi-house-door"></i>
+        <p>Home</p>
+      </button>
+      <button class="nav_button" id="search_button" title="Go to search.">
+        <i class="bi bi-search"></i>
+        <p>Search</p>
+      </button>
+      <button
+        class="nav_button"
+        id="notifications_button"
+        title="Go to notifications."
+      >
+        <i class="bi bi-bell"></i>
+        <p>Notifications</p>
+      </button>
+      <button class="nav_button" id="messages_button" title="Go to messages.">
+        <i class="bi bi-chat-dots"></i>
+        <p>Chat</p>
+      </button>
+      <button>
+        <i class="bi bi-hash" style="font-size: 3vh; margin-left: 0.1vw"></i>
+        <p>Feeds</p>
+      </button>
+      <button class="nav_button" id="lists_button" title="Go to lists.">
+        <i class="bi bi-list-ul"></i>
+        <p>Lists</p>
+      </button>
+      <button class="nav_button" id="profile_button" title="Go to profile.">
+        <i class="bi bi-person-circle"></i>
+        <p>Profile</p>
+      </button>
+      <button class="nav_button" id="settings_button" title="Go to settings.">
+        <i class="bi bi-gear"></i>
+        <p>Settings</p>
+      </button>
+      <button id="new_post_button" title="Create a new post.">
+        <i class="bi bi-pencil-square"></i>
+        <b>New Post</b>
+      </button>
+      <button id="scroll_up_button" title="Go to top of the page.">
+        <i id="scroll_up_icon" class="bi bi-arrow-up-circle"></i>
+      </button>
+    </nav>
+    <main>
+      <div id="header_container">
+        <header>
+          <h2 id="app_name">FlutterTalk</h2>
+          <img
+            id="header_fluttertalk_logo"
+            src="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+            alt="An image of the FlutterTalk logo."
+          />
+          <button id="hashtags_btn">#</button>
+        </header>
+        <nav>
+          <button class="header_nav_btn active_page">Discover</button>
+          <button class="header_nav_btn">Following</button>
+        </nav>
+      </div>
+      <section id="main_section">
+        <div class="post_container">
+          <img
+            src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+            alt="Profile picture of the user."
+          />
+          <div>
+            <span>
+              <h4 class="post_display_name">
+                <a href="192.168.0.54:5500/users/@{{ post.accountName }}">
+                  {{ post.displayName }}
+                </a>
+              </h4>
+              <p class="post_account_name">
+                <a href="192.168.0.54:5500/users/@{{ post.accountName }}">
+                  @{{ post.accountName }}
+                </a>
+              </p>
+              <p class="post_age">⦁ {{ post.age }}</p>
+            </span>
+            <pre>
+{{ post.content }}
+            </pre>
+            <div class="action_buttons_container">
+              <button>
+                <i class="bi bi-chat-left"></i>
+                {{ post.commentAmount }}
+              </button>
+              <button
+                onclick="shareToClipBoard('{{ post.accountName }}', '{{ post.postID}}')"
+                title="Copy the link to this post to you clipboard."
+                class="share_button"
+                id="share_button_{{ post.accountName }}_{{ post.postID }}"
+              >
+                <i class="bi bi-share"></i>
+                {{ post.sharedAmount }}
+              </button>
+              <button>
+                {% if post.liked %}
+                <i class="bi bi-heart-fill"></i>
+                {% else %}
+                <i class="bi bi-heart"></i>
+                {% endif %} {{ post.likeAmount }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div>
+      <input type="text" id="search_bar" placeholder="Search..." />
+    </div>
+  </body>
+</html>
