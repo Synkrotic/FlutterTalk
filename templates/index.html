@@ -14,7 +14,7 @@
       <button class="header_nav_btn">Following</button>
     </nav>
   </div>
-  <section id="main_section">
+  <article id="main_section">
     {% for post in posts %}
     <div class="post_container">
       <img
@@ -45,14 +45,14 @@
           </button>
           <button
             onclick="sharePost('{{ post.accountName }}', '{{ post.postID}}')"
-            title="Copy the link to this post to you clipboard."
+            title="Copy the link to this post to your clipboard."
             class="share_button"
             id="share_button_{{ post.accountName }}_{{ post.postID }}"
           >
             <i class="bi bi-share"></i>
             {{ post.sharedAmount }}
           </button>
-          <button>
+          <button id="like_button_{{ post.accountName }}_{{ post.postID }}">
             {% if post.liked %}
             <i class="bi bi-heart-fill"></i>
             {% else %}

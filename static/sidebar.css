@@ -1,3 +1,8 @@
+.sidebar {
+ display: flex;
+ flex-direction: column;
+}
+
 .search_bar_container {
   width: 60%;
   height: 5vh;
@@ -7,6 +12,7 @@
   opacity: 0.8;
   padding: 3px;
   border-radius: 0.5em;
+  margin-bottom: 3vh;
 }
 
 .search_bar_container:hover {
@@ -50,4 +56,29 @@
 
 .search_bar_container:focus-within .search_bar_icon {
   color: var(--attentionBlue);
+}
+
+hr {
+  margin-top: 3vh;
+  /* margin-bottom: 1vh; */
+}
+
+.sidebar a {
+  margin-left: 1vw;
+  color: var(--darkBlue);
+}
+.sidebar a:hover {
+  color: var(--attentionBlue);
+}
+.sidebar nav a {
+  margin: 0;
+}
+
+.sidebar nav {
+  margin-top: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 50%;
+  margin-left: 2vw;
 }

@@ -58,11 +58,11 @@
           <p>{{ accountName }}</p>
         </span>
       </button>
-      <button class="nav_button" id="home_button" title="Go to homepage.">
+      <button class="nav_button" id="home_button" title="Go to homepage." onclick="goToPage('/')">
         <i class="bi bi-house-door"></i>
         <p>Home</p>
       </button>
-      <button class="nav_button" id="search_button" title="Go to search.">
+      <button class="nav_button" id="search_button" title="Go to search." onclick="goToPage('/search')">
         <i class="bi bi-search"></i>
         <p>Search</p>
       </button>
@@ -70,31 +70,32 @@
         class="nav_button"
         id="notifications_button"
         title="Go to notifications."
+        onclick="goToPage('/notifications')"
       >
         <i class="bi bi-bell"></i>
         <p>Notifications</p>
       </button>
-      <button class="nav_button" id="messages_button" title="Go to messages.">
+      <button class="nav_button" id="messages_button" title="Go to messages." onclick="goToPage('/messages')">
         <i class="bi bi-chat-dots"></i>
         <p>Chat</p>
       </button>
-      <button>
+      <button class="nav_button" id="feeds_button" title="Go to your different feeds." onclick="goToPage('/feeds')">
         <i class="bi bi-hash" style="font-size: 3vh; margin-left: 0.1vw"></i>
         <p>Feeds</p>
       </button>
-      <button class="nav_button" id="lists_button" title="Go to lists.">
+      <button class="nav_button" id="lists_button" title="Go to lists." onclick="goToPage('/lists')">
         <i class="bi bi-list-ul"></i>
         <p>Lists</p>
       </button>
-      <button class="nav_button" id="profile_button" title="Go to profile.">
+      <button class="nav_button" id="profile_button" title="Go to profile." onclick="goToPage('/profile')">
         <i class="bi bi-person-circle"></i>
         <p>Profile</p>
       </button>
-      <button class="nav_button" id="settings_button" title="Go to settings.">
+      <button class="nav_button" id="settings_button" title="Go to settings." onclick="goToPage('/settings')">
         <i class="bi bi-gear"></i>
         <p>Settings</p>
       </button>
-      <button id="new_post_button" title="Create a new post.">
+      <button id="new_post_button" title="Create a new post." onclick="goToPage('/createPost')">
         <i class="bi bi-pencil-square"></i>
         <b>New Post</b>
       </button>

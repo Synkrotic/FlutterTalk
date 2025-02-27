@@ -1,5 +1,7 @@
+ip = "localhost";
+
 function sharePost(accountName, postID) {
-  const url = `http://localhost:5500/users/@${accountName}/${postID}/addShare`;
+  const url = `http:/${ip}:5500/users/@${accountName}/${postID}/addShare`;
   fetch(url, {
     method: "GET",
     headers: {
@@ -21,7 +23,7 @@ function sharePost(accountName, postID) {
 }
 
 function copyShareLinkToClipboard(accountName, postID) {
-  const url = `http://localhost:5500/users/@${accountName}/${postID}`;
+  const url = `http://${ip}:5500/users/@${accountName}/${postID}`;
   navigator.clipboard.writeText(url);
 
   const share_button = doc.getElementById(
