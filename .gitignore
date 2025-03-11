@@ -4,3 +4,4 @@
 /Scripts/
 lib64
 pyvenv.cfg
+.gitignore
