@@ -1,6 +1,6 @@
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey, Column, Integer, Text
+from sqlalchemy import ForeignKey, Column, Integer, Text, VARCHAR
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, declarative_base
 from sqlalchemy.orm import Mapped
@@ -70,3 +70,8 @@ class CommentLike(Base):
     user = relationship('User', back_populates='comment_likes')
 
 
+class Authentication(Base):
+    __tablename__ = 'authentication'
+
+    token = Column(VARCHAR(16), primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)

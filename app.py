@@ -1,7 +1,10 @@
-from flask import Flask, render_template, make_response, request
+from flask import render_template, request
+from globals import *
 
 import accountManager
-import database, secrets
+import database
+import secrets
+
 token_bytes: bytes = secrets.token_bytes()
 token_hex: str = secrets.token_hex()
 token_url: str = secrets.token_urlsafe()
@@ -43,13 +46,13 @@ Posts = [
     "liked": True
   }
 ]
-app = Flask(__name__)
 
 database.create()
 
 def getPost(accountName, postID):
   post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
   return post
+
 
 @app.route('/')
 def index():
@@ -64,8 +67,8 @@ def viewPost(accountName, postID):
   return getFullPage(render_template("viewAccount.html", displayName=displayName, accountName=f'@{accountName}', post=post))
 
 
-@app.route('/users/@<string:accountName>/<int:postID>/addShare')
-def addShare(accountName, postID):
+@app.route('/users/addShare/<int:postID>')
+def addShare(postID):
     post = getPost(accountName, postID)
     if post is None:
         return 404
