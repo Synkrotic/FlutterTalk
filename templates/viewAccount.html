@@ -1,0 +1,65 @@
+<main>
+  <div id="header_container">
+    <header>
+      <h2 id="app_name">FlutterTalk</h2>
+      <img
+        id="header_fluttertalk_logo"
+        src="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+        alt="An image of the FlutterTalk logo."
+      />
+      <button id="hashtags_btn">#</button>
+    </header>
+    <nav>
+      <button class="header_nav_btn active_page">Discover</button>
+      <button class="header_nav_btn">Following</button>
+    </nav>
+  </div>
+  <section id="main_section">
+    <div class="post_container">
+      <img
+        src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+        alt="Profile picture of the user."
+      />
+      <div>
+        <span>
+          <h4 class="post_display_name">
+            <a href="192.168.0.54:5500/users/@{{ post.accountName }}">
+              {{ post.displayName }}
+            </a>
+          </h4>
+          <p class="post_account_name">
+            <a href="192.168.0.54:5500/users/@{{ post.accountName }}">
+              @{{ post.accountName }}
+            </a>
+          </p>
+          <p class="post_age">⦁ {{ post.age }}</p>
+        </span>
+        <pre>
+{{ post.content }}
+        </pre>
+        <div class="action_buttons_container">
+          <button>
+            <i class="bi bi-chat-left"></i>
+            {{ post.commentAmount }}
+          </button>
+          <button
+            onclick="shareToClipBoard('{{ post.accountName }}', '{{ post.postID}}')"
+            title="Copy the link to this post to you clipboard."
+            class="share_button"
+            id="share_button_{{ post.accountName }}_{{ post.postID }}"
+          >
+            <i class="bi bi-share"></i>
+            {{ post.sharedAmount }}
+          </button>
+          <button>
+            {% if post.liked %}
+            <i class="bi bi-heart-fill"></i>
+            {% else %}
+            <i class="bi bi-heart"></i>
+            {% endif %} {{ post.likeAmount }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

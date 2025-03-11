@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlutterTalk</title>
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+    />
+    <!-- Own JavaScript -->
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/script.js') }}"
+    ></script>
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/backendRequests.js') }}"
+    ></script>
+    <!-- Own homepage stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/style.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Own navbar stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/navbar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Own sidebar stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/sidebar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+  </head>
+  <body>
+    <nav>
+      <button id="account_button" title="Log out or switch from account.">
+        <img
+          src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+          alt="The profile picture of your account."
+        />
+        <span id="account_button_text">
+          <b>{{ displayName }}</b>
+          <p>{{ accountName }}</p>
+        </span>
+      </button>
+      <button class="nav_button" id="home_button" title="Go to homepage." onclick="goToPage('/')">
+        <i class="bi bi-house-door"></i>
+        <p>Home</p>
+      </button>
+      <button class="nav_button" id="search_button" title="Go to search." onclick="goToPage('/search')">
+        <i class="bi bi-search"></i>
+        <p>Search</p>
+      </button>
+      <button
+        class="nav_button"
+        id="notifications_button"
+        title="Go to notifications."
+        onclick="goToPage('/notifications')"
+      >
+        <i class="bi bi-bell"></i>
+        <p>Notifications</p>
+      </button>
+      <button class="nav_button" id="messages_button" title="Go to messages." onclick="goToPage('/messages')">
+        <i class="bi bi-chat-dots"></i>
+        <p>Chat</p>
+      </button>
+      <button class="nav_button" id="feeds_button" title="Go to your different feeds." onclick="goToPage('/feeds')">
+        <i class="bi bi-hash" style="font-size: 3vh; margin-left: 0.1vw"></i>
+        <p>Feeds</p>
+      </button>
+      <button class="nav_button" id="lists_button" title="Go to lists." onclick="goToPage('/lists')">
+        <i class="bi bi-list-ul"></i>
+        <p>Lists</p>
+      </button>
+      <button class="nav_button" id="profile_button" title="Go to profile." onclick="goToPage('/profile')">
+        <i class="bi bi-person-circle"></i>
+        <p>Profile</p>
+      </button>
+      <button class="nav_button" id="settings_button" title="Go to settings." onclick="goToPage('/settings')">
+        <i class="bi bi-gear"></i>
+        <p>Settings</p>
+      </button>
+      <button id="new_post_button" title="Create a new post." onclick="goToPage('/createPost')">
+        <i class="bi bi-pencil-square"></i>
+        <b>New Post</b>
+      </button>
+      <button id="scroll_up_button" title="Go to top of the page.">
+        <i id="scroll_up_icon" class="bi bi-arrow-up-circle"></i>
+      </button>
+    </nav>
+  </body>
+</html>

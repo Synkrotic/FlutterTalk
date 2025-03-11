@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlutterTalk</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+    />
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/errorpage.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/script.js') }}"
+    ></script>
+  </head>
+  <body>
+    <img src="../static/Assets/Media/FlutterTalk_Logo.svg" alt="Logo of FlutterTalk">
+    <h1 id="appname">FlutterTalk</h1>
+    <div id="error_container">
+      <h1>Oops! Something went wrong!</h1>
+      <h2>{{ error }}</h2>
+      <h3>We're sorry for the inconvenience!</h3>
+      <button onclick="goToPage('/')">Go to homepage</button>  
+    </div>
+  </body>
+</html>
