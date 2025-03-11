@@ -71,7 +71,7 @@ def viewPost(accountName, postID):
 def addShare(postID):
     post = getPost(accountName, postID)
     if post is None:
-        return 404
+        return "-1"
 
     post["sharedAmount"] += 1
     return str(post["sharedAmount"])

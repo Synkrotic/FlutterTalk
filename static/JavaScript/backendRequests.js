@@ -1,7 +1,5 @@
-ip = "localhost";
-
 function sharePost(accountName, postID) {
-  const url = `http:/${ip}:5500/users/@${accountName}/${postID}/addShare`;
+  const url = `/users/addShare/${postID}`;
   fetch(url, {
     method: "GET",
     headers: {
@@ -11,9 +9,7 @@ function sharePost(accountName, postID) {
     if (response.status === 200) {
       copyShareLinkToClipboard(accountName, postID);
 
-      const share_button = doc.getElementById(
-        `share_button_${accountName}_${postID}`
-      );
+      const share_button = doc.getElementById(`share_button_${postID}`);
       share_button.innerHTML = share_button.innerHTML.replace(
         /(\d+)/,
         (match) => parseInt(match) + 1
@@ -23,7 +19,7 @@ function sharePost(accountName, postID) {
 }
 
 function copyShareLinkToClipboard(accountName, postID) {
-  const url = `http://${ip}:5500/users/@${accountName}/${postID}`;
+  const url = `/users/@${accountName}/${postID}`;
   navigator.clipboard.writeText(url);
 
   const share_button = doc.getElementById(

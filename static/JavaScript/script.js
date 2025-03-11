@@ -1,5 +1,3 @@
-ip = "localhost";
-
 const doc = document;
 const headerNavButtons = doc.getElementsByClassName("header_nav_btn");
 const scrollUpButton = doc.getElementById("scroll_up_button");
@@ -27,6 +25,6 @@ scrollUpButton.addEventListener("click", function () {
 });
 
 function goToPage(location) {
-  if (window.location.href === `http://${ip}:5500${location}`) return
-  window.location.href = `http://${ip}:5500${location}`;
+  if (window.location.href === `${location}`) return;
+  window.location.href = `${location}`;
 }
