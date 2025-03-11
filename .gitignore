@@ -8,5 +8,4 @@ pyvenv.cfg
 .prettierrc
 .venv
 .idea
-.idea
 data.sqlite
