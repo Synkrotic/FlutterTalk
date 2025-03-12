@@ -77,6 +77,14 @@ def addShare(postID):
     return str(post["sharedAmount"])
 
 
+@app.route('/profile')
+def viewProfile():
+  if accountName is not None:
+    return getFullPage(render_template("viewProfile.html", displayName=displayName, accountName=f'@{accountName}'))
+
+  return getFullPage(render_template("errorPage.html", error="401 unauthorized"))
+
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
