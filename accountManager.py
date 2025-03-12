@@ -2,7 +2,7 @@ import secrets
 import time
 from datetime import timedelta
 
-from flask import Response
+from flask import Response, Request
 from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session
 
@@ -15,7 +15,7 @@ def getAuthToken(userid: int) -> str:
     session: Session = database.getSession()
 
     query = session.query(tables.Authentication).where(tables.User.id == userid)
-    if query.first() is not None:
+    if query.first() is None:
         token: str
         while True:
             token = secrets.token_hex()
@@ -32,14 +32,31 @@ def getAuthToken(userid: int) -> str:
     return query.first().token
 
 
+def getUser(request: Request) -> tables.User | None:
+    token = request.cookies.get('token')
+    if token is None:
+        return None
+
+    session: Session = database.getSession()
+    return session.query(tables.Authentication).where(tables.Authentication.token == token).first()
+
+def getOrDefaultUserName(user: tables.User) -> str:
+    if user is None:
+        return 'anonymous'
+    else:
+        return user.username
+
+
 def login(username: str, password:str) -> Response:
+    print (username, password)
     session: Session = database.getSession()
     query = session.query(tables.User).where(
         and_(tables.User.username == username, tables.User.password == password)
-    )
-    session.close()
+    ).
     if query.first() is None:
+        session.close()
         return Response("username or password incorrect")
+    session.close()
 
     response = Response("logged in")
     token = getAuthToken(query.first().id.real)
