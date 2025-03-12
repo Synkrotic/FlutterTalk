@@ -1,15 +1,28 @@
+from flask import Response
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 import tables
 import database
+def getAuthToken(userid: int) -> str:
+    session: Session = database.getSession()
+
+    query = session.query(tables.Authentication).where(tables.User.id == userid)
+    if query.first() is not None:
+        query.update({"user_id": userid})
+        return query.first().token
 
 
-def login(username: str, password:str) -> bool:
-    query = database.getSession().query(tables.User).filter(
+def login(username: str, password:str) -> Response:
+    session: Session = database.getSession()
+    query = session.query(tables.User).where(
         and_(tables.User.username == username, tables.User.password == password)
     )
-    return query.first() is not None
+    session.close()
+    if query.first() is None:
+        return Response("username or password incorrect")
+    response = Response("logged in")
+    response
 
 
 
@@ -31,3 +44,4 @@ def createAccount(username: str, password: str):
         session.add(user)
         session.commit()
         return True
+
