@@ -1,16 +1,35 @@
+import secrets
+import time
+from datetime import timedelta
+
 from flask import Response
-from sqlalchemy import and_
+from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session
 
 import tables
 import database
+from tables import Authentication
+TOKEN_DURATION = timedelta(7)
+
 def getAuthToken(userid: int) -> str:
     session: Session = database.getSession()
 
     query = session.query(tables.Authentication).where(tables.User.id == userid)
     if query.first() is not None:
-        query.update({"user_id": userid})
-        return query.first().token
+        token: str
+        while True:
+            token = secrets.token_hex()
+            if session.query(tables.Authentication).where(tables.Authentication.token == token).first() is None:
+                break
+        session.execute(insert(Authentication), [{"token": token, "user_id": userid}])
+        session.commit()
+        session.close()
+        return token
+
+    query.update({"time_created": func.now()})
+    session.commit()
+    session.close()
+    return query.first().token
 
 
 def login(username: str, password:str) -> Response:
@@ -21,8 +40,10 @@ def login(username: str, password:str) -> Response:
     session.close()
     if query.first() is None:
         return Response("username or password incorrect")
+
     response = Response("logged in")
-    response
+    token = getAuthToken(query.first().id.real)
+    response.set_cookie('token', token, max_age=TOKEN_DURATION.seconds, httponly=True)
 
 
 
