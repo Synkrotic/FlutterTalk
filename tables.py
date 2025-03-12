@@ -1,6 +1,7 @@
+from pickle import LONG4
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey, Column, Integer, Text, VARCHAR
+from sqlalchemy import ForeignKey, Column, Integer, Text, VARCHAR, DateTime, func
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, declarative_base
 from sqlalchemy.orm import Mapped
@@ -75,3 +76,4 @@ class Authentication(Base):
 
     token = Column(VARCHAR(16), primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    time_created = Column(DateTime, nullable=False, default=func.now())
