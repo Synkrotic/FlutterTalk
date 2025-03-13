@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import create_engine, Engine
+from sqlalchemy import create_engine, Engine, Connection
 from sqlalchemy.orm import Session
 
 from tables import Base
@@ -14,3 +14,5 @@ def create() -> None:
 def getSession() -> Session:
     return Session(engine)
 
+def getConnection() -> Connection:
+    return engine.connect()
