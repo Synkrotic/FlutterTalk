@@ -43,8 +43,17 @@ Posts = [
   }
 ]
 
+#database.create()
 accountManager.createAccount('syn', 'pwd')
-database.create()
+def getFullPage(renderedPage):
+    print(request.cookies.get('token'))
+    page = render_template("navbar.html",
+                           displayName=DisplayName,
+                           accountName=accountManager.getOrDefaultUserName(accountManager.getUser(request))
+    )
+    page += renderedPage
+    page += render_template("sidebar.html")
+    return page
 
 def getPost(accountName, postID):
     post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
@@ -84,10 +93,7 @@ def viewProfile():
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        if accountManager.login(request.form['name'], request.form['password']):
-            return 'logged in'
-        else:
-            return 'username or password incorrect'
+        return accountManager.login(request.form['name'], request.form['password'])
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -110,15 +116,6 @@ def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
 
 
-def getFullPage(renderedPage):
-    request.cookies.get('token')
-    page = render_template("navbar.html",
-                           displayName=DisplayName,
-                           accountName=accountManager.getOrDefaultUserName(accountManager.getUser(request))
-    )
-    page += renderedPage
-    page += render_template("sidebar.html")
-    return page
 
 if __name__ == '__main__':
     app.run(debug=True)

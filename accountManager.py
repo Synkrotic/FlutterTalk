@@ -1,6 +1,7 @@
 import secrets
 import time
 from datetime import timedelta
+from typing import Type
 
 from flask import Response, Request
 from sqlalchemy import and_, func, insert, text, Result, Row
@@ -11,11 +12,15 @@ import database
 from tables import Authentication
 TOKEN_DURATION = timedelta(7)
 
-def getAuthToken(userid: int) -> str:
+# userid: int # fuck sqlalchemy
+def getAuthToken(userid):
     session: Session = database.getSession()
 
-    query = session.query(tables.Authentication).where(tables.User.id == userid)
-    if query.first() is None:
+    query = session.query(tables.Authentication).where(tables.Authentication.user_id == userid)
+    auth = query.first()
+
+    if auth is None:
+        print("creating token")
         token: str
         while True:
             token = secrets.token_hex()
@@ -26,10 +31,12 @@ def getAuthToken(userid: int) -> str:
         session.close()
         return token
 
+    token = auth.token
+    print("updating token")
     query.update({"time_created": func.now()})
     session.commit()
     session.close()
-    return query.first().token
+    return token
 
 
 def getUser(request: Request) -> tables.User | None:
@@ -38,7 +45,7 @@ def getUser(request: Request) -> tables.User | None:
         return None
 
     session: Session = database.getSession()
-    return session.query(tables.Authentication).where(tables.Authentication.token == token).first()
+    return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
 
 def getOrDefaultUserName(user: tables.User) -> str:
     if user is None:
@@ -49,21 +56,19 @@ def getOrDefaultUserName(user: tables.User) -> str:
 
 def login(username: str, password:str) -> Response:
     print (username, password)
-    GET_USER_QU ERY = text(""""
-    SELECT * FROM user 
-    WHERE username = :username AND password = :password
-    """)
-    connection = database.getConnection()
-    GET_USER_QUERY.bindparams(username=username, password=password)
-    results: Row = connection.execute(GET_USER_QUERY).fetchone()
-    connection.close()
-    if results is None:
-        connection.close()
+    session: Session = database.getSession()
+    user: Type[tables.User] = session.query(tables.User).where(and_(tables.User.username == username, tables.User.password == password)).first()
+    print(user)
+    if user is None:
+        session.close()
         return Response("username or password incorrect")
-
+    session.close()
     response = Response("logged in")
-    token = getAuthToken(results[0]['id'].real)
-    response.set_cookie('token', token, max_age=TOKEN_DURATION.seconds, httponly=True)
+    print(user.id)
+    token = getAuthToken(int(user.id))
+    print('token: ', token)
+    response.set_cookie('token', token, httponly=True)
+    return response
 
 
 def _checkExists(username: str) -> bool:
