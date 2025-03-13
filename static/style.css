@@ -2,10 +2,14 @@
   overflow: hidden;
 }
 
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
-  font-family: "Roboto", sans-serif;
-  background-color: var(--blackish);
-  color: white;
+  font-family: "Roboto", sans-serif !important;
+  background-color: var(--blackish) !important;
+  color: white !important;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

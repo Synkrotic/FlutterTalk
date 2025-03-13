@@ -28,3 +28,12 @@ function goToPage(location) {
   if (window.location.href === `${location}`) return;
   window.location.href = `${location}`;
 }
+
+function showPassword() {
+  const passwordInput = document.getElementById("password-input");
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+  } else {
+    passwordInput.type = "password";
+  }
+}

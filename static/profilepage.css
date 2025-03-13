@@ -1,0 +1,60 @@
+div.input-container{
+    width: 80%;
+}
+
+main h2 {
+    text-align: center;
+    margin-top: 5vh;
+}
+
+form {
+    padding-top: 5vh;
+    padding-left: 2vw;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+div.input-container > input {
+    height: 4vh;
+    width: 100%;
+    padding: 10px;
+    margin: 2px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+button.save-button {
+    align-self: center;
+    transform: translateX(-2vw);
+    text-transform: capitalize;
+}
+
+.show-password-container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    margin-left: 2vw;
+    height: 2vh;
+    transform: translateY(-1vh);
+}
+.show-password-container label {
+    height: 100%;
+    width: 20vw;
+    margin-left: 0.4vw;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.input-container textarea {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 4vh;
+    color: black;
+}

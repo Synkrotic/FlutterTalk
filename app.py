@@ -64,7 +64,7 @@ def viewPost(accountName, postID):
   post = getPost(accountName, postID)
   if post is None:
     return render_template("errorPage.html", error="404 post not found!")
-  return getFullPage(render_template("viewAccount.html", displayName=displayName, accountName=f'@{accountName}', post=post))
+  return getFullPage(render_template("viewAccount.html", displayName=displayName, accountName=f'{accountName}', post=post))
 
 
 @app.route('/users/addShare/<int:postID>')
@@ -75,6 +75,22 @@ def addShare(postID):
 
     post["sharedAmount"] += 1
     return str(post["sharedAmount"])
+
+
+@app.route('/profile')
+def viewProfile():
+  # TODO Get accountdetails from database
+  account = {
+    "displayName": "Synkrotic",
+    "accountName": "synkrotic",
+    "password": "password",
+    "bio": "Cheesecake",
+    "location": "The Netherlands",
+    "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+  }
+  if account is None:
+    return getFullPage(render_template("viewProfile.html", action="login")) # either login or register (NOT CAPITALIZED!!!)
+  return getFullPage(render_template("viewProfile.html", user=account))
 
 
 @app.route('/login', methods=['POST'])
@@ -103,7 +119,7 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage):
-  page = render_template("navbar.html", displayName=displayName, accountName=f'@{accountName}')
+  page = render_template("navbar.html", displayName=displayName, accountName=f'{accountName}')
   page += renderedPage
   page += render_template("sidebar.html")
   return page

@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FlutterTalk</title>
     <!-- Favicon -->
     <link
       rel="icon"
@@ -40,10 +39,15 @@
       as="style"
       onload="this.onload=null;this.rel='stylesheet'"
     />
-    <!-- Bootstrap Icons -->
+    <!-- Bootstrap -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
     />
   </head>
   <body>
@@ -55,7 +59,7 @@
         />
         <span id="account_button_text">
           <b>{{ displayName }}</b>
-          <p>{{ accountName }}</p>
+          <p>@{{ accountName }}</p>
         </span>
       </button>
       <button class="nav_button" id="home_button" title="Go to homepage." onclick="goToPage('/')">
@@ -80,7 +84,7 @@
         <p>Chat</p>
       </button>
       <button class="nav_button" id="feeds_button" title="Go to your different feeds." onclick="goToPage('/feeds')">
-        <i class="bi bi-hash" style="font-size: 3vh; margin-left: 0.1vw"></i>
+        <i class="bi bi-hash" style="font-size: 3vh; margin-left: 0.1vw !important;"></i>
         <p>Feeds</p>
       </button>
       <button class="nav_button" id="lists_button" title="Go to lists." onclick="goToPage('/lists')">
