@@ -5,12 +5,8 @@ import accountManager
 import database
 import secrets
 
-token_bytes: bytes = secrets.token_bytes()
-token_hex: str = secrets.token_hex()
-token_url: str = secrets.token_urlsafe()
-print(token_bytes, token_hex, token_url)
-displayName = "Synkrotic"
-accountName = "synkrotic"
+DisplayName = "Synkrotic"
+AccountName = "synkrotic"
 Posts = [
   {
     "postID": 1,
@@ -47,17 +43,26 @@ Posts = [
   }
 ]
 
-database.create()
+#database.create()
+accountManager.createAccount('syn', 'pwd')
+def getFullPage(renderedPage):
+    print(request.cookies.get('token'))
+    page = render_template("navbar.html",
+                           displayName=DisplayName,
+                           accountName=accountManager.getOrDefaultUserName(accountManager.getUser(request))
+    )
+    page += renderedPage
+    page += render_template("sidebar.html")
+    return page
 
 def getPost(accountName, postID):
-  post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
-  return post
+    post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
+    return post
 
 
 @app.route('/')
 def index():
-  return getFullPage(render_template("index.html", posts=Posts))
-
+    return getFullPage(render_template("index.html", posts=Posts))
 
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postID):
@@ -65,11 +70,15 @@ def viewPost(accountName, postID):
   if post is None:
     return render_template("errorPage.html", error="404 post not found!")
   return getFullPage(render_template("viewAccount.html", displayName=displayName, accountName=f'{accountName}', post=post))
+    post = getPost(accountName, postID)
+    if post is None:
+        return render_template("errorPage.html", error="404 post not found!")
+    return getFullPage(render_template("viewAccount.html", displayName=DisplayName, accountName=f'@{accountName}', post=post))
 
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
-    post = getPost(accountName, postID)
+    post = getPost(AccountName, postID)
     if post is None:
         return "-1"
 
@@ -79,6 +88,10 @@ def addShare(postID):
 
 @app.route('/profile')
 def viewProfile():
+    if AccountName is not None:
+        return getFullPage(render_template("viewProfile.html", displayName=DisplayName, accountName=f'@{AccountName}'))
+
+    return getFullPage(render_template("errorPage.html", error="401 unauthorized"))
   # TODO Get accountdetails from database
   account = {
     "displayName": "Synkrotic",
@@ -96,10 +109,7 @@ def viewProfile():
 @app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        if accountManager.login(request.form['name'], request.form['password']):
-            return 'logged in'
-        else:
-            return 'username or password incorrect'
+        return accountManager.login(request.form['name'], request.form['password'])
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -112,14 +122,18 @@ def register():
     else:
         return render_template('register.html')
 
+@app.route("/test")
+def test():
+    return render_template("test.html")
+
 
 @app.errorhandler(404)
 def page_not_found(e):
-  return render_template("errorPage.html", error="404 page not found!"), 404
+    return render_template("errorPage.html", error="404 page not found!"), 404
 
 
 def getFullPage(renderedPage):
-  page = render_template("navbar.html", displayName=displayName, accountName=f'{accountName}')
+  page = render_template("navbar.html", displayName=displayName, accountName=f'@{accountName}')
   page += renderedPage
   page += render_template("sidebar.html")
   return page
