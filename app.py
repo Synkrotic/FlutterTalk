@@ -45,15 +45,6 @@ Posts = [
 
 #database.create()
 accountManager.createAccount('syn', 'pwd')
-def getFullPage(renderedPage):
-    print(request.cookies.get('token'))
-    page = render_template("navbar.html",
-                           displayName=DisplayName,
-                           accountName=accountManager.getOrDefaultUserName(accountManager.getUser(request))
-    )
-    page += renderedPage
-    page += render_template("sidebar.html")
-    return page
 
 def getPost(accountName, postID):
     post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
@@ -69,11 +60,7 @@ def viewPost(accountName, postID):
   post = getPost(accountName, postID)
   if post is None:
     return render_template("errorPage.html", error="404 post not found!")
-  return getFullPage(render_template("viewAccount.html", displayName=displayName, accountName=f'{accountName}', post=post))
-    post = getPost(accountName, postID)
-    if post is None:
-        return render_template("errorPage.html", error="404 post not found!")
-    return getFullPage(render_template("viewAccount.html", displayName=DisplayName, accountName=f'@{accountName}', post=post))
+  return getFullPage(render_template("viewAccount.html", displayName=DisplayName, accountName=f'{accountName}', post=post))
 
 
 @app.route('/users/addShare/<int:postID>')
@@ -88,22 +75,18 @@ def addShare(postID):
 
 @app.route('/profile')
 def viewProfile():
-    if AccountName is not None:
-        return getFullPage(render_template("viewProfile.html", displayName=DisplayName, accountName=f'@{AccountName}'))
-
-    return getFullPage(render_template("errorPage.html", error="401 unauthorized"))
-  # TODO Get accountdetails from database
-  account = {
+    # TODO Get accountdetails from database
+    account = {
     "displayName": "Synkrotic",
     "accountName": "synkrotic",
     "password": "password",
     "bio": "Cheesecake",
     "location": "The Netherlands",
     "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
-  }
-  if account is None:
-    return getFullPage(render_template("viewProfile.html", action="login")) # either login or register (NOT CAPITALIZED!!!)
-  return getFullPage(render_template("viewProfile.html", user=account))
+    }
+    if account is None:
+        return getFullPage(render_template("viewProfile.html", action="login")) # either login or register (NOT CAPITALIZED!!!)
+    return getFullPage(render_template("viewProfile.html", user=account))
 
 
 @app.route('/login', methods=['POST'])
@@ -133,7 +116,7 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage):
-  page = render_template("navbar.html", displayName=displayName, accountName=f'@{accountName}')
+  page = render_template("navbar.html", displayName=DisplayName, accountName=f'{AccountName}')
   page += renderedPage
   page += render_template("sidebar.html")
   return page
