@@ -4,8 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlutterTalk | Profile</title>
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='/profilepage.css') }}"
+      as="style"
+      onload="this.onload=null;
+      this.rel='stylesheet'"
+    />
 </head>
 <body>
-    
+  <main>
+    {% if user != undefined or user != None %}
+      <h2>Hello {{ user.displayName }}</h2>
+      <form action="/saveProfile" method="post" id="profile-form">
+        <div class="input-container">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="name" class="form-control username-input" value="{{ user.displayName }}">
+        </div>
+        <div class="input-container">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" name="password" id="password-input" class="form-control" value="{{ user.password }}">
+          <span class="show-password-container">
+            <input type="checkbox" id="show-password" class="show-password form-check-input" onclick="showPassword()">
+            <label for="show-password" class="show-password-label">Show Password</label>
+          </span>
+        </div>
+        <div class="input-container">
+          <label for="bio" class="form-label">Email</label>
+          <textarea name="bio" class="form-input"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success save-button">Save</button>
+
+      </form>
+    {% else %}
+      <h2>Please login or register</h2>
+      <form id="login-form" method="post" action="/{{ action }}">
+        <div class="input-container">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="name" class="form-control username-input">
+        </div>
+        <div class="input-container">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" name="password" class="form-control">
+          <span class="show-password-container">
+            <input type="checkbox" id="show-password" class="show-password form-check-input" onclick="showPassword()">
+            <label for="show-password" class="show-password-label">Show Password</label>
+          </span>
+        </div>
+        <button type="submit" class="btn btn-success save-button">{{ action }}</button>
+      </form>
+    {% endif %}
+  </main>
 </body>
 </html>

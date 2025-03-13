@@ -26,9 +26,9 @@
 .search_bar_icon {
   position: absolute;
   color: #3e5879;
-  font-size: 1.25rem;
-  margin-top: 0.5rem;
-  margin-left: 0.5rem;
+  font-size: 1.25rem !important;
+  margin-top: 0.5rem !important;
+  margin-left: 0.5rem !important;
 }
 
 .search_bar {
@@ -36,14 +36,15 @@
   width: 100%;
   border: none;
   background: none;
-  padding-left: 2.3rem;
+  padding-left: 2.3rem !important;
   color: #3e5879;
-  font: normal 1.2rem sans-serif;
+  line-height: 100%;
+  font: normal 1.2rem sans-serif !important;
 }
 
 .search_bar::placeholder {
   color: #3e5879;
-  font: normal 1.2rem sans-serif;
+  font: normal 1.2rem sans-serif !important;
 }
 
 .search_bar:focus {
