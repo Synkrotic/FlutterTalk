@@ -116,7 +116,7 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage):
-  page = render_template("navbar.html", displayName=DisplayName, accountName=f'{AccountName}')
+  page = render_template("navbar.html", displayName=DisplayName, accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}')
   page += renderedPage
   page += render_template("sidebar.html")
   return page
