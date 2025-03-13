@@ -3,7 +3,7 @@ import time
 from datetime import timedelta
 
 from flask import Response, Request
-from sqlalchemy import and_, func, insert
+from sqlalchemy import and_, func, insert, text, Result, Row
 from sqlalchemy.orm import Session
 
 import tables
@@ -49,19 +49,21 @@ def getOrDefaultUserName(user: tables.User) -> str:
 
 def login(username: str, password:str) -> Response:
     print (username, password)
-    session: Session = database.getSession()
-    query = session.query(tables.User).where(
-        and_(tables.User.username == username, tables.User.password == password)
-    ).
-    if query.first() is None:
-        session.close()
+    GET_USER_QU ERY = text(""""
+    SELECT * FROM user 
+    WHERE username = :username AND password = :password
+    """)
+    connection = database.getConnection()
+    GET_USER_QUERY.bindparams(username=username, password=password)
+    results: Row = connection.execute(GET_USER_QUERY).fetchone()
+    connection.close()
+    if results is None:
+        connection.close()
         return Response("username or password incorrect")
-    session.close()
 
     response = Response("logged in")
-    token = getAuthToken(query.first().id.real)
+    token = getAuthToken(results[0]['id'].real)
     response.set_cookie('token', token, max_age=TOKEN_DURATION.seconds, httponly=True)
-
 
 
 def _checkExists(username: str) -> bool:
