@@ -1,4 +1,5 @@
 import os
+import sys
 
 from sqlalchemy import create_engine, Engine, Connection
 from sqlalchemy.orm import Session
@@ -16,3 +17,8 @@ def getSession() -> Session:
 
 def getConnection() -> Connection:
     return engine.connect()
+
+
+if __name__ == '__main__':
+    create()
+    sys.exit(0)

@@ -17,7 +17,7 @@ def getAuthToken(userid):
     session: Session = database.getSession()
 
     query = session.query(tables.Authentication).where(tables.Authentication.user_id == userid)
-    auth = query.first()
+    auth: Type[Authentication] | None = query.first()
 
     if auth is None:
         print("creating token")
@@ -31,27 +31,12 @@ def getAuthToken(userid):
         session.close()
         return token
 
-    token = auth.token
+    token = auth.token # type: ignore
     print("updating token")
     query.update({"time_created": func.now()})
     session.commit()
     session.close()
     return token
-
-
-def getUser(request: Request) -> tables.User | None:
-    token = request.cookies.get('token')
-    if token is None:
-        return None
-
-    session: Session = database.getSession()
-    return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
-
-def getOrDefaultUserName(user: tables.User) -> str:
-    if user is None:
-        return 'anonymous'
-    else:
-        return user.username
 
 
 def login(username: str, password:str) -> Response:
@@ -90,3 +75,18 @@ def createAccount(username: str, password: str):
         session.commit()
         return True
 
+
+def getUser(request: Request) -> tables.User | None:
+    token = request.cookies.get('token')
+    if token is None:
+        return None
+
+    session: Session = database.getSession()
+    return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
+
+
+def getOrDefaultUserName(user: tables.User) -> str:
+    if user is None:
+        return 'anonymous'
+    else:
+        return user.username
