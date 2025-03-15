@@ -9,8 +9,7 @@ import secrets
 
 from tables import User
 
-DisplayName = "Synkrotic"
-AccountName = "synkrotic"
+
 Posts = [
     {
         "postID": 1,
@@ -67,12 +66,12 @@ def viewPost(accountName, postID):
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
     return getFullPage(
-        render_template("viewAccount.html", displayName=DisplayName, accountName=f'{accountName}', post=post))
+        render_template("viewAccount.html", displayName={accountManager.getOrDefaultUserName(accountManager.getUser(request))}, accountName=f'{accountName}', post=post))
 
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
-    post = getPost(AccountName, postID)
+    post = getPost({accountManager.getOrDefaultUserName(accountManager.getUser(request))}, postID)
     if post is None:
         return "-1"
 
@@ -83,8 +82,10 @@ def addShare(postID):
 @app.route('/profile')
 def viewProfile():
     user: User = accountManager.getUser(request)
+    print ("user:", user)
     if user is None:
         return getFullPage(render_template("viewProfile.html", action="login"))
+
     account = {
         "displayName": accountManager.getOrDefaultUserName(user),
         "accountName": accountManager.getOrDefaultUserName(user),
@@ -124,7 +125,7 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage):
-    page = render_template("navbar.html", displayName=DisplayName,
+    page = render_template("navbar.html", displayName={accountManager.getOrDefaultUserName(accountManager.getUser(request))},
                            accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}')
     page += renderedPage
     page += render_template("sidebar.html")

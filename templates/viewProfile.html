@@ -14,7 +14,7 @@
 </head>
 <body>
   <main>
-    {% if user != undefined or user != None %}
+    {% if user is defined and user != None%}
       <h2>Hello {{ user.displayName }}</h2>
       <form action="/saveProfile" method="post" id="profile-form">
         <div class="input-container">
