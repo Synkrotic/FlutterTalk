@@ -1,15 +1,15 @@
 import secrets
-import time
 from datetime import timedelta
 from typing import Type
 
-from flask import Response, Request
-from sqlalchemy import and_, func, insert, text, Result, Row
+from flask import Response, Request, render_template
+from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session
 
-import tables
 import database
+import tables
 from tables import Authentication
+
 TOKEN_DURATION = timedelta(7)
 
 # userid: int # fuck sqlalchemy
@@ -39,21 +39,16 @@ def getAuthToken(userid):
     return token
 
 
-def login(username: str, password:str) -> Response:
-    print (username, password)
+def login(username: str, password:str) -> str | None:
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(and_(tables.User.username == username, tables.User.password == password)).first()
-    print(user)
     if user is None:
         session.close()
-        return Response("username or password incorrect")
+        return None
     session.close()
-    response = Response("logged in")
-    print(user.id)
-    token = getAuthToken(int(user.id))
-    print('token: ', token)
-    response.set_cookie('token', token, httponly=True)
-    return response
+    token = getAuthToken(user.id)
+
+    return token
 
 
 def _checkExists(username: str) -> bool:
@@ -76,8 +71,14 @@ def createAccount(username: str, password: str):
         return True
 
 
-def getUser(request: Request) -> tables.User | None:
-    token = request.cookies.get('token')
+def getUser(request: Request | str) -> tables.User | None:
+    if isinstance(request, str):
+        token = request
+    elif request is not None:
+        token = request.cookies.get('token')
+    else:
+        return None
+
     if token is None:
         return None
 

@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, Response
 from sqlalchemy.orm import Session
 
 from globals import *
@@ -80,11 +80,18 @@ def addShare(postID):
 
 
 @app.route('/profile')
-def viewProfile():
-    user: User = accountManager.getUser(request)
+def viewProfile(new_token = None):
+    response = Response()
+    if new_token is not None:
+        response.set_cookie('token', new_token, httponly=True)
+        user: User = accountManager.getUser(new_token)
+    else:
+        user: User = accountManager.getUser(request)
+
     print ("user:", user)
     if user is None:
-        return getFullPage(render_template("viewProfile.html", action="login"))
+        response.set_data(getFullPage(render_template("viewProfile.html", action="login")))
+        return response
 
     account = {
         "displayName": accountManager.getOrDefaultUserName(user),
@@ -93,14 +100,18 @@ def viewProfile():
         "location": user.location,
         "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
     }
-
-    return getFullPage(render_template("viewProfile.html", user=account))
+    response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
+    return response
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        return accountManager.login(request.form['name'], request.form['password'])
+    token: str = accountManager.login(request.form['name'], request.form['password'])
+    if token is not None:
+        return viewProfile(token)
+    else:
+        return render_template("errorPage.html", error="Invalid login credentials")
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
