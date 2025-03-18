@@ -2,7 +2,7 @@ import secrets
 from datetime import timedelta
 from typing import Type
 
-from flask import Response, Request, render_template
+from flask import Request
 from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session
 

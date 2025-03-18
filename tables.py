@@ -1,11 +1,6 @@
-from pickle import LONG4
-from typing import List
-from typing import Optional
 from sqlalchemy import ForeignKey, Column, Integer, Text, VARCHAR, DateTime, func
 from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase, declarative_base
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
@@ -39,7 +34,7 @@ class Post(Base):
     user = relationship('User', back_populates='posts')
     comments = relationship('Comment', back_populates='post', cascade='all, delete-orphan')
     post_likes = relationship('PostLike', back_populates='post', cascade='all, delete-orphan')
-
+    shares = Column(Integer, default=0)
 class Comment(Base):
     __tablename__ = 'comment'
 
