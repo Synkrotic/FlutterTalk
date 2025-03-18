@@ -161,5 +161,5 @@ def getConnection() -> Connection:
     return engine.connect()
 
 if __name__ == '__main__':
-    database.create()
+    # database.create()
     app.run(debug=False, host='0.0.0.0', port=3000)
