@@ -6,18 +6,18 @@ from sqlalchemy.orm import Session
 
 from tables import Base
 
-engine: Engine = create_engine('sqlite:///' + os.path.join(os.getcwd(), 'data.sqlite'), echo=True)
+db_path = os.path.join(os.getcwd(), 'data.sqlite')
+engine: Engine = create_engine(f'sqlite:///{db_path}', echo=True)
 
 def create() -> None:
-    Base.metadata.create_all(engine)
-
+    if not os.path.exists(db_path):
+        Base.metadata.create_all(engine)
 
 def getSession() -> Session:
     return Session(engine)
 
 def getConnection() -> Connection:
     return engine.connect()
-
 
 if __name__ == '__main__':
     create()
