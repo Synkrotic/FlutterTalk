@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["flutter", "dart"]
+
+[phases.build]
+cmds = ["flutter build web"]
+
+[phases.start]
+cmds = ["dart run"]
