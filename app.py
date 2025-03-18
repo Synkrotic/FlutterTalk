@@ -1,14 +1,14 @@
 from flask import render_template, request, Response
 from sqlalchemy.orm import Session
 
+import tables
 from globals import *
 
 import accountManager
 import database
 import secrets
 
-from tables import User
-
+from tables import User, Authentication
 
 Posts = [
     {
@@ -53,6 +53,7 @@ accountManager.createAccount('syn', 'pwd')
 def getPost(accountName, postID):
     post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
     return post
+
 
 
 @app.route('/')
@@ -125,6 +126,21 @@ def register():
         return render_template('register.html')
 
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    if 'token' not in request.cookies:
+        return 412
+
+    token = request.cookies['token']
+
+    with database.getSession() as session:
+        session.query(Authentication).filter_by(token=token).delete()
+
+    response = Response()
+    response.delete_cookie('token', httponly=True)
+    return response
+
+
 @app.route("/test")
 def test():
     return render_template("test.html")
@@ -136,7 +152,8 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage):
-    page = render_template("navbar.html", displayName={accountManager.getOrDefaultUserName(accountManager.getUser(request))},
+    print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
+    page = render_template("navbar.html", displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
                            accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}')
     page += renderedPage
     page += render_template("sidebar.html")
