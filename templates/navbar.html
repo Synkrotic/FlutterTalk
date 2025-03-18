@@ -52,7 +52,7 @@
   </head>
   <body>
     <nav>
-      <button id="account_button" title="Log out or switch from account.">
+      <button class="nav_button" id="account_button" title="Log out or switch from account.">
         <img
           src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
           alt="The profile picture of your account."
@@ -61,6 +61,9 @@
           <b>{{ displayName }}</b>
           <p>@{{ accountName }}</p>
         </span>
+        <button id="logout_menu_button" title="Log out of your account." onclick="logout()">
+          Logout
+        </button>
       </button>
       <button class="nav_button" id="home_button" title="Go to homepage." onclick="goToPage('/')">
         <i class="bi bi-house-door"></i>
@@ -99,11 +102,11 @@
         <i class="bi bi-gear"></i>
         <p>Settings</p>
       </button>
-      <button id="new_post_button" title="Create a new post." onclick="goToPage('/createPost')">
+      <button class="nav_button" id="new_post_button" title="Create a new post." onclick="goToPage('/createPost')">
         <i class="bi bi-pencil-square"></i>
         <b>New Post</b>
       </button>
-      <button id="scroll_up_button" title="Go to top of the page.">
+      <button class="nav_button" id="scroll_up_button" title="Go to top of the page.">
         <i id="scroll_up_icon" class="bi bi-arrow-up-circle"></i>
       </button>
     </nav>

@@ -14,23 +14,19 @@
 </head>
 <body>
   <main>
-    {% if user is defined and user != None%}
+    {% if user is defined and user != None %}
       <h2>Hello {{ user.displayName }}</h2>
       <form action="/saveProfile" method="post" id="profile-form">
         <div class="input-container">
-          <label for="username" class="form-label">Username</label>
+          <label for="username" class="form-label">Displayname</label>
           <input type="text" name="name" class="form-control username-input" value="{{ user.displayName }}">
         </div>
         <div class="input-container">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" name="password" id="password-input" class="form-control" value="{{ user.password }}">
-          <span class="show-password-container">
-            <input type="checkbox" id="show-password" class="show-password form-check-input" onclick="showPassword()">
-            <label for="show-password" class="show-password-label">Show Password</label>
-          </span>
+          <label for="accountname" class="form-label">Accountname</label>
+          <input type="text" name="accountname" id="accountname-input" class="form-control" value="{{ user.accountname }}">
         </div>
         <div class="input-container">
-          <label for="bio" class="form-label">Email</label>
+          <label for="bio" class="form-label">Biography</label>
           <textarea name="bio" class="form-input"></textarea>
         </div>
         <button type="submit" class="btn btn-success save-button">Save</button>
@@ -45,7 +41,7 @@
         </div>
         <div class="input-container">
           <label for="password" class="form-label">Password</label>
-          <input type="password" name="password" class="form-control">
+          <input type="password" name="password" id="password-input" class="form-control">
           <span class="show-password-container">
             <input type="checkbox" id="show-password" class="show-password form-check-input" onclick="showPassword()">
             <label for="show-password" class="show-password-label">Show Password</label>
