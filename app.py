@@ -68,8 +68,10 @@ def index():
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postID):
     post = getPost(accountName, postID)
+
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
+
     return getFullPage(
         render_template("viewAccount.html", displayName={accountManager.getOrDefaultUserName(accountManager.getUser(request))}, accountName=f'{accountName}', post=post))
 
@@ -105,6 +107,7 @@ def viewProfile(new_token = None):
         "location": user.location,
         "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
     }
+
     response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
     return response
 
