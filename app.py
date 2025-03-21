@@ -159,6 +159,24 @@ def getFullPage(renderedPage):
     page += render_template("sidebar.html")
     return page
 
+import os
+import sys
+import database
+
+from sqlalchemy import create_engine, Engine, Connection
+from sqlalchemy.orm import Session
+
+from tables import Base
+
+db_path = os.path.join(os.getcwd(), 'data.sqlite')
+engine: Engine = create_engine(f'sqlite:///{db_path}', echo=True)
+
+def getSession() -> Session:
+    return Session(engine)
+
+def getConnection() -> Connection:
+    return engine.connect()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # database.create()
+    app.run(debug=False, host='0.0.0.0', port=3000)
