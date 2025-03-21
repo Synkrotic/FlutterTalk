@@ -8,7 +8,7 @@ import os
 
 Posts = [
     {
-        "postID": 1,
+        "postID": 0,
         "displayName": "Pufferenco",
         "accountName": "pufferenco",
         "content": "Hello, World!",
@@ -30,7 +30,7 @@ Posts = [
         "liked": False
     },
     {
-        "postID": 1,
+        "postID": 2,
         "displayName": "TechGuru",
         "accountName": "techguru",
         "content": "Exploring new technologies and frameworks is my passion. From Python to web development, I love diving deep into code and sharing insights with the community!",
@@ -38,6 +38,17 @@ Posts = [
         "commentAmount": 1,
         "sharedAmount": 0,
         "likeAmount": 30,
+        "liked": True
+    },
+    {
+        "postID": 3,
+        "displayName": "TopScrech",
+        "accountName": "techguru",
+        "content": "Help, ik doe staafwerk",
+        "age": "1m",
+        "commentAmount": 666,
+        "sharedAmount": 666,
+        "likeAmount": 666,
         "liked": True
     }
 ]
