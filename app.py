@@ -64,7 +64,6 @@ def getPost(accountName, postID):
 def index():
     return getFullPage(render_template("index.html", posts=Posts))
 
-
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postID):
     post = getPost(accountName, postID)
@@ -73,44 +72,55 @@ def viewPost(accountName, postID):
         return render_template("errorPage.html", error="404 post not found!")
 
     return getFullPage(
-        render_template("viewAccount.html", displayName={accountManager.getOrDefaultUserName(accountManager.getUser(request))}, accountName=f'{accountName}', post=post))
+        render_template(
+            "viewAccount.html",
+            displayName={
+                accountManager.getOrDefaultUserName(
+                    accountManager.getUser(request)
+                )
+            },
+            accountName=f'{accountName}',
+            post=post)
+    )
 
+@app.route('/users/@<string:accountName>')
+def viewAccount(accountName):
+    return accountName
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
     post = getPost({accountManager.getOrDefaultUserName(accountManager.getUser(request))}, postID)
+
     if post is None:
         return "-1"
 
     post["sharedAmount"] += 1
     return str(post["sharedAmount"])
 
-
 @app.route('/profile')
 def viewProfile(new_token = None):
-    return 'test'
-    # response = Response()
-    # if new_token is not None:
-    #     response.set_cookie('token', new_token, httponly=True)
-    #     user: User = accountManager.getUser(new_token)
-    # else:
-    #     user: User = accountManager.getUser(request)
-    #
-    # print ("user:", user)
-    # if user is None:
-    #     response.set_data(getFullPage(render_template("viewProfile.html", action="login")))
-    #     return response
-    #
-    # account = {
-    #     "displayName": accountManager.getOrDefaultUserName(user),
-    #     "accountName": accountManager.getOrDefaultUserName(user),
-    #     "bio": user.bio,
-    #     "location": user.location,
-    #     "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
-    # }
-    #
-    # response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
-    # return response
+    response = Response()
+    if new_token is not None:
+        response.set_cookie('token', new_token, httponly=True)
+        user: User = accountManager.getUser(new_token)
+    else:
+        user: User = accountManager.getUser(request)
+
+    print ("user:", user)
+    if user is None:
+        response.set_data(getFullPage(render_template("viewProfile.html", action="login")))
+        return response
+
+    account = {
+        "displayName": accountManager.getOrDefaultUserName(user),
+        "accountName": accountManager.getOrDefaultUserName(user),
+        "bio": user.bio,
+        "location": user.location,
+        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+    }
+
+    response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
+    return response
 
 @app.route('/login', methods=['POST'])
 def login():
