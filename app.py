@@ -88,28 +88,29 @@ def addShare(postID):
 
 @app.route('/profile')
 def viewProfile(new_token = None):
-    response = Response()
-    if new_token is not None:
-        response.set_cookie('token', new_token, httponly=True)
-        user: User = accountManager.getUser(new_token)
-    else:
-        user: User = accountManager.getUser(request)
-
-    print ("user:", user)
-    if user is None:
-        response.set_data(getFullPage(render_template("viewProfile.html", action="login")))
-        return response
-
-    account = {
-        "displayName": accountManager.getOrDefaultUserName(user),
-        "accountName": accountManager.getOrDefaultUserName(user),
-        "bio": user.bio,
-        "location": user.location,
-        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
-    }
-
-    response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
-    return response
+    return 'test'
+    # response = Response()
+    # if new_token is not None:
+    #     response.set_cookie('token', new_token, httponly=True)
+    #     user: User = accountManager.getUser(new_token)
+    # else:
+    #     user: User = accountManager.getUser(request)
+    #
+    # print ("user:", user)
+    # if user is None:
+    #     response.set_data(getFullPage(render_template("viewProfile.html", action="login")))
+    #     return response
+    #
+    # account = {
+    #     "displayName": accountManager.getOrDefaultUserName(user),
+    #     "accountName": accountManager.getOrDefaultUserName(user),
+    #     "bio": user.bio,
+    #     "location": user.location,
+    #     "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+    # }
+    #
+    # response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
+    # return response
 
 @app.route('/login', methods=['POST'])
 def login():
