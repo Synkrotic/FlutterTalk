@@ -1,14 +1,10 @@
 from flask import render_template, request, Response
-from sqlalchemy.orm import Session
-
-import tables
 from globals import *
+from tables import User, Authentication
 
 import accountManager
 import database
-import secrets
-
-from tables import User, Authentication
+import os
 
 Posts = [
     {
@@ -49,12 +45,9 @@ Posts = [
 #database.create()
 accountManager.createAccount('syn', 'pwd')
 
-
 def getPost(accountName, postID):
     post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
     return post
-
-
 
 @app.route('/')
 def index():
@@ -104,7 +97,6 @@ def viewProfile(new_token = None):
     response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
     return response
 
-
 @app.route('/login', methods=['POST'])
 def login():
     token: str = accountManager.login(request.form['name'], request.form['password'])
@@ -112,8 +104,6 @@ def login():
         return viewProfile(token)
     else:
         return render_template("errorPage.html", error="Invalid login credentials")
-
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -159,14 +149,8 @@ def getFullPage(renderedPage):
     page += render_template("sidebar.html")
     return page
 
-import os
-import sys
-import database
-
 from sqlalchemy import create_engine, Engine, Connection
 from sqlalchemy.orm import Session
-
-from tables import Base
 
 db_path = os.path.join(os.getcwd(), 'data.sqlite')
 engine: Engine = create_engine(f'sqlite:///{db_path}', echo=True)
