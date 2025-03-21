@@ -44,7 +44,7 @@ Posts = [
         "postID": 3,
         "displayName": "TopScrech",
         "accountName": "techguru",
-        "content": "Help, ik doe staafwerk",
+        "content": "Help, ik doe slaafwerk",
         "age": "1m",
         "commentAmount": 666,
         "sharedAmount": 666,
