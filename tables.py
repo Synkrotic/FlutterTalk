@@ -9,7 +9,8 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String, nullable=False)
+    account_name = Column(String, nullable=False)
+    display_name = Column(String, nullable=True)
     password = Column(String, nullable=False)
     likes = Column(Integer, default=0)
     followers = Column(Integer, default=0)

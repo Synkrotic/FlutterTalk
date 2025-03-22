@@ -41,7 +41,7 @@ def getAuthToken(userid):
 
 def login(username: str, password:str) -> str | None:
     session: Session = database.getSession()
-    user: Type[tables.User] = session.query(tables.User).where(and_(tables.User.username == username, tables.User.password == password)).first()
+    user: Type[tables.User] = session.query(tables.User).where(and_(tables.User.account_name == username, tables.User.password == password)).first()
     if user is None:
         session.close()
         return None
@@ -53,7 +53,7 @@ def login(username: str, password:str) -> str | None:
 
 def _checkExists(username: str) -> bool:
     session: Session = database.getSession()
-    user = session.query(tables.User).filter(tables.User.username == username).first()
+    user = session.query(tables.User).filter(tables.User.account_name == username).first()
     if user is None:
         return False
     else:
@@ -65,7 +65,7 @@ def createAccount(username: str, password: str):
         return False
     else:
         session: Session = database.getSession()
-        user = tables.User(username=username, password=password)
+        user = tables.User(account_name=username, password=password)
         session.add(user)
         session.commit()
         return True
@@ -90,4 +90,11 @@ def getOrDefaultUserName(user: tables.User) -> str:
     if user is None:
         return 'anonymous'
     else:
-        return user.username
+        return user.account_name
+
+
+def getOrDefaultDisplayNameName(user: tables.User) -> str:
+    if user is None:
+        return 'anonymous'
+    else:
+        return user.account_name

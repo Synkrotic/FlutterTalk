@@ -1,59 +1,11 @@
-from flask import render_template, request, Response
-from sqlalchemy.orm import Session
-
-import tables
-from globals import *
+from flask import render_template, request, redirect
 
 import accountManager
-import database
-import secrets
-
+from globals import *
 from tables import User, Authentication
 
-Posts = [
-    {
-        "postID": 1,
-        "displayName": "Pufferenco",
-        "accountName": "pufferenco",
-        "content": "Hello, World!",
-        "age": "3h",
-        "commentAmount": 2,
-        "sharedAmount": 3,
-        "likeAmount": 10,
-        "liked": True
-    },
-    {
-        "postID": 1,
-        "displayName": "JaneDoe",
-        "accountName": "janedoe",
-        "content": "Just finished my project! I'm really excited about the progress I've made and looking forward to what comes next.",
-        "age": "1h",
-        "commentAmount": 4,
-        "sharedAmount": 1,
-        "likeAmount": 20,
-        "liked": False
-    },
-    {
-        "postID": 1,
-        "displayName": "TechGuru",
-        "accountName": "techguru",
-        "content": "Exploring new technologies and frameworks is my passion. From Python to web development, I love diving deep into code and sharing insights with the community!",
-        "age": "30m",
-        "commentAmount": 1,
-        "sharedAmount": 0,
-        "likeAmount": 30,
-        "liked": True
-    }
-]
-
-#database.create()
 accountManager.createAccount('syn', 'pwd')
-
-
-def getPost(accountName, postID):
-    post = next((post for post in Posts if post["postID"] == postID and post["accountName"] == accountName), None)
-    return post
-
+print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab')
 
 
 @app.route('/')
@@ -81,13 +33,9 @@ def addShare(postID):
 
 
 @app.route('/profile')
-def viewProfile(new_token = None):
+def viewProfile():
     response = Response()
-    if new_token is not None:
-        response.set_cookie('token', new_token, httponly=True)
-        user: User = accountManager.getUser(new_token)
-    else:
-        user: User = accountManager.getUser(request)
+    user: User = accountManager.getUser(request)
 
     print ("user:", user)
     if user is None:
@@ -109,6 +57,9 @@ def viewProfile(new_token = None):
 def login():
     token: str = accountManager.login(request.form['name'], request.form['password'])
     if token is not None:
+        response = Response()
+        response.set_cookie('token', token, httponly=True)
+        redirect('/profile', 200, response)
         return viewProfile(token)
     else:
         return render_template("errorPage.html", error="Invalid login credentials")
@@ -160,13 +111,10 @@ def getFullPage(renderedPage):
     return page
 
 import os
-import sys
 import database
 
 from sqlalchemy import create_engine, Engine, Connection
 from sqlalchemy.orm import Session
-
-from tables import Base
 
 db_path = os.path.join(os.getcwd(), 'data.sqlite')
 engine: Engine = create_engine(f'sqlite:///{db_path}', echo=True)
