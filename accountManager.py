@@ -10,15 +10,18 @@ import database
 import tables
 from tables import Authentication
 
+
+
 TOKEN_DURATION = timedelta(7)
+
 
 # userid: int # fuck sqlalchemy
 def getAuthToken(userid):
     session: Session = database.getSession()
-
+    
     query = session.query(tables.Authentication).where(tables.Authentication.user_id == userid)
     auth: Type[Authentication] | None = query.first()
-
+    
     if auth is None:
         print("creating token")
         token: str
@@ -30,8 +33,8 @@ def getAuthToken(userid):
         session.commit()
         session.close()
         return token
-
-    token = auth.token # type: ignore
+    
+    token = auth.token  # type: ignore
     print("updating token")
     query.update({"time_created": func.now()})
     session.commit()
@@ -39,15 +42,17 @@ def getAuthToken(userid):
     return token
 
 
-def login(username: str, password:str) -> str | None:
+def login(username: str, password: str) -> str | None:
     session: Session = database.getSession()
-    user: Type[tables.User] = session.query(tables.User).where(and_(tables.User.account_name == username, tables.User.password == password)).first()
+    user: Type[tables.User] = session.query(tables.User).where(
+        and_(tables.User.account_name == username, tables.User.password == password)
+        ).first()
     if user is None:
         session.close()
         return None
     session.close()
     token = getAuthToken(user.id)
-
+    
     return token
 
 
@@ -78,10 +83,10 @@ def getUser(request: Request | str) -> tables.User | None:
         token = request.cookies.get('token')
     else:
         return None
-
+    
     if token is None:
         return None
-
+    
     session: Session = database.getSession()
     return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
 

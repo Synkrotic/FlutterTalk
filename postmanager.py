@@ -2,9 +2,10 @@ from typing import Type
 
 from flask import Request
 
-from globals import *
 import database
+from globals import *
 from tables import Post
+
 
 
 def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post]) -> list[dict] | dict:
@@ -20,6 +21,7 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post]) 
             "sharedAmount": post.shares,
             "liked": True
         }
+    
     if isinstance(posts, Post):
         return convert(posts)
     else:
@@ -46,7 +48,7 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     if request.cookies.get('current_post') is not None:
         currentPost = request.cookies.get('current_post')
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
-
+    
     with database.getSession() as session:
         posts = session.query(Post).filter(Post.id > currentPost).limit(amount).all()
         if len(posts) == 0:
@@ -54,10 +56,10 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
         return __postClassToDict(posts), cookies
 
 
-
 def getPost(postId: int):
     with database.getSession() as session:
         return __postClassToDict(session.query(Post).filter(Post.id == postId).first())
+
 
 def addPost(post: dict):
     with database.getSession() as session:
