@@ -20,8 +20,10 @@ def addCookie(cookies: list[Cookie], new) -> list[Cookie]:
     cookies.append(new)
     return cookies
 
-def addCookiesToResponse(cookies: list[Cookie], response: Response):
+def addCookiesToResponse(cookies: list[Cookie], response: Response) -> Response:
     if cookies is None:
-        return
+        return response
     for cookie in cookies:
         cookie.add(response)
+
+    return response

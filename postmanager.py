@@ -1,20 +1,29 @@
+from typing import Type
+
 from flask import Request
 
 from globals import *
 import database
 from tables import Post
 
-def __postClassToDict(posts: list[Post]) -> list[dict]:
-     return [{
-        "postID": post.id,
-        "accountName": post.user.account_name,
-        "displayName": post.user.account_name,
-        "content": post.content,
-        "likeAmount": post.likes,
-        "commentAmount": len(post.comments),
-        "sharedAmount": post.shares,
-        "liked": True
-    } for post in posts]
+
+def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post]) -> list[dict] | dict:
+    def convert(post: Post) -> dict:
+        return {
+            "postID": post.id,
+            "accountName": post.user.account_name,
+            "displayName": post.user.account_name,
+            "content": post.content,
+            "age": "0",
+            "likeAmount": post.likes,
+            "commentAmount": len(post.comments),
+            "sharedAmount": post.shares,
+            "liked": True
+        }
+    if isinstance(posts, Post):
+        return convert(posts)
+    else:
+        return [convert(post) for post in posts]
 
 
 def getPostOfFeed(request) -> (dict | None, list[Cookie]):
@@ -29,16 +38,14 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
         if post is None:
             return None, cookies
         post.comments.filter()
-        return __postClassToDict([post])[0], cookies
+        return __postClassToDict(post), cookies
 
 
 def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
-    cookies = []
     currentPost = 0
     if request.cookies.get('current_post') is not None:
         currentPost = request.cookies.get('current_post')
-    else:
-        cookies = addCookie([], Cookie("current_post", currentPost))
+    cookies = addCookie([], Cookie("current_post", currentPost + amount))
 
     with database.getSession() as session:
         posts = session.query(Post).filter(Post.id > currentPost).limit(amount).all()
@@ -47,6 +54,14 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
         return __postClassToDict(posts), cookies
 
 
+
 def getPost(postId: int):
     with database.getSession() as session:
-        return __postClassToDict([session.query(Post).filter(Post.id == postId).first()])[0]
+        return __postClassToDict(session.query(Post).filter(Post.id == postId).first())
+
+def addPost(post: dict):
+    with database.getSession() as session:
+        post = Post(**post)
+        session.add(post)
+        session.commit()
+        return

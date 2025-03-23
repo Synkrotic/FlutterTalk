@@ -1,22 +1,25 @@
-from flask import render_template, request, Response
+from flask import render_template, request, Response, redirect
+
+import postmanager
 from globals import *
 from tables import User, Authentication
 
 import accountManager
 from globals import *
 from tables import User, Authentication
+import database
 
-accountManager.createAccount('syn', 'pwd')
 print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab')
 
 
 @app.route('/')
 def index():
-    return getFullPage(render_template("index.html", posts=Posts))
-
+    posts, cookies = postmanager.getPosts(10, request)
+    response = Response(getFullPage(render_template("index.html", posts=posts)))
+    return addCookiesToResponse(cookies, response)
 @app.route('/users/@<string:accountName>/<int:postID>')
-def viewPost(accountName, postID):
-    post = getPost(accountName, postID)
+def viewPost(accountName, postId):
+    post = postmanager.getPost(postId)
 
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
@@ -39,7 +42,7 @@ def viewAccount(accountName):
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
-    post = getPost({accountManager.getOrDefaultUserName(accountManager.getUser(request))}, postID)
+    post = postmanager.getPost(postID)
 
     if post is None:
         return "-1"
@@ -123,20 +126,6 @@ def getFullPage(renderedPage):
     page += render_template("sidebar.html")
     return page
 
-import os
-import database
-
-from sqlalchemy import create_engine, Engine, Connection
-from sqlalchemy.orm import Session
-
-db_path = os.path.join(os.getcwd(), 'data.sqlite')
-engine: Engine = create_engine(f'sqlite:///{db_path}', echo=True)
-
-def getSession() -> Session:
-    return Session(engine)
-
-def getConnection() -> Connection:
-    return engine.connect()
 
 if __name__ == '__main__':
     # database.create()

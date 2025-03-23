@@ -8,7 +8,7 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     account_name = Column(String, nullable=False)
     display_name = Column(String, nullable=True)
     password = Column(String, nullable=False)
@@ -26,7 +26,7 @@ class User(Base):
 class Post(Base):
     __tablename__ = 'post'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     content = Column(Text, nullable=False)
     likes = Column(Integer, default=0)
@@ -39,7 +39,7 @@ class Post(Base):
 class Comment(Base):
     __tablename__ = 'comment'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     content = Column(Text, nullable=False)
