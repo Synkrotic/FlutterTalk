@@ -4,7 +4,7 @@ import accountManager
 import database
 import postmanager
 from globals import *
-from tables import User, Authentication
+from tables import User, Authentication, Post
 
 
 
@@ -45,12 +45,14 @@ def viewAccount(accountName):
 def addShare(postID):
     session, postQuery = postmanager.getPostQuery(postID)
     
-    if postQuery is None or postQuery.:
+    if postQuery is None or postQuery.first() is None:
         return "-1"
+    post: Post = postQuery.first()
     
-    shares = postQuery.shares
-    postQuery.update({"sharedAmount": shares+1})
+    shares = post.shares
+    postQuery.update({"shares": shares+1})
     session.commit()
+    print(post.shares)
     return str(shares+1)
 
 

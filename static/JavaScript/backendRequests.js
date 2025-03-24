@@ -8,7 +8,7 @@ function sharePost(accountName, postID) {
   }).then((response) => {
     if (response.status === 200) {
       copyShareLinkToClipboard(accountName, postID);
-
+      alert("Link copied to clipboard!");
       const share_button = doc.getElementById(`share_button_${postID}`);
       share_button.innerHTML = share_button.innerHTML.replace(
         /(\d+)/,

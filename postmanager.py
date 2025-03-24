@@ -62,7 +62,7 @@ def getPost(postId: int):
 
 def getPostQuery(postId: int) -> (Session, Query | None):
     session: Session = database.getSession()
-    return session, session.query(Post).filter(Post.id == postId).limit(1)
+    return session, session.query(Post).filter(Post.id == postId)
 
 def addPost(post: dict):
     with database.getSession() as session:
