@@ -9,3 +9,4 @@ pyvenv.cfg
 .venv
 .idea
 data.sqlite
+/__pycache__
