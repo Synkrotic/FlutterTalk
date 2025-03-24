@@ -1,3 +1,6 @@
+import random
+import string
+
 import accountManager
 import postmanager
 
@@ -19,16 +22,14 @@ accountManager.createAccount('user9', 'password9')
 accountManager.createAccount('user10', 'password10')
 
 POSTS = [
-    {'user_id': 1, 'content': 'Content of post 1', 'likes': 0, 'forwards': 0, 'shares': 0},
-    {'user_id': 2, 'content': 'Content of post 2', 'likes': 999999, 'forwards': 21344, 'shares': 41},
-    {'user_id': 3, 'content': 'Content of post 3', 'likes': 2, 'forwards': 4, 'shares': 0},
-    {'user_id': 4, 'content': 'Content of post 4', 'likes': 3, 'forwards': 5, 'shares': 0},
-    {'user_id': 5, 'content': 'Content of post 5', 'likes': 0, 'forwards': 12, 'shares': 0},
-    {'user_id': 6, 'content': 'Content of post 6', 'likes': 0, 'forwards': 0, 'shares': 0},
-    {'user_id': 7, 'content': 'Content of post 7', 'likes': 0, 'forwards': 0, 'shares': 0},
-    {'user_id': 8, 'content': 'Content of post 8', 'likes': 0, 'forwards': 4, 'shares': 0},
-    {'user_id': 9, 'content': 'Content of post 9', 'likes': 0, 'forwards': 0, 'shares': 0},
-    {'user_id': 10, 'content': 'Content of post 10', 'likes': 0, 'forwards': 0, 'shares': 0},
+    {
+        'user_id': i % 9+1,
+        'content': ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(0, 100))),
+        'likes': random.randint(0, 10000),
+        'forwards': random.randint(0, 10000),
+        'shares': random.randint(0, 10000)
+    }
+    for i in range(1, 1000)  # Generating 50 entries
 ]
 
 for post in POSTS:
