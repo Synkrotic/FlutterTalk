@@ -10,7 +10,7 @@ class User(Base):
     __tablename__ = 'user'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    account_name = Column(String, nullable=False)
+    account_name = Column(String, nullable=False, unique=True)
     display_name = Column(String, nullable=True)
     password = Column(String, nullable=False)
     likes = Column(Integer, default=0)
@@ -78,5 +78,5 @@ class Authentication(Base):
     __tablename__ = 'authentication'
     
     token = Column(VARCHAR(16), primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False, unique=True)
     time_created = Column(DateTime, nullable=False, default=func.now())

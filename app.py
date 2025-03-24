@@ -1,10 +1,11 @@
 from flask import render_template, request, redirect
+from sqlalchemy.orm import Session, Query
 
 import accountManager
 import database
 import postmanager
 from globals import *
-from tables import User, Authentication, Post
+from tables import User, Authentication, Post, PostLike
 
 
 
@@ -46,14 +47,51 @@ def addShare(postID):
     session, postQuery = postmanager.getPostQuery(postID)
     
     if postQuery is None or postQuery.first() is None:
-        return "-1"
+        return 400
     post: Post = postQuery.first()
     
     shares = post.shares
-    postQuery.update({"shares": shares+1})
+    postQuery.update({"shares": shares + 1})
     session.commit()
-    print(post.shares)
-    return str(shares+1)
+    return 200
+
+
+@app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
+def addLike(postID):
+    session: Session
+    postQuery: Query
+    session, postQuery = postmanager.getPostQuery(postID)
+    if postQuery is None or postQuery.first() is None:
+        return 400
+    match request.method:
+        case 'DELETE':
+            postLike = session.query(PostLike)\
+                        .filter(PostLike.post_id == postID)\
+                        .filter(PostLike.user_id == accountManager.getUser(request).id)\
+                        .first()
+            
+            if postLike is None:
+                return 400
+            session.delete(postLike)
+            session.commit()
+        case 'POST':
+            user = accountManager.getUser(request)
+            if user is None:
+                return 401
+            if session.query(PostLike) \
+                    .filter(PostLike.post_id == postID) \
+                    .filter(PostLike.user_id == user.id) \
+                    .first() is None:
+                return 400
+            
+            postLike = PostLike(post_id=postID, user_id=user.id)
+            session.add(postLike)
+            session.commit()
+    
+    likes: int = session.query(PostLike).filter(PostLike.post_id == postID).count()
+    postQuery.update({"likes": session.query(PostLike).filter(PostLike.post_id == postID).count()})
+    session.commit()
+    return str(likes)
 
 
 @app.route('/profile')
@@ -126,7 +164,8 @@ def createPost():
     postmanager.addPost({
         "user_id": user.id,
         "content": request.form['content']
-    })
+    }
+    )
     
     return redirect('/')
 
