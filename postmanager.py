@@ -1,6 +1,6 @@
 from typing import Type
 
-from flask import Request
+from sqlalchemy.orm import Session, Query
 
 import database
 from globals import *
@@ -45,8 +45,8 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
 
 def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     currentPost = 0
-    if request.cookies.get('current_post') is not None:
-        currentPost = request.cookies.get('current_post')
+    if getCookie(request, 'current_post') is not None:
+        currentPost = getCookie(request, 'current_post')
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
     
     with database.getSession() as session:
@@ -60,6 +60,9 @@ def getPost(postId: int):
     with database.getSession() as session:
         return __postClassToDict(session.query(Post).filter(Post.id == postId).first())
 
+def getPostQuery(postId: int) -> (Session, Query | None):
+    session: Session = database.getSession()
+    return session, session.query(Post).filter(Post.id == postId).limit(1)
 
 def addPost(post: dict):
     with database.getSession() as session:
@@ -67,3 +70,4 @@ def addPost(post: dict):
         session.add(post)
         session.commit()
         return
+

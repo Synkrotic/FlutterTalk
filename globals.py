@@ -1,20 +1,20 @@
-from flask import Flask, Response
+import json
+from typing import Any
 
-
-
+from flask import Flask, Response, Request
 app = Flask(__name__)
 
 
 class Cookie:
-    
-    def __init__(self, content, httponly=False, duration=None):
+    def __init__(self, key, content, httponly=False, duration=None):
         self.content = content
         self.httponly = httponly
         self.duration = duration
+        self.key = key
         pass
     
     def add(self, response: Response):
-        response.set_cookie('token', self.content, httponly=self.httponly, expires=self.duration)
+        response.set_cookie(self.key, json.dumps(self.content), httponly=self.httponly, expires=self.duration)
         pass
 
 
@@ -32,3 +32,8 @@ def addCookiesToResponse(cookies: list[Cookie], response: Response) -> Response:
         cookie.add(response)
     
     return response
+
+def getCookie(request: Request, key: str) -> Any | None:
+    if request.cookies.get(key) is None:
+        return None
+    return json.loads(request.cookies.get(key))

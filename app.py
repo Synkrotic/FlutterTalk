@@ -8,9 +8,6 @@ from tables import User, Authentication
 
 
 
-print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab')
-
-
 @app.route('/')
 def index():
     posts, cookies = postmanager.getPosts(10, request)
@@ -46,13 +43,15 @@ def viewAccount(accountName):
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
-    post = postmanager.getPost(postID)
+    session, postQuery = postmanager.getPostQuery(postID)
     
-    if post is None:
+    if postQuery is None or postQuery.:
         return "-1"
     
-    post["sharedAmount"] += 1
-    return str(post["sharedAmount"])
+    shares = postQuery.shares
+    postQuery.update({"sharedAmount": shares+1})
+    session.commit()
+    return str(shares+1)
 
 
 @app.route('/profile')
@@ -81,10 +80,9 @@ def viewProfile():
 def login():
     token: str = accountManager.login(request.form['name'], request.form['password'])
     if token is not None:
-        response = Response()
+        response = app.redirect('/profile', code=302)
         response.set_cookie('token', token, httponly=True)
-        redirect('/profile', 200, response)
-        return viewProfile(token)
+        return response
     else:
         return render_template("errorPage.html", error="Invalid login credentials")
 
@@ -113,6 +111,22 @@ def logout():
     response = Response()
     response.delete_cookie('token', httponly=True)
     return response
+
+
+@app.route('/post', methods=['POST', 'GET'])
+def createPost():
+    if request.method == 'GET':
+        return render_template("test.html")
+    
+    user = accountManager.getUser(request)
+    if user is None:
+        return redirect('/login')
+    postmanager.addPost({
+        "user_id": user.id,
+        "content": request.form['content']
+    })
+    
+    return redirect('/')
 
 
 @app.route("/test")
