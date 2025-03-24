@@ -1,4 +1,8 @@
 function sharePost(accountName, postID) {
+  if (location.protocol !== 'https:'){
+    alert("You're not on https, no link copied to clipboard.");
+    return;
+  }
   const url = `/users/addShare/${postID}`;
   fetch(url, {
     method: "GET",
