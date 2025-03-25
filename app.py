@@ -184,6 +184,10 @@ def tos():
 def feedback():
     return redirect("mailto:topscrech@icloud.com")
 
+@app.route("/help")
+def help():
+    return 'Me Potato, me HELP!'
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
