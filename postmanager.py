@@ -4,11 +4,10 @@ from sqlalchemy.orm import Session, Query
 
 import database
 from globals import *
-from tables import Post
+from tables import Post, User, PostLike
 
 
-
-def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post]) -> list[dict] | dict:
+def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], user: User | None=None) -> list[dict] | dict:
     def convert(post: Post) -> dict:
         return {
             "postID": post.id,
@@ -19,7 +18,9 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post]) 
             "likeAmount": post.likes,
             "commentAmount": len(post.comments),
             "sharedAmount": post.shares,
-            "liked": True
+            "liked": user is not None and Query(PostLike)
+                    .filter(PostLike.post_id == post.id)
+                    .filter(PostLike.user_id == user.id).first() is not None
         }
     
     if isinstance(posts, Post):
