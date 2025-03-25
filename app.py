@@ -1,16 +1,17 @@
 from flask import render_template, request, redirect, url_for
 from sqlalchemy.orm import Session, Query
+from tables import User, Authentication, Post, PostLike
+from globals import *
 
 import accountManager
 import database
 import postmanager
-from globals import *
-from tables import User, Authentication, Post, PostLike
 
 @app.route('/')
 def index():
     posts, cookies = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts)))
+
     return addCookiesToResponse(cookies, response)
 
 @app.route('/users/@<string:accountName>/<int:postID>')
@@ -55,8 +56,10 @@ def addLike(postID):
     session: Session
     postQuery: Query
     session, postQuery = postmanager.getPostQuery(postID)
+
     if postQuery is None or postQuery.first() is None:
         return 400
+
     match request.method:
         case 'DELETE':
             postLike = session.query(PostLike)\
@@ -71,6 +74,7 @@ def addLike(postID):
 
         case 'POST':
             user = accountManager.getUser(request)
+
             if user is None:
                 return 401
             if session.query(PostLike) \
@@ -83,7 +87,7 @@ def addLike(postID):
             session.add(postLike)
             session.commit()
     
-    likes: int = session.query(PostLike).filter(PostLike.post_id == postID).count()
+    likes = session.query(PostLike).filter(PostLike.post_id == postID).count()
     postQuery.update({"likes": session.query(PostLike).filter(PostLike.post_id == postID).count()})
     session.commit()
 
@@ -150,8 +154,10 @@ def createPost():
         return render_template("test.html")
     
     user = accountManager.getUser(request)
+
     if user is None:
         return redirect('/login')
+
     postmanager.addPost({
         "user_id": user.id,
         "content": request.form['content']
@@ -178,6 +184,10 @@ def feedback():
 @app.route("/help")
 def help():
     return render_template("help.html")
+
+@app.route("/settings")
+def settings():
+    return render_template("settings.html")
 
 @app.errorhandler(404)
 def page_not_found(e):
