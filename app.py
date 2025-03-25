@@ -180,10 +180,13 @@ def privacy():
 def tos():
     return redirect("https://bisquit.host/terms.pdf")
 
+@app.route("/feedback")
+def feedback():
+    return redirect("mailto:topscrech@icloud.com")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
-
 
 def getFullPage(renderedPage):
     print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
