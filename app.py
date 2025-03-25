@@ -1,16 +1,17 @@
 from flask import render_template, request, redirect, url_for
 from sqlalchemy.orm import Session, Query
+from tables import User, Authentication, Post, PostLike
+from globals import *
 
 import accountManager
 import database
 import postmanager
-from globals import *
-from tables import User, Authentication, Post, PostLike
 
 @app.route('/')
 def index():
     posts, cookies = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts)))
+
     return addCookiesToResponse(cookies, response)
 
 @app.route('/users/@<string:accountName>/<int:postID>')
@@ -33,11 +34,9 @@ def viewPost(accountName, postId):
         )
     )
 
-
 @app.route('/users/@<string:accountName>')
 def viewAccount(accountName):
     return accountName
-
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
@@ -52,14 +51,15 @@ def addShare(postID):
     session.commit()
     return 200
 
-
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
 def addLike(postID):
     session: Session
     postQuery: Query
     session, postQuery = postmanager.getPostQuery(postID)
+
     if postQuery is None or postQuery.first() is None:
         return 400
+
     match request.method:
         case 'DELETE':
             postLike = session.query(PostLike)\
@@ -74,6 +74,7 @@ def addLike(postID):
 
         case 'POST':
             user = accountManager.getUser(request)
+
             if user is None:
                 return 401
             if session.query(PostLike) \
@@ -86,11 +87,11 @@ def addLike(postID):
             session.add(postLike)
             session.commit()
     
-    likes: int = session.query(PostLike).filter(PostLike.post_id == postID).count()
+    likes = session.query(PostLike).filter(PostLike.post_id == postID).count()
     postQuery.update({"likes": session.query(PostLike).filter(PostLike.post_id == postID).count()})
     session.commit()
-    return str(likes)
 
+    return str(likes)
 
 @app.route('/profile')
 def viewProfile():
@@ -113,7 +114,6 @@ def viewProfile():
     response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
     return response
 
-
 @app.route('/login', methods=['POST'])
 def login():
     token: str = accountManager.login(request.form['name'], request.form['password'])
@@ -124,7 +124,6 @@ def login():
     else:
         return render_template("errorPage.html", error="Invalid login credentials")
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -134,7 +133,6 @@ def register():
             return 'account already exists'
     else:
         return render_template('register.html')
-
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -150,23 +148,22 @@ def logout():
     response.delete_cookie('token', httponly=True)
     return response
 
-
 @app.route('/post', methods=['POST', 'GET'])
 def createPost():
     if request.method == 'GET':
         return render_template("test.html")
     
     user = accountManager.getUser(request)
+
     if user is None:
         return redirect('/login')
+
     postmanager.addPost({
         "user_id": user.id,
         "content": request.form['content']
-    }
-    )
+    })
     
     return redirect('/')
-
 
 @app.route("/test")
 def test():
@@ -180,17 +177,31 @@ def privacy():
 def tos():
     return redirect("https://bisquit.host/terms.pdf")
 
+@app.route("/feedback")
+def feedback():
+    return redirect("mailto:topscrech@icloud.com")
+
+@app.route("/help")
+def help():
+    return render_template("help.html")
+
+@app.route("/settings")
+def settings():
+    return render_template("settings.html")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
 
-
 def getFullPage(renderedPage):
     print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
-    page = render_template("navbar.html",
-                           displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
-                           accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}'
-                           )
+
+    page = render_template(
+        "navbar.html",
+        displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
+        accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}'
+    )
+
     page += renderedPage
     page += render_template("sidebar.html")
     return page

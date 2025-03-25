@@ -1,25 +1,17 @@
 import random
 import string
-
 import accountManager
 import postmanager
-
-
 
 if __name__ != '__main__':
     print('this is not a module and should not be imported')
     exit(0)
 
-accountManager.createAccount('user1', 'password1')
-accountManager.createAccount('user2', 'password2')
-accountManager.createAccount('user3', 'password3')
-accountManager.createAccount('user4', 'password4')
-accountManager.createAccount('user5', 'password5')
-accountManager.createAccount('user6', 'password6')
-accountManager.createAccount('user7', 'password7')
-accountManager.createAccount('user8', 'password8')
-accountManager.createAccount('user9', 'password9')
-accountManager.createAccount('user10', 'password10')
+users = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10']
+passwords = ['password1', 'password2', 'password3', 'password4', 'password5', 'password6', 'password7', 'password8', 'password9', 'password10']
+
+for i in range(len(users)):
+    accountManager.createAccount(users[i], passwords[i])
 
 POSTS = [
     {
@@ -29,6 +21,7 @@ POSTS = [
         'forwards': random.randint(0, 10000),
         'shares': random.randint(0, 10000)
     }
+
     for i in range(1, 1000)  # Generating 50 entries
 ]
 

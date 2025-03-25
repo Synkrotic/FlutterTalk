@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FlutterTalk</title>
+    <link rel="icon"
+          type="image/png"
+          href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+    />
+    <link rel="preload"
+          href="{{ url_for('static', filename='errorpage.css') }}"
+          as="style"
+          onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <script defer src="{{ url_for('static', filename='JavaScript/script.js') }}"></script>
+</head>
+<body>
+<div id="error_container">
+    <h3>Settings</h3>
+
+    <button onclick="goToPage('/')">
+        Go to homepage
+    </button>
+</div>
+</body>
+</html>
