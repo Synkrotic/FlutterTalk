@@ -10,11 +10,11 @@
     margin-left: 8%;
     background: #2c3b50;
     opacity: 0.8;
-    padding: 3px 1rem !important; /* Added padding to the container */
+    padding: 3px 1rem !important;
     border-radius: 0.5em;
     margin-bottom: 3vh;
-    display: flex;          /* Make it a flex container */
-    align-items: center;   /* Vertically align items */
+    display: flex;
+    align-items: center;
 }
 
 .search_bar_icon {
