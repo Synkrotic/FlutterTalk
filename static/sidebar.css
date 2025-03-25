@@ -4,15 +4,33 @@
 }
 
 .search_bar_container {
-  width: 60%;
-  height: 5vh;
-  margin-top: 5%;
-  margin-left: 8%;
-  background: #2c3b50;
-  opacity: 0.8;
-  padding: 3px;
-  border-radius: 0.5em;
-  margin-bottom: 3vh;
+    width: 60%;
+    height: 5vh;
+    margin-top: 5%;
+    margin-left: 8%;
+    background: #2c3b50;
+    opacity: 0.8;
+    padding: 3px 1rem !important; /* Added padding to the container */
+    border-radius: 0.5em;
+    margin-bottom: 3vh;
+    display: flex;          /* Make it a flex container */
+    align-items: center;   /* Vertically align items */
+}
+
+.search_bar_icon {
+    color: #3e5879;
+    font-size: 1.25rem !important;
+}
+
+.search_bar {
+    height: 100%;
+    width: 100%;
+    border: none;
+    background: none;
+    padding-left: 0.8rem !important; /* Reduced padding */
+    color: #3e5879;
+    line-height: 100%;
+    font: normal 1.2rem sans-serif !important;
 }
 
 .search_bar_container:hover {
@@ -21,25 +39,6 @@
 
 .search_bar_container:hover .search_bar_icon {
   color: #a7b7cb;
-}
-
-.search_bar_icon {
-  position: absolute;
-  color: #3e5879;
-  font-size: 1.25rem !important;
-  margin-top: 0.5rem !important;
-  margin-left: 0.5rem !important;
-}
-
-.search_bar {
-  height: 100%;
-  width: 100%;
-  border: none;
-  background: none;
-  padding-left: 2.3rem !important;
-  color: #3e5879;
-  line-height: 100%;
-  font: normal 1.2rem sans-serif !important;
 }
 
 .search_bar::placeholder {
