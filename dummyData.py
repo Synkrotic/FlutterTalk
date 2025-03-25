@@ -1,10 +1,7 @@
 import random
 import string
-
 import accountManager
 import postmanager
-
-
 
 if __name__ != '__main__':
     print('this is not a module and should not be imported')
@@ -29,6 +26,7 @@ POSTS = [
         'forwards': random.randint(0, 10000),
         'shares': random.randint(0, 10000)
     }
+
     for i in range(1, 1000)  # Generating 50 entries
 ]
 
