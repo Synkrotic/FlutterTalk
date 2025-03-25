@@ -7,14 +7,11 @@ import postmanager
 from globals import *
 from tables import User, Authentication, Post, PostLike
 
-
-
 @app.route('/')
 def index():
     posts, cookies = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts)))
     return addCookiesToResponse(cookies, response)
-
 
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postId):
@@ -74,6 +71,7 @@ def addLike(postID):
                 return 400
             session.delete(postLike)
             session.commit()
+
         case 'POST':
             user = accountManager.getUser(request)
             if user is None:
@@ -189,7 +187,6 @@ def getFullPage(renderedPage):
     page += renderedPage
     page += render_template("sidebar.html")
     return page
-
 
 if __name__ == '__main__':
     # database.create()
