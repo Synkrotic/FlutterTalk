@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from sqlalchemy.orm import Session, Query
 
 import accountManager
@@ -172,6 +172,13 @@ def createPost():
 def test():
     return render_template("test.html")
 
+@app.route("/privacy")
+def privacy():
+    return redirect("https://bisquit.host/policy.pdf")
+
+@app.route("/terms")
+def tos():
+    return redirect("https://bisquit.host/terms.pdf")
 
 @app.errorhandler(404)
 def page_not_found(e):
