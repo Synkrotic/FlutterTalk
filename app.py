@@ -177,7 +177,7 @@ def feedback():
 
 @app.route("/help")
 def help():
-    return 'Me Potato, me HELP!'
+    return render_template("help.html")
 
 @app.errorhandler(404)
 def page_not_found(e):
