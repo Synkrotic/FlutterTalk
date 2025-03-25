@@ -33,11 +33,9 @@ def viewPost(accountName, postId):
         )
     )
 
-
 @app.route('/users/@<string:accountName>')
 def viewAccount(accountName):
     return accountName
-
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
@@ -51,7 +49,6 @@ def addShare(postID):
     postQuery.update({"shares": shares + 1})
     session.commit()
     return 200
-
 
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
 def addLike(postID):
@@ -89,8 +86,8 @@ def addLike(postID):
     likes: int = session.query(PostLike).filter(PostLike.post_id == postID).count()
     postQuery.update({"likes": session.query(PostLike).filter(PostLike.post_id == postID).count()})
     session.commit()
-    return str(likes)
 
+    return str(likes)
 
 @app.route('/profile')
 def viewProfile():
@@ -113,7 +110,6 @@ def viewProfile():
     response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
     return response
 
-
 @app.route('/login', methods=['POST'])
 def login():
     token: str = accountManager.login(request.form['name'], request.form['password'])
@@ -124,7 +120,6 @@ def login():
     else:
         return render_template("errorPage.html", error="Invalid login credentials")
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -134,7 +129,6 @@ def register():
             return 'account already exists'
     else:
         return render_template('register.html')
-
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -150,7 +144,6 @@ def logout():
     response.delete_cookie('token', httponly=True)
     return response
 
-
 @app.route('/post', methods=['POST', 'GET'])
 def createPost():
     if request.method == 'GET':
@@ -162,11 +155,9 @@ def createPost():
     postmanager.addPost({
         "user_id": user.id,
         "content": request.form['content']
-    }
-    )
+    })
     
     return redirect('/')
-
 
 @app.route("/test")
 def test():
@@ -194,10 +185,13 @@ def page_not_found(e):
 
 def getFullPage(renderedPage):
     print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
-    page = render_template("navbar.html",
-                           displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
-                           accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}'
-                           )
+
+    page = render_template(
+        "navbar.html",
+        displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
+        accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}'
+    )
+
     page += renderedPage
     page += render_template("sidebar.html")
     return page
