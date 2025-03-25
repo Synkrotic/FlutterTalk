@@ -10,3 +10,4 @@ pyvenv.cfg
 .idea
 data.sqlite
 /__pycache__
+.http

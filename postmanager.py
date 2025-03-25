@@ -19,8 +19,8 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
             "commentAmount": len(post.comments),
             "sharedAmount": post.shares,
             "liked": user is not None and Query(PostLike)
-                    .filter(PostLike.post_id == post.id)
-                    .filter(PostLike.user_id == user.id).first() is not None
+                    .where(PostLike.post_id == post.id)
+                    .where(PostLike.user_id == user.id).first() is not None
         }
     
     if isinstance(posts, Post):
@@ -37,10 +37,10 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
     else:
         cookies = addCookie([], Cookie("current_post", current_post))
     with database.getSession() as session:
-        post: Post | None = session.query(Post).filter(Post.id == current_post).first()
+        post: Post | None = session.query(Post).where(Post.id == current_post).first()
         if post is None:
             return None, cookies
-        post.comments.filter()
+        post.comments.where()
         return __postClassToDict(post), cookies
 
 
@@ -51,7 +51,7 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
     
     with database.getSession() as session:
-        posts = session.query(Post).filter(Post.id > currentPost).limit(amount).all()
+        posts = session.query(Post).where(Post.id > currentPost).limit(amount).all()
         if len(posts) == 0:
             return [], cookies
         return __postClassToDict(posts), cookies
@@ -59,11 +59,11 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
 
 def getPost(postId: int):
     with database.getSession() as session:
-        return __postClassToDict(session.query(Post).filter(Post.id == postId).first())
+        return __postClassToDict(session.query(Post).where(Post.id == postId).first())
 
 def getPostQuery(postId: int) -> (Session, Query | None):
     session: Session = database.getSession()
-    return session, session.query(Post).filter(Post.id == postId)
+    return session, session.query(Post).where(Post.id == postId)
 
 def addPost(post: dict):
     with database.getSession() as session:

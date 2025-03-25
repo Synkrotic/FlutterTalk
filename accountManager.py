@@ -7,23 +7,24 @@ from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session
 
 import database
+import globals
 import tables
+from globals import ADMIN
 from tables import Authentication
-
-
 
 TOKEN_DURATION = timedelta(7)
 
 
 # userid: int # fuck sqlalchemy
-def getAuthToken(userid):
+def __getAuthToken(userid):
+    if userid is globals.ADMIN["id"]:
+        raise Exception("Cannot get token for admin")
     session: Session = database.getSession()
     
     query = session.query(tables.Authentication).where(tables.Authentication.user_id == userid)
     auth: Type[Authentication] | None = query.first()
     
     if auth is None:
-        print("creating token")
         token: str
         while True:
             token = secrets.token_hex()
@@ -35,7 +36,6 @@ def getAuthToken(userid):
         return token
     
     token = auth.token  # type: ignore
-    print("updating token")
     query.update({"time_created": func.now()})
     session.commit()
     session.close()
@@ -43,6 +43,8 @@ def getAuthToken(userid):
 
 
 def login(username: str, password: str) -> str | None:
+    if username is globals.ADMIN["account_name"]:
+        raise Exception("Cannot get token for admin")
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(
         and_(tables.User.account_name == username, tables.User.password == password)
@@ -51,14 +53,14 @@ def login(username: str, password: str) -> str | None:
         session.close()
         return None
     session.close()
-    token = getAuthToken(user.id)
+    token = __getAuthToken(user.id)
     
     return token
 
 
 def _checkExists(username: str) -> bool:
     session: Session = database.getSession()
-    user = session.query(tables.User).filter(tables.User.account_name == username).first()
+    user = session.query(tables.User).where(tables.User.account_name == username).first()
     if user is None:
         return False
     else:
@@ -76,16 +78,21 @@ def createAccount(username: str, password: str):
         return True
 
 
-def getUser(request: Request | str) -> tables.User | None:
-    if isinstance(request, str):
-        token = request
-    elif request is not None:
+def getUser(request: Request) -> tables.User | None:
+    if request is not None:
         token = request.cookies.get('token')
     else:
         return None
-    
     if token is None:
         return None
+    
+    if token== globals.ADMIN_TOKEN:
+        if isinstance(request, Request):
+            if request.remote_addr != "127.0.0.1":
+                print ("attempted admin login from", request.remote_addr)
+                return None
+            print("admin login from", request.remote_addr)
+            return tables.User(**ADMIN)
     
     session: Session = database.getSession()
     return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()

@@ -3,7 +3,16 @@ from typing import Any
 
 from flask import Flask, Response, Request
 app = Flask(__name__)
-
+ADMIN = data = {
+    "id": 1,
+    "account_name": "ADMIN",
+    "password": "_",
+    "display_name": "ADMIN",
+    "bio": "ADMIN",
+    "profile_pic": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+    "location": "ADMIN"
+}
+ADMIN_TOKEN = "ADMIN"
 
 class Cookie:
     def __init__(self, key, content, httponly=False, duration=None):
