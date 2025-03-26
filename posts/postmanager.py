@@ -1,5 +1,5 @@
-import zoneinfo
-from datetime import datetime, tzinfo
+from datetime import datetime
+from datetime import datetime
 from typing import Type
 
 import pytz
@@ -9,6 +9,7 @@ import accountManager
 import database
 from globals import *
 from tables import Post, User, PostLike
+
 
 
 def _getFormattedTime(posted: datetime) -> str:
@@ -78,9 +79,11 @@ def getPost(postId: int, request: Request) -> dict | None:
     with database.getSession() as session:
         return __postClassToDict(session.query(Post).where(Post.id == postId).first(), accountManager.getUser(request))
 
+
 def getPostQuery(postId: int) -> (Session, Query | None):
     session: Session = database.getSession()
     return session, session.query(Post).where(Post.id == postId)
+
 
 def addPost(post: dict):
     with database.getSession() as session:

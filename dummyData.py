@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 import accountManager
 import database
 import globals
-import postmanager
+from posts import postmanager
 import tables
 
 

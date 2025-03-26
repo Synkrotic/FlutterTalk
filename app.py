@@ -3,8 +3,9 @@ from sqlalchemy.orm import Session, Query
 
 import accountManager
 import database
-import postmanager
+from posts import postmanager, postData
 from globals import *
+from posts.postData import getLike
 from tables import User, Authentication, Post, PostLike
 
 
@@ -45,74 +46,21 @@ def viewAccount(accountName):
 
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
-    session, postQuery = postmanager.getPostQuery(postID)
-    
-    if postQuery is None or postQuery.first() is None:
-        return 400
-    post: Post = postQuery.first()
-    
-    shares = post.shares
-    postQuery.update({"shares": shares + 1})
-    session.commit()
-    return 200
+    return postData.addShare(postID, accountManager.getUser(request))
 
 
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
 def addLike(postID):
-    session: Session
-    postQuery: Query
-    session, postQuery = postmanager.getPostQuery(postID)
-    
-    if postQuery is None or postQuery.first() is None:
-        return Response(status=401, response="Post not found")
-    
+    user: User = accountManager.getUser(request)
     match request.method:
         case 'DELETE':
-            postLike = session.query(PostLike) \
-                .where(PostLike.post_id == postID and PostLike.user_id == accountManager.getUser(request).id) \
-                .first()
-            
-            if postLike is None:
-                return Response(status=400, response="You have not liked this post")
-            session.delete(postLike)
-            session.commit()
-        
+            return postData.deleteLike(postID, user)
         case 'POST':
-            user = accountManager.getUser(request)
-            
-            if user is None:
-                return Response(status=401, response="You must be logged in to like a post")
-            if session.query(PostLike) \
-                    .where(PostLike.post_id == postID and PostLike.user_id == user.id) \
-                    .first() is not None:
-                return Response(status=200, response="You have already liked this post")
-            
-            postLike = PostLike(post_id=postID, user_id=user.id)
-            session.add(postLike)
-            session.commit()
-          
+            return postData.addLike(postID, user)
         case 'GET':
-            user = accountManager.getUser(request)
-            userLiked: bool
-            if user is not None:
-                userLiked = session.query(PostLike) \
-                                .where(PostLike.post_id == postID and PostLike.user_id == user.id) \
-                                .first() is not None
-            else:
-                userLiked = False
-            
-            return {
-                "userLiked": userLiked,
-                "likes": session.query(Post).where(Post.id == postID).first().likes
-            }
+            return getLike(postID, user)
         case _:
             return render_template("errorPage.html", error="Invalid method used")
-    
-    likes = session.query(PostLike).where(PostLike.post_id == postID).count()
-    postQuery.update({"likes": session.query(PostLike).where(PostLike.post_id == postID).count()})
-    session.commit()
-    
-    return str(likes)
 
 
 @app.route('/profile')
@@ -180,7 +128,6 @@ def createPost():
         return render_template("test.html")
     
     user = accountManager.getUser(request)
-    
     if user is None:
         return redirect('/login')
     
