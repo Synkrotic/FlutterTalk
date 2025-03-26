@@ -58,15 +58,17 @@ function logout() {
       res.json().then((data) => {
         throw new Error(data.errorText);
       }).catch((error) => {
-        addPopup(error.message);
+        addPopup(false, error.message);
       });
+    } else {
+      addPopup(true, "Logged out successfully!");
     }
   });
 }
 
-function addPopup(errorText) {
+function addPopup(errorType, errorText) {
   try {
-    fetch(`/addPopup/${errorText}`, {
+    fetch(`/addPopup/${errorType ? "success" : "error"}/${errorText}`, {
       method: "POST",
     }).then((res) => {
       if (res.status === 200) {

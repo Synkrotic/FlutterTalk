@@ -1,5 +1,5 @@
-<section class="popup-container">
-  <h3>ERROR!</h3>
+<div class="popup-container {{ popupType|lower }}">
+  <h3>{{ popupType|upper }}!</h3>
   <button
     id="popup-{{ errorID }}"
     class="popup-close-button"
@@ -7,4 +7,4 @@
     title="Close popup"
   >X</button>
   <p>{{ errorText }}</p>
-</section>
+</div>

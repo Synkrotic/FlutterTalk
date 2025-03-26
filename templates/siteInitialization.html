@@ -53,7 +53,8 @@
   <body>
     <section id="popups-container">
       {% for index in range(errors|length) %}
-        {% with errorText=errors[index], errorID=index %}
+        {% set errorType = errors[index].keys()|list|first %}
+        {% with errorID=index, popupType=errorType, errorText=errors[index][errorType] %}
           {% include 'popup.html' %}
         {% endwith %}
       {% endfor %}

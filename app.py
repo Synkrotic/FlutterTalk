@@ -11,8 +11,8 @@ from tables import User, Authentication, Post, PostLike
 
 
 
-
 errors = [] # TODO add errors in cookies or sum \_( '-')_/
+
 
 @app.route('/')
 def index():
@@ -68,13 +68,14 @@ def addLike(postID):
 
 
 @app.route('/profile')
-def viewProfile():
+@app.route('/profile/<string:action>')
+def viewProfile(action="login"):
     response = Response()
     user: User = accountManager.getUser(request)
     
     print("user:", user)
     if user is None:
-        response.set_data(getFullPage(render_template("viewProfile.html", action="login")))
+        response.set_data(getFullPage(render_template("viewProfile.html", action=action)))
         return response
     
     account = {
@@ -179,17 +180,17 @@ def closePopup(errorID):
         errors.pop(int(errorID))
     except:
         return "Error: No popup with this ID found!", 404
-    return "Successfully closed this popup!", 200
+    return "Successfully closed the popup!", 200
 
 
-@app.route("/addPopup/<string:error>", methods=['POST'])
-def addPopup(error):
-    errors.append(error)
-    return "Successfully added this popup!", 200
+@app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
+def addPopup(errorType, error):
+    errors.append({errorType: error})
+    return "Successfully added the popup!", 200
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found():
     return render_template("errorPage.html", error="404 page not found!"), 404
 
 

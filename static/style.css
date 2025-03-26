@@ -324,7 +324,6 @@ main div nav {
   position: relative;
   width: 100%;
   height: max-content;
-  background-color: var(--attentionRed);
   justify-content: center;
   align-items: center;
   margin: 0.1vh 0px;
@@ -337,6 +336,8 @@ main div nav {
   justify-content: center;
   align-items: center;
 }
+.popup-container.error { background-color: var(--attentionRed); }
+.popup-container.success { background-color: var(--attentionGreen); }
 
 .popup-close-button {
   all: unset;

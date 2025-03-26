@@ -127,7 +127,7 @@ body nav {
   flex-direction: row;
   align-items: center;
   border-radius: 99999999999px;
-  transition: 1s;
+  transition: 0.2s;
   z-index: -5;
 }
 #logout_menu_button i {
@@ -142,7 +142,6 @@ body nav {
   transform: translate(-1vw, 6vh);
   opacity: 1;
   z-index: 5;
-  transition: 1s;
 }
 
 
