@@ -45,7 +45,7 @@ def viewPost(accountName, postId):
 
 @app.route('/users/@<string:accountName>')
 def viewAccount(accountName):
-    return accountName
+    return getFullPage(render_template("viewAccount.html", accountName=accountName))
 
 
 @app.route('/users/addShare/<int:postID>')
