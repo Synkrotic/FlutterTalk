@@ -1,0 +1,14 @@
+<link
+  rel="preload"
+  href="{{ url_for('static', filename='createpostpage.css') }}"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<main id="create-post-container">
+  <h1>Create Post</h1>
+  <form action="/post" method="post" id="create-post-form">
+    <label for="content" class="form-label">Content</label>
+    <textarea id="content" name="content" class="form-input text_area" maxlength="1000" rows="2" required></textarea>
+    <button type="submit" class="btn btn-success save-button" onclick="addPopup(true, 'Successfully created a post!')">Create Post</button>
+  </form>
+</main>

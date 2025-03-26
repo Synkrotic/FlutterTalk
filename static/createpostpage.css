@@ -1,0 +1,28 @@
+#create-post-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1vh 2vw;
+}
+
+#create-post-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+#create-post-form textarea {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 4vh;
+  overflow-y: scroll !important;
+  color: black;
+}
+.save-button {
+  border-radius: 99999999px;
+  width: 17%;
+  height: 5vh;
+  font-size: 1.5vh;
+  align-self: center;
+  margin-top: 3vh;
+}

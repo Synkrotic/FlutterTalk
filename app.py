@@ -130,7 +130,7 @@ def logout():
 @app.route('/post', methods=['POST', 'GET'])
 def createPost():
     if request.method == 'GET':
-        return render_template("test.html")
+        return getFullPage(render_template("createPost.html"))
     
     user = accountManager.getUser(request)
     if user is None:
@@ -141,7 +141,7 @@ def createPost():
         "content": request.form['content']
     })
     
-    return redirect('/')
+    return redirect('/') # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
 
 
 @app.route("/test")
@@ -190,7 +190,7 @@ def addPopup(errorType, error):
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
 
 

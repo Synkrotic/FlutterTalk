@@ -10,7 +10,7 @@ const headerNavButtons = doc.getElementsByClassName("header_nav_btn");
 const scrollUpButton = doc.getElementById("scroll_up_button");
 
 // Profile objects
-const bioArea = doc.getElementById('bio-area');
+const textAreas = doc.getElementsByClassName("text_area");
 
 
 
@@ -35,10 +35,13 @@ scrollUpButton.addEventListener("click", function () {
   });
 });
 
-if (bioArea) {
-  bioArea.addEventListener('input', function () {
-    bioArea.style.height = bioArea.scrollHeight + 'px';
-  });
+if (textAreas) {
+  for (let i = 0; i < textAreas.length; i++) {
+    textAreas[i].addEventListener("input", function () {
+      this.style.height = "auto";
+      this.style.height = this.scrollHeight + "px";
+    });
+  }
 }
 
 navbar.addEventListener("mouseleave", () => {
