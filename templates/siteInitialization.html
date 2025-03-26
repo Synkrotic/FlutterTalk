@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+    />
+    <!-- Own JavaScript -->
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/script.js') }}"
+    ></script>
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/backendRequests.js') }}"
+    ></script>
+    <!-- Own homepage stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='style.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Own navbar stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='navbar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Own sidebar stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='sidebar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
+    />
+  </head>
+  <body>
+    <section id="popups-container">
+      {% for index in range(errors|length) %}
+        {% with errorText=errors[index], errorID=index %}
+          {% include 'popup.html' %}
+        {% endwith %}
+      {% endfor %}
+    </section>

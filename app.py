@@ -3,12 +3,16 @@ from sqlalchemy.orm import Session, Query
 
 import accountManager
 import database
+import json
 from posts import postmanager, postData
 from globals import *
 from posts.postData import getLike
 from tables import User, Authentication, Post, PostLike
 
 
+
+
+errors = [] # TODO add errors in cookies or sum \_( '-')_/
 
 @app.route('/')
 def index():
@@ -110,7 +114,7 @@ def register():
 @app.route('/logout', methods=['POST'])
 def logout():
     if 'token' not in request.cookies:
-        return 412
+        return json.dumps({"errorText": "User not logged in!"}), 412, {'ContentType': 'application/json'}
     
     token = request.cookies['token']
     
@@ -169,6 +173,21 @@ def settings():
     return render_template("settings.html")
 
 
+@app.route("/closePopup/<int:errorID>", methods=['POST'])
+def closePopup(errorID):
+    try:
+        errors.pop(int(errorID))
+    except:
+        return "Error: No popup with this ID found!", 404
+    return "Successfully closed this popup!", 200
+
+
+@app.route("/addPopup/<string:error>", methods=['POST'])
+def addPopup(error):
+    errors.append(error)
+    return "Successfully added this popup!", 200
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
@@ -177,7 +196,8 @@ def page_not_found(e):
 def getFullPage(renderedPage):
     print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
     
-    page = render_template(
+    page = render_template("siteInitialization.html", errors=errors)
+    page += render_template(
         "navbar.html",
         displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
         accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}'
@@ -189,4 +209,4 @@ def getFullPage(renderedPage):
 
 if __name__ == '__main__':
     # database.create()
-    app.run(debug=False, host='0.0.0.0', port=3000)
+    app.run(debug=True, host='0.0.0.0', port=3000)

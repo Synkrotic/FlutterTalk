@@ -10,5 +10,6 @@ pyvenv.cfg
 .idea
 data.sqlite
 /__pycache__
+/posts/__pycache__
 .http
 removeDatabase.bat

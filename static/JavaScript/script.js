@@ -48,18 +48,48 @@ navbar.addEventListener("mouseleave", () => {
 
 
 // Button Functions
-function showLogout() {
-  accountButton.classList.toggle("active");
-}
+function showLogout() { accountButton.classList.toggle("active"); }
+
 function logout() {
+  fetch("/logout", {
+    method: "POST",
+  }).then((res) => {
+    if (res.status !== 200) {
+      res.json().then((data) => {
+        throw new Error(data.errorText);
+      }).catch((error) => {
+        addPopup(error.message);
+      });
+    }
+  });
+}
+
+function addPopup(errorText) {
   try {
-    fetch("/logout", {
+    fetch(`/addPopup/${errorText}`, {
       method: "POST",
     }).then((res) => {
       if (res.status === 200) {
         window.location.reload();
       } else {
-        throw new Error("Failed to logout! User is not logged in.");
+        throw new Error("Failed to add popup!");
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function closePopup(id) {
+  errorID = id.split("-")[1];
+  try {
+    fetch(`/closePopup/${errorID}`, {
+      method: "POST",
+    }).then((res) => {
+      if (res.status === 200) {
+        window.location.reload();
+      } else {
+        throw new Error("Failed to close popup!");
       }
     });
   } catch (error) {
