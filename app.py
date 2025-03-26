@@ -54,7 +54,7 @@ def addShare(postID):
 
 
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
-def addLike(postID):
+def likePost(postID):
     user: User = accountManager.getUser(request)
     match request.method:
         case 'DELETE':

@@ -46,58 +46,23 @@ navbar.addEventListener("mouseleave", () => {
 });
 
 
+// Extra functions
+function copyShareLinkToClipboard(accountName, postID) {
+  const url = `/users/@${accountName}/${postID}`;
+  navigator.clipboard.writeText(url);
+
+  const share_button = doc.getElementById(
+    `share_button_${accountName}_${postID}`
+  );
+  share_button.className += " active";
+  setTimeout(() => {
+    share_button.className = share_button.className.replace(" active", "");
+  }, 1200);
+}
+
 
 // Button Functions
 function showLogout() { accountButton.classList.toggle("active"); }
-
-function logout() {
-  fetch("/logout", {
-    method: "POST",
-  }).then((res) => {
-    if (res.status !== 200) {
-      res.json().then((data) => {
-        throw new Error(data.errorText);
-      }).catch((error) => {
-        addPopup(false, error.message);
-      });
-    } else {
-      addPopup(true, "Logged out successfully!");
-    }
-  });
-}
-
-function addPopup(errorType, errorText) {
-  try {
-    fetch(`/addPopup/${errorType ? "success" : "error"}/${errorText}`, {
-      method: "POST",
-    }).then((res) => {
-      if (res.status === 200) {
-        window.location.reload();
-      } else {
-        throw new Error("Failed to add popup!");
-      }
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-function closePopup(id) {
-  errorID = id.split("-")[1];
-  try {
-    fetch(`/closePopup/${errorID}`, {
-      method: "POST",
-    }).then((res) => {
-      if (res.status === 200) {
-        window.location.reload();
-      } else {
-        throw new Error("Failed to close popup!");
-      }
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 function goToPage(location) {
   if (window.location.href === `${location}`) return;

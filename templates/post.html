@@ -1,8 +1,8 @@
 {# templates/post.html #}
 <div class="post_container">
   <img
-          src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
-          alt="Profile picture of the user."
+    src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+    alt="Profile picture of the user."
   />
   <div>
     <span>
@@ -27,15 +27,15 @@
         {{ post.commentAmount }}
       </button>
       <button
-              onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}')"
-              title="Copy the link to this post to your clipboard."
-              class="share_button"
-              id="share_button_{{ post.postID }}"
+        onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}')"
+        title="Copy the link to this post to your clipboard."
+        class="share_button"
+        id="share_button_{{ post.postID }}"
       >
         <i class="bi bi-share"></i>
         {{ post.sharedAmount }}
       </button>
-      <button id="like_button_{{ post.accountName }}_{{ post.postID }}">
+      <button id="like_button_{{ post.accountName }}_{{ post.postID }}" onclick="likePost('{{ post.postID }}')">
         {% if post.liked %}
         <i class="bi bi-heart-fill"></i>
         {% else %}
