@@ -33,6 +33,7 @@ class Post(Base):
     content = Column(Text, nullable=False)
     likes = Column(Integer, default=0)
     forwards = Column(Integer, default=0)
+    time_created = Column(DateTime, nullable=False, default=func.now())
     
     user = relationship('User', back_populates='posts')
     comments = relationship('Comment', back_populates='post', cascade='all, delete-orphan')

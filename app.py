@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session, Query
 import accountManager
 import database
 import postmanager
-from errors import badRequest
 from globals import *
 from tables import User, Authentication, Post, PostLike
 
@@ -86,12 +85,12 @@ def addLike(postID):
             if session.query(PostLike) \
                     .where(PostLike.post_id == postID and PostLike.user_id == user.id) \
                     .first() is not None:
-                return Response(status=400, response="You have already liked this post")
+                return Response(status=200, response="You have already liked this post")
             
             postLike = PostLike(post_id=postID, user_id=user.id)
             session.add(postLike)
             session.commit()
-        
+          
         case 'GET':
             user = accountManager.getUser(request)
             userLiked: bool
@@ -146,7 +145,7 @@ def login():
         response.set_cookie('token', token, httponly=True)
         return response
     else:
-        return errors.invalidCredentials()
+        return render_template("errorPage.html", error="Invalid login credentials")
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -241,7 +240,6 @@ def getFullPage(renderedPage):
     page += render_template("sidebar.html")
     return page
 
-import errors
 if __name__ == '__main__':
     # database.create()
     app.run(debug=False, host='0.0.0.0', port=3000)

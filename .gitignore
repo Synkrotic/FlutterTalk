@@ -11,3 +11,4 @@ pyvenv.cfg
 data.sqlite
 /__pycache__
 .http
+removeDatabase.bat
