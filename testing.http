@@ -1,2 +1,0 @@
-POST http://127.0.0.1:3000/users/like/2 HTTP/1.1
-Cookie: token=ADMIN
