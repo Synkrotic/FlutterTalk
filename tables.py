@@ -1,3 +1,6 @@
+from datetime import datetime
+
+import pytz
 from sqlalchemy import ForeignKey, Column, Integer, Text, VARCHAR, DateTime, func, String
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -33,7 +36,7 @@ class Post(Base):
     content = Column(Text, nullable=False)
     likes = Column(Integer, default=0)
     forwards = Column(Integer, default=0)
-    time_created = Column(DateTime, nullable=False, default=func.now())
+    time_created = Column(DateTime, nullable=False, default=lambda: datetime.now(pytz.UTC))
     
     user = relationship('User', back_populates='posts')
     comments = relationship('Comment', back_populates='post', cascade='all, delete-orphan')

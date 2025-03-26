@@ -1,3 +1,4 @@
+import zoneinfo
 from datetime import datetime, tzinfo
 from typing import Type
 
@@ -11,10 +12,10 @@ from tables import Post, User, PostLike
 
 
 def _getFormattedTime(posted: datetime) -> str:
-    time = datetime.now().astimezone(pytz.UTC) - posted
-    print(datetime.now().astimezone(pytz.UTC), posted, time.seconds)
+    time = datetime.now(pytz.UTC) - posted
+    print(datetime.now(pytz.UTC), posted, time.seconds)
     if time.seconds < 60:
-        return f"{time}s"
+        return f"{time.seconds}s"
     elif time.seconds//60 < 60:
         return f"{time.seconds//60}m"
     elif time.seconds//60//60 < 24:
@@ -30,7 +31,7 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
                 "accountName": post.user.account_name,
                 "displayName": post.user.account_name,
                 "content": post.content,
-                "age": _getFormattedTime(post.time_created.astimezone()),
+                "age": _getFormattedTime(post.time_created.replace(tzinfo=pytz.UTC)),
                 "likeAmount": post.likes,
                 "commentAmount": len(post.comments),
                 "sharedAmount": post.shares,

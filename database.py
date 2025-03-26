@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from tables import Base
 
 db_path = os.path.join(os.getcwd(), 'data.sqlite')
-engine: Engine = create_engine(f'sqlite:///{db_path}', echo=True)
+engine: Engine = create_engine(f'sqlite:///{db_path}')
 
 def create() -> None:
     # if not os.path.exists(db_path):
