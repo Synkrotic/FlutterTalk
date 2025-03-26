@@ -2,7 +2,6 @@ from datetime import datetime, tzinfo
 from typing import Type
 
 import pytz
-import tzlocal
 from sqlalchemy.orm import Session, Query
 
 import accountManager
