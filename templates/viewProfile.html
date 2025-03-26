@@ -11,7 +11,6 @@
       onload="this.onload=null;
       this.rel='stylesheet'"
     />
-</head>
 <body>
   <main>
     {% if user is defined and user != None %}
@@ -27,7 +26,7 @@
         </div>
         <div class="input-container">
           <label for="bio" class="form-label">Biography</label>
-          <textarea name="bio" class="form-input">Ik houd van trekkers</textarea>
+          <textarea name="bio" class="form-input" maxlength="500" id="bio-area"></textarea>
         </div>
         <button type="submit" class="btn btn-success save-button">Save</button>
 

@@ -51,8 +51,8 @@
     />
   </head>
   <body>
-    <nav>
-      <button class="nav_button" id="account_button" title="Log out or switch from account.">
+    <nav id="main-nav">
+      <button class="nav_button" id="account_button" title="Log out or switch from account." onclick="showLogout()">
         <img
           src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
           alt="The profile picture of your account."
@@ -62,6 +62,7 @@
           <p>@{{ accountName }}</p>
         </span>
         <button id="logout_menu_button" title="Log out of your account." onclick="logout()">
+          <i class="bi bi-box-arrow-right"></i>
           Logout
         </button>
       </button>

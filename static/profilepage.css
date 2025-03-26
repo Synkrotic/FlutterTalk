@@ -56,5 +56,7 @@ button.save-button {
     min-width: 100%;
     max-width: 100%;
     min-height: 4vh;
+    max-height: 15vh;
+    overflow-y: scroll !important;
     color: black;
 }
