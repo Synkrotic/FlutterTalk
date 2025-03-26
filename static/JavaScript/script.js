@@ -55,7 +55,13 @@ function logout() {
   try {
     fetch("/logout", {
       method: "POST",
-    })
+    }).then((res) => {
+      if (res.status === 200) {
+        window.location.reload();
+      } else {
+        throw new Error("Failed to logout! User is not logged in.");
+      }
+    });
   } catch (error) {
     console.error(error);
   }
