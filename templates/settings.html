@@ -33,7 +33,7 @@
         const shareData = {
           title: "FlutterTalk Test Share",
           text: "Testing the Web Share API on FlutterTalk!",
-          url: window.location.href,
+          url: window.location.href
         };
 
         if (navigator.share) {
@@ -41,10 +41,26 @@
             .share(shareData)
             .then(() => console.log("Content shared successfully."))
             .catch((error) =>
-              console.error("Error sharing the content:", error)
+              console.error("Error sharing content:", error)
             );
+        } else if (navigator.clipboard) {
+          // Fallback: Copy the combined share text to clipboard.
+          const shareText =
+            shareData.title + "\n" +
+            shareData.text + "\n" +
+            shareData.url;
+
+          navigator.clipboard
+            .writeText(shareText)
+            .then(() => {
+              alert("Text copied to clipboard.");
+            })
+            .catch((error) => {
+              console.error("Error copying text:", error);
+              alert("Failed to copy text to clipboard.");
+            });
         } else {
-          alert("Web Share API is not supported in your browser.");
+          alert("Sharing is not supported on your browser.");
         }
       }
     </script>
