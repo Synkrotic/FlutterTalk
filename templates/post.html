@@ -28,21 +28,61 @@
       </button>
       <button
         onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}')"
-        title="Copy the link to this post to your clipboard."
+        title="Share this post via your device's native share dialog."
         class="share_button"
         id="share_button_{{ post.postID }}"
       >
         <i class="bi bi-share"></i>
         {{ post.sharedAmount }}
       </button>
-      <button id="like_button_{{ post.accountName }}_{{ post.postID }}" onclick="likePost('{{ post.postID }}')">
+      <button
+        id="like_button_{{ post.accountName }}_{{ post.postID }}"
+        onclick="likePost('{{ post.postID }}')"
+      >
         {% if post.liked %}
-        <i class="bi bi-heart-fill"></i>
+          <i class="bi bi-heart-fill"></i>
         {% else %}
-        <i class="bi bi-heart"></i>
+          <i class="bi bi-heart"></i>
         {% endif %}
         {{ post.likeAmount }}
       </button>
     </div>
   </div>
 </div>
+
+<script>
+  function sharePost(accountName, postID) {
+    // Construct the URL to be shared.
+    const url = window.location.origin + "/posts/" + postID + "/";
+    const title = "Post from @" + accountName;
+    const text = "Check out this post by " + accountName + "!";
+
+    if (navigator.share) {
+      // Use the Web Share API if supported.
+      navigator
+        .share({
+          title: title,
+          text: text,
+          url: url,
+        })
+        .then(() => console.log("Post shared successfully"))
+        .catch((error) => console.error("Error sharing post:", error));
+    } else if (navigator.clipboard) {
+      // Fallback: copy the URL to the clipboard.
+      navigator.clipboard
+        .writeText(url)
+        .then(() =>
+          alert(
+            "Web Share API not available. Link copied to clipboard: " + url
+          )
+        )
+        .catch((error) => {
+          console.error("Error copying link:", error);
+          alert("Sharing is not supported on this browser.");
+        });
+    } else {
+      // Last-resort fallback if neither API is available.
+      alert("Sharing is not supported on this browser.");
+    }
+  }
+</script>
