@@ -197,7 +197,7 @@ def settings():
 def closePopup(errorID):
     try:
         errors.pop(int(errorID))
-    except:
+    except IndexError:
         return "Error: No popup with this ID found!", 404
     return "Successfully closed the popup!", 200
 
