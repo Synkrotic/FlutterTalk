@@ -57,8 +57,11 @@
     const title = "Post from @" + accountName;
     const text = "Check out this post by " + accountName + "!";
 
+    // Combine title, text, and URL if Web Share API isn't supported
+    const shareText = title + "\n" + text + "\n" + url;
+
     if (navigator.share) {
-      // Use the Web Share API if supported.
+      // Use Web Share API if supported
       navigator
         .share({
           title: title,
@@ -66,22 +69,25 @@
           url: url,
         })
         .then(() => console.log("Post shared successfully"))
-        .catch((error) => console.error("Error sharing post:", error));
+        .catch((error) =>
+          console.error("Error sharing post:", error)
+        );
     } else if (navigator.clipboard) {
-      // Fallback: copy the URL to the clipboard.
+      // Fallback: copy as text
       navigator.clipboard
-        .writeText(url)
+        .writeText(shareText)
         .then(() =>
           alert(
-            "Web Share API not available. Link copied to clipboard: " + url
+            "Web Share API not available. Share text copied to clipboard:\n" +
+              shareText
           )
         )
         .catch((error) => {
-          console.error("Error copying link:", error);
+          console.error("Error copying share text:", error);
           alert("Sharing is not supported on this browser.");
         });
     } else {
-      // Last-resort fallback if neither API is available.
+      // Fallback: neither API is available
       alert("Sharing is not supported on this browser.");
     }
   }
