@@ -80,9 +80,8 @@ def getPost(postId: int, request: Request) -> dict | None:
         return __postClassToDict(session.query(Post).where(Post.id == postId).first(), accountManager.getUser(request))
 
 
-def getPostQuery(postId: int) -> (Session, Query | None):
-    session: Session = database.getSession()
-    return session, session.query(Post).where(Post.id == postId)
+def getPostQuery(session: Session, postId: int) -> Query | None:
+    return session.query(Post).where(Post.id == postId)
 
 
 def addPost(post: dict):

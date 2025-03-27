@@ -41,7 +41,7 @@ def addLike(postID, user: User):
         session.commit()
         
         likes = session.query(PostLike).where(PostLike.post_id == postID).count()
-        postmanager.getPostQuery(postID).update({"likes": session.query(PostLike).where(PostLike.post_id == postID).count()})
+        postmanager.getPostQuery(session, postID).update({"likes": session.query(PostLike).where(PostLike.post_id == postID).count()})
         session.commit()
         
         return str(likes)

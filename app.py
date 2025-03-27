@@ -24,7 +24,7 @@ def index():
 
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postId):
-    post = postmanager.getPost(postId)
+    post = postmanager.getPost(postId, request)
     
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")

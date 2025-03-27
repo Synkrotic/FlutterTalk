@@ -42,7 +42,7 @@ async function likePost(postID) {
   else
     addLike(postID);
 
-  window.location.reload();
+  //window.location.reload();
 }
 
 async function addLike(postID) {

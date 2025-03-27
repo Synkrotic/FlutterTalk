@@ -17,7 +17,7 @@ TOKEN_DURATION = timedelta(7)
 
 # userid: int # fuck sqlalchemy
 def __getAuthToken(userid):
-    if userid is globals.ADMIN["id"]:
+    if userid == globals.ADMIN["id"]:
         raise Exception("Cannot get token for admin")
     session: Session = database.getSession()
     
@@ -43,7 +43,7 @@ def __getAuthToken(userid):
 
 
 def login(username: str, password: str) -> str | None:
-    if username is globals.ADMIN["account_name"]:
+    if username == globals.ADMIN["account_name"]:
         raise Exception("Cannot get token for admin")
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(
@@ -86,7 +86,7 @@ def getUser(request: Request) -> tables.User | None:
     if token is None:
         return None
     
-    if token== globals.ADMIN_TOKEN:
+    if token is globals.ADMIN_TOKEN:
         if isinstance(request, Request):
             if request.remote_addr != "127.0.0.1":
                 print ("attempted admin login from", request.remote_addr)
