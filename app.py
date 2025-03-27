@@ -16,9 +16,17 @@ errors = [] # TODO add errors in cookies or sum \_( '-')_/
 
 @app.route('/')
 def index():
-    posts, cookies = postmanager.getPosts(10, request)
+    posts, _ = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts)))
-    
+
+    response.set_cookie("current_post", '0')
+    return response
+
+@app.route('/getPosts/<int:amount>')
+def getPosts(amount: int):
+    posts, cookies = postmanager.getPosts(amount, request)
+    response = Response(json.dumps(posts))
+
     return addCookiesToResponse(cookies, response)
 
 
@@ -105,7 +113,11 @@ def login():
 def register():
     if request.method == 'POST':
         if accountManager.createAccount(request.form['name'], request.form['password']):
-            return redirect('profile')
+            addPopup('success', 'Account created!')
+            token: str = accountManager.login(request.form['name'], request.form['password'])
+
+            response: Response = redirect('profile')
+            return response
         else:
             addPopup('error', 'Account already exists.')
             return redirect('profile/register')
