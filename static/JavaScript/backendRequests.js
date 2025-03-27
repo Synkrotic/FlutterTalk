@@ -1,8 +1,4 @@
 function sharePost(accountName, postID) {
-  if (location.protocol !== 'https:'){
-    alert("You're not on https, no link copied to clipboard.");
-    return;
-  }
   const url = `/users/addShare/${postID}`;
   fetch(url, {
     method: "GET",
@@ -11,8 +7,10 @@ function sharePost(accountName, postID) {
     },
   }).then((response) => {
     if (response.status === 200) {
-      copyShareLinkToClipboard(accountName, postID);
-      alert("Link copied to clipboard!");
+      if (location.protocol !== 'https:')
+        alert(`You're not on https, no link copied to clipboard.\nLink to post is http://${window.location.host}/users/@${accountName}/${postID}`);
+      else
+        copyShareLinkToClipboard(accountName, postID);
       const share_button = doc.getElementById(`share_button_${postID}`);
       share_button.innerHTML = share_button.innerHTML.replace(
         /(\d+)/,
