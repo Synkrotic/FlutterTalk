@@ -101,15 +101,14 @@ def login():
         return render_template("errorPage.html", error="Invalid login credentials")
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
         if accountManager.createAccount(request.form['name'], request.form['password']):
-            return 'account created'
+            return redirect('profile')
         else:
-            return 'account already exists'
-    else:
-        return render_template('register.html')
+            addPopup('error', 'Account already exists.')
+            return redirect('profile/register')
 
 
 @app.route('/logout', methods=['POST'])
