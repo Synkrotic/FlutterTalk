@@ -127,21 +127,19 @@ def logout():
     return response
 
 
-@app.route('/post', methods=['POST', 'GET'])
+@app.route('/post', methods=['POST'])
 def createPost():
-    if request.method == 'GET':
-        return getFullPage(render_template("createPost.html"))
-    
     user = accountManager.getUser(request)
     if user is None:
-        return redirect('/login')
+        return json.dumps({"statusText": "User is not logged in!"}), 401, { "ContentType": 'application/json' }
     
+    content = list(request.get_json().values())[0]
     postmanager.addPost({
         "user_id": user.id,
-        "content": request.form['content']
+        "content": content
     })
     
-    return redirect('/') # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
+    return redirect('/'), 200 # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
 
 
 @app.route("/test")

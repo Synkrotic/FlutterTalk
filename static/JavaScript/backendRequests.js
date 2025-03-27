@@ -78,6 +78,34 @@ async function removeLike() {
 }
 
 
+
+function createPost() {
+  const contentArea = doc.getElementById("content-area");
+  const postContent = contentArea.value;
+
+  const url = "/post";
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content: postContent })
+  }).then((response) => {
+    if (response.status === 200) {
+      contentArea.value = "";
+      addPopup(true, "Post created successfully!");
+    } else {
+      response.json().then((data) => {
+        addPopup(false, data.statusText);
+      });
+    }
+  });
+}
+
+
+
+
+
 function logout() {
   fetch("/logout", {
     method: "POST",

@@ -241,6 +241,8 @@ main div nav {
   color: white;
   margin-bottom: 0.5rem;
   text-wrap: wrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .action_buttons_container {

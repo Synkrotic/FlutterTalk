@@ -4,11 +4,22 @@
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
 />
-<main id="create-post-container">
-  <h1>Create Post</h1>
-  <form action="/post" method="post" id="create-post-form">
-    <label for="content" class="form-label">Content</label>
-    <textarea id="content" name="content" class="form-input text_area" maxlength="1000" rows="2" required></textarea>
-    <button type="submit" class="btn btn-success save-button" onclick="addPopup(true, 'Successfully created a post!')">Create Post</button>
-  </form>
-</main>
+<section id="create-post-container" class="hide-menu">
+  <div id="post-header">
+    <button class="btn btn-primary post-menu-button" onclick="toggleCreatePost()">Cancel</button>
+    <h1>Create Post</h1>
+    <button class="btn btn-success post-menu-button" onclick="createPost()">Post</button>
+  </div>
+  <textarea
+    id="content-area"
+    name="content"
+    class="form-input"
+    maxlength="1000"
+    placeholder="What's on your mind?"
+    cols="60"
+    rows="15"
+    wrap="hard"
+    required
+  ></textarea>
+  <p id="char-counter">0</p>
+</section>

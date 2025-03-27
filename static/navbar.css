@@ -1,12 +1,14 @@
 :root {
   --blackish: #191d28;
   --darkBlue: #213555;
+  --mediumBlue: #455682;
   --moderateBlue: #3e5879;
   --attentionBlue: #529aff;
   --darkCyan: #4c585b;
   --darkGrayBlue: #7e99a3;
   --powderBlue: #9eb3c2;
   --grayBlue: #a5bfcc;
+  --lightRed: #ffaaaa;
 
   --attentionRed: #ff4d4d;
   --attentionGreen: #00cc66;
@@ -146,7 +148,15 @@ body nav {
 
 
 
-
+#settings_button i {
+  height: unset;
+  aspect-ratio: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 #settings_button:hover i {
   animation: cogwheelAnimation 2.5s linear infinite;
 }

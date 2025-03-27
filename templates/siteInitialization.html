@@ -51,6 +51,7 @@
     />
   </head>
   <body>
+    {% include('createPost.html') %}
     <section id="popups-container">
       {% for index in range(errors|length) %}
         {% set errorType = errors[index].keys()|list|first %}
