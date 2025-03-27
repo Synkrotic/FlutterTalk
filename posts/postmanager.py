@@ -75,6 +75,19 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
         return __postClassToDict(posts, accountManager.getUser(request)), cookies
 
 
+def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, list[Cookie]):
+    currentPost = 0
+    if getCookie(request, 'current_post') is not None:
+        currentPost = getCookie(request, 'current_post')
+    cookies = addCookie([], Cookie("current_post", currentPost + amount))
+    
+    with database.getSession() as session:
+        posts = session.query(Post).where(Post.id > currentPost, Post.user_id == userID).limit(amount).all()
+        if len(posts) == 0:
+            return [], cookies
+        return __postClassToDict(posts, accountManager.getUser(request)), cookies
+
+
 def getPost(postId: int, request: Request) -> dict | None:
     with database.getSession() as session:
         return __postClassToDict(session.query(Post).where(Post.id == postId).first(), accountManager.getUser(request))

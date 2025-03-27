@@ -35,13 +35,13 @@
         <i class="bi bi-share"></i>
         {{ post.sharedAmount }}
       </button>
-      <button id="like_button_{{ post.accountName }}_{{ post.postID }}" onclick="likePost('{{ post.postID }}')">
+      <button id="like_button_{{ post.postID }}" onclick="likePost('{{ post.postID}}');">
         {% if post.liked %}
-        <i class="bi bi-heart-fill"></i>
+        <i class="bi bi-heart-fill" id="like_icon_{{ post.postID }}"></i>
         {% else %}
-        <i class="bi bi-heart"></i>
+        <i class="bi bi-heart" id="like_icon_{{ post.postID }}"></i>
         {% endif %}
-        {{ post.likeAmount }}
+        <p id="like_amount_{{ post.postID }}">{{ post.likeAmount }}</p>
       </button>
     </div>
   </div>

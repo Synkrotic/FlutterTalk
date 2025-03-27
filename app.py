@@ -45,7 +45,17 @@ def viewPost(accountName, postId):
 
 @app.route('/users/@<string:accountName>')
 def viewAccount(accountName):
-    return getFullPage(render_template("viewAccount.html", accountName=accountName))
+    if not accountManager._checkExists(accountName):
+        return render_template("errorPage.html", error="404 user not found!")
+    
+    user: User = accountManager.getUserByName(accountName)
+    if user is None:
+        return render_template("errorPage.html", error="404 user not found!")
+    
+    posts, cookies = postmanager.getPostsOfUserByID(user.id, 10, request)
+    response = Response(getFullPage(render_template("index.html", posts=posts)))
+    
+    return addCookiesToResponse(cookies, response)
 
 
 @app.route('/users/addShare/<int:postID>')

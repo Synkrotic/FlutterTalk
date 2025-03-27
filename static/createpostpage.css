@@ -9,10 +9,10 @@
   z-index: 10;
   background-image: radial-gradient(
     circle at bottom left,
-    color-mix(in srgb, var(--mediumBlue) 97%, transparent),
-    color-mix(in srgb, var(--darkBlue) 97%, transparent) 80%);
+    color-mix(in srgb, var(--darkBlue) 90%, transparent),
+    color-mix(in srgb, var(--blackish) 97%, transparent) 80%);
   border-radius: 3em;
-  outline: 1px solid snow;
+  outline: 2px solid #121212;
   opacity: 1;
   transition: 0.5s;
 }

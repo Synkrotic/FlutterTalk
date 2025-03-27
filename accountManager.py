@@ -98,6 +98,17 @@ def getUser(request: Request) -> tables.User | None:
     return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
 
 
+def getUserByName(accountName: int) -> tables.User | None:
+    session: Session = database.getSession()
+    user: Type[tables.User] = session.query(tables.User).where(
+        tables.User.account_name == accountName
+    ).first()
+    if user is None:
+        return None
+    else:
+        return user
+
+
 def getOrDefaultUserName(user: tables.User) -> str:
     if user is None:
         return 'anonymous'

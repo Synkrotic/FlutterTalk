@@ -54,14 +54,18 @@ async function addLike(postID) {
     },
   }).then((response) => {
     if (response.status === 200) {
-      return response;
+      return response.json();
     }
   });
 
-  console.log(likeAmount);
+  const likeText = doc.getElementById(`like_amount_${postID}`);
+  const icon = doc.getElementById(`like_icon_${postID}`);
+  likeText.value = likeAmount;
+  icon.classList.remove("bi-heart");
+  icon.classList.add("bi-heart-fill");
 }
 
-async function removeLike() {
+async function removeLike(postID) {
   url = `/users/like/${postID}`;
   const likeAmount = await fetch(url, {
     method: "POST",
@@ -74,7 +78,9 @@ async function removeLike() {
     }
   });
 
-  console.log(likeAmount);
+  const icon = doc.getElementById(`like_icon_${postID}`);
+  likeButton.innerHTML = likeAmount;
+  icon.classList.remove("bi-heart");
 }
 
 
