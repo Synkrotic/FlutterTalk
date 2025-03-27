@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Support</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlutterTalk</title>
-    <link rel="icon"
-          type="image/png"
-          href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
     />
-    <link rel="preload"
-          href="{{ url_for('static', filename='errorpage.css') }}"
-          as="style"
-          onload="this.onload=null;this.rel='stylesheet'"
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='errorpage.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
-    <script defer src="{{ url_for('static', filename='JavaScript/script.js') }}"></script>
-</head>
-<body>
-<div id="error_container">
-    <h3>Settings</h3>
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/script.js') }}"
+    ></script>
+  </head>
+  <body>
+    <div id="error_container">
+      <h3>Settings</h3>
+      <button onclick="goToPage('/')">Go to homepage</button>
+      <button onclick="testShare()">Test Share</button>
+    </div>
 
-    <button onclick="goToPage('/')">
-        Go to homepage
-    </button>
-</div>
-</body>
+    <script>
+      function testShare() {
+        const shareData = {
+          title: "FlutterTalk Test Share",
+          text: "Testing the Web Share API on FlutterTalk!",
+          url: window.location.href,
+        };
+
+        if (navigator.share) {
+          navigator
+            .share(shareData)
+            .then(() => console.log("Content shared successfully."))
+            .catch((error) =>
+              console.error("Error sharing the content:", error)
+            );
+        } else {
+          alert("Web Share API is not supported in your browser.");
+        }
+      }
+    </script>
+  </body>
 </html>
