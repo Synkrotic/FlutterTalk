@@ -110,7 +110,7 @@ def getUser(request: Request) -> tables.User | None:
     return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
 
 
-def getUserByName(accountName: int) -> tables.User | None:
+def getUserByName(accountName: int) -> tables.User | None | Type[tables.User]:
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(
         tables.User.account_name == accountName

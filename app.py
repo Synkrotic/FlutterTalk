@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, Query
 
 import accountManager
 import database
-import json
+import dummyData
 from posts import postmanager, postData
 from globals import *
 from posts.postData import getLike
