@@ -4,8 +4,9 @@ from typing import Type
 
 from flask import Request
 from sqlalchemy import and_, func, insert
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, InstrumentedAttribute
 
+import bcrypt
 import database
 import globals
 import tables
@@ -42,14 +43,25 @@ def __getAuthToken(userid):
     return token
 
 
+def genPassword(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+def checkPassword(password: str, hashed: str | InstrumentedAttribute) -> bool:
+    return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
+
 def login(username: str, password: str) -> str | None:
     if username == globals.ADMIN["account_name"]:
         raise Exception("Cannot get token for admin")
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(
-        and_(tables.User.account_name == username, tables.User.password == password)
+        and_(tables.User.account_name == username)
         ).first()
+
     if user is None:
+        session.close()
+        return None
+
+    if not checkPassword(password, user.password):
         session.close()
         return None
     session.close()
@@ -72,7 +84,7 @@ def createAccount(username: str, password: str):
         return False
     else:
         session: Session = database.getSession()
-        user = tables.User(account_name=username, password=password)
+        user = tables.User(account_name=username, password=genPassword(password))
         session.add(user)
         session.commit()
         return True
