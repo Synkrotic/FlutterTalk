@@ -1,19 +1,18 @@
 from flask import Response
-
-import accountManager
-import database
 from posts import postmanager
 from tables import PostLike, User, Post
 
-
+import database
 
 def deleteLike(postID, user: User):
     with database.getSession() as session:
         postQuery = postmanager.getPostQuery(postID)
+
         if postQuery is None or postQuery.first() is None:
             return Response(status=401, response="Post not found")
-        
+
         postLike = session.query(PostLike).where(PostLike.post_id == postID and PostLike.user_id == user.id).first()
+
         if postLike is None:
             return Response(status=400, response="You have not liked this post")
         
@@ -21,11 +20,14 @@ def deleteLike(postID, user: User):
         session.commit()
         
         likes = session.query(PostLike).where(PostLike.post_id == postID).count()
-        postQuery.update({"likes": session.query(PostLike).where(PostLike.post_id == postID).count()})
+
+        postQuery.update({
+            "likes": session.query(PostLike).where(PostLike.post_id == postID).count()
+        })
+
         session.commit()
         
         return str(likes)
-    
     
 def addLike(postID, user: User):
     with database.getSession() as session:
