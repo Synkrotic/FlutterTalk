@@ -56,7 +56,7 @@ async function addLike(postID) {
     },
   }).then((response) => {
     if (response.status === 200) {
-      return response;
+      return response.json();
     }
   });
 
@@ -84,7 +84,7 @@ async function removeLike(postID) {
     let likeData;
 
     if (response.status === 200) {
-      likeData = await response;
+      likeData = await response.json();
     } else {
       console.error("Request did not return a 200 status");
       return;
