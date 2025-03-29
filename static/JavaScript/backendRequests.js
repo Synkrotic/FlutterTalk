@@ -104,6 +104,7 @@ async function removeLike(postID) {
 
     if (icon) {
       icon.classList.remove("bi-heart");
+      icon.classList.add("bi-heart-fill");
     } else {
       console.warn(`like_icon_${postID} not found`);
     }
