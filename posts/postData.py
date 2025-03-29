@@ -45,22 +45,24 @@ def addLike(postID, user: User):
         session.commit()
         
         return str(likes)
-    
+
 def getLike(postID, user: User):
     with database.getSession() as session:
-        userLiked: bool
         if user is not None:
-            userLiked = session.query(PostLike) \
-                            .where(PostLike.post_id == postID and PostLike.user_id == user.id) \
-                            .first() is not None
+            userLiked = (
+                    session.query(PostLike)
+                    .where((PostLike.post_id == postID) & (PostLike.user_id == user.id))
+                    .first()
+                    is not None
+            )
         else:
             userLiked = False
-        
+
+        post = session.query(Post).where(Post.id == postID).first()
         return {
             "userLiked": userLiked,
-            "likes": session.query(Post).where(Post.id == postID).first().likes
+            "likes": post.likes if post else 0
         }
-    
     
 def addShare(postID, user: User):
     with database.getSession() as session:
