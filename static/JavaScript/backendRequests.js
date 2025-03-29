@@ -35,6 +35,8 @@ async function likePost(postID) {
     }
   });
 
+  console.log(likedByUser);
+
   if (likedByUser)
     removeLike(postID);
   else
