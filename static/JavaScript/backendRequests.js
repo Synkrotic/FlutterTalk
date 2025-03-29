@@ -24,25 +24,26 @@ function sharePost(accountName, postID) {
 async function likePost(postID) {
   const url = `/users/like/${postID}`;
 
-  likedByUser = await fetch(url, {
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json().userLiked;
-    }
   });
 
-  console.log(likedByUser);
+  let likedByUser;
+  if (response.status === 200) {
+    const data = await response.json();
+    likedByUser = data.userLiked;
+  }
 
-  if (likedByUser)
+  console.log("test", likedByUser);
+
+  if (likedByUser) {
     removeLike(postID);
-  else
+  } else {
     addLike(postID);
-
-  //window.location.reload();
+  }
 }
 
 async function addLike(postID) {
