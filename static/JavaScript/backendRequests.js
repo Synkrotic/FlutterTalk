@@ -63,7 +63,7 @@ async function addLike(postID) {
   const likeText = doc.getElementById(`like_amount_${postID}`);
   const icon = doc.getElementById(`like_icon_${postID}`);
 
-  likeText.innerHTML = likeAmount;
+  likeText.innerHTML = likeAmount.likes;
   icon.classList.remove("bi-heart");
   icon.classList.add("bi-heart-fill");
 }
