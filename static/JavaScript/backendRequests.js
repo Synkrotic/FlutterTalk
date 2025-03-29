@@ -24,64 +24,124 @@ function sharePost(accountName, postID) {
 async function likePost(postID) {
   const url = `/users/like/${postID}`;
 
-  likedByUser = await fetch(url, {
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json().userLiked;
-    }
   });
 
-  if (likedByUser)
-    removeLike(postID);
-  else
-    addLike(postID);
+  let likedByUser;
+  if (response.status === 200) {
+    const data = await response.json();
+    likedByUser = data.userLiked;
+  }
 
-  //window.location.reload();
+  console.log("test", likedByUser);
+
+  if (likedByUser) {
+    removeLike(postID);
+  } else {
+    addLike(postID);
+  }
 }
 
 async function addLike(postID) {
-  url = `/users/like/${postID}`;
-  const likeAmount = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json();
-    }
-  });
+  const url = `/users/like/${postID}`;
+  const likeText = document.getElementById(`like_amount_${postID}`);
+  const icon = document.getElementById(`like_icon_${postID}`);
 
-  const likeText = doc.getElementById(`like_amount_${postID}`);
-  const icon = doc.getElementById(`like_icon_${postID}`);
-  likeText.value = likeAmount;
-  icon.classList.remove("bi-heart");
-  icon.classList.add("bi-heart-fill");
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      if (data && typeof data.likes !== 'undefined') {
+        likeText.innerHTML = data.likes;
+
+        if (response.status === 201 || response.status === 200) {
+          icon.classList.remove("bi-heart");
+          icon.classList.add("bi-heart-fill");
+        }
+
+        if (data.message) {
+          console.log(`Like status for post ${postID}: ${data.message}`);
+        }
+
+      } else {
+        console.error(`Received success status ${response.status}, but 'likes' key missing in response data for post ${postID}:`, data);
+      }
+
+    } else {
+      console.error(`Failed to like post ${postID}. Status: ${response.status}`);
+      try {
+        const errorData = await response.json();
+        console.error('Error details:', errorData);
+        alert(`Error: ${errorData.error || response.statusText}`);
+      } catch (e) {
+        alert(`Error: ${response.statusText}`);
+      }
+    }
+
+  } catch (error) {
+    console.error(`Network error or other issue liking post ${postID}:`, error);
+    alert("Could not connect to the server to like the post.");
+  }
 }
 
 async function removeLike(postID) {
-  url = `/users/like/${postID}`;
-  const likeAmount = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
+  const url = `/users/like/${postID}`;
+
+  try {
+    // Make the fetch call
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Only attempt to parse JSON if status is 200 (OK)
+    let likeData;
+
     if (response.status === 200) {
-      return response;
+      likeData = await response.json();
+    } else {
+      console.error("Request did not return a 200 status");
+      return;
     }
-  });
 
-  const icon = doc.getElementById(`like_icon_${postID}`);
-  likeButton.innerHTML = likeAmount;
-  icon.classList.remove("bi-heart");
+    // Extract the like amount from the returned JSON
+    // (Assuming the response has a property 'likes')
+    const likeAmount = likeData;
+
+    // Use the document object to select elements
+    const icon = document.getElementById(`like_icon_${postID}`);
+    const likeButton = document.getElementById(`like_amount_${postID}`);
+
+    // Check if elements exist before modifying them
+    if (likeButton) {
+      likeButton.innerHTML = likeAmount;
+    } else {
+      console.warn(`like_button_${postID} not found`);
+    }
+
+    if (icon) {
+      icon.classList.remove("bi-heart-fill");
+      icon.classList.add("bi-heart");
+    } else {
+      console.warn(`like_icon_${postID} not found`);
+    }
+  } catch (error) {
+    console.error("Error in removeLike:", error);
+  }
 }
-
-
 
 function createPost() {
   const contentArea = doc.getElementById("content-area");
