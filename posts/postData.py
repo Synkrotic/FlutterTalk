@@ -54,9 +54,8 @@ def addLike(postID: int, user: User):
             current_likes = session.query(PostLike).filter(PostLike.post_id == postID).count()
             post.likes = current_likes
 
-            print(current_likes)
-
             session.commit()
+            current_likes = session.query(PostLike).filter(PostLike.post_id == postID).count()
 
             return Response(status=201, response=f'{{"likes": {current_likes}}}', mimetype='application/json')
 
