@@ -48,6 +48,7 @@ async function likePost(postID) {
 
 async function addLike(postID) {
   url = `/users/like/${postID}`;
+
   const likeAmount = await fetch(url, {
     method: "POST",
     headers: {
@@ -55,13 +56,14 @@ async function addLike(postID) {
     },
   }).then((response) => {
     if (response.status === 200) {
-      return response.json();
+      return response;
     }
   });
 
   const likeText = doc.getElementById(`like_amount_${postID}`);
   const icon = doc.getElementById(`like_icon_${postID}`);
-  likeText.value = likeAmount;
+
+  likeText.innerHTML = likeAmount;
   icon.classList.remove("bi-heart");
   icon.classList.add("bi-heart-fill");
 }
@@ -82,7 +84,7 @@ async function removeLike(postID) {
     let likeData;
 
     if (response.status === 200) {
-      likeData = await response.json();
+      likeData = await response;
     } else {
       console.error("Request did not return a 200 status");
       return;

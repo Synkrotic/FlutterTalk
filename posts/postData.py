@@ -33,6 +33,7 @@ def addLike(postID, user: User):
     with database.getSession() as session:
         if user is None:
             return Response(status=401, response="You must be logged in to like a post")
+
         if session.query(PostLike) \
                 .where(PostLike.post_id == postID and PostLike.user_id == user.id) \
                 .first() is not None:
