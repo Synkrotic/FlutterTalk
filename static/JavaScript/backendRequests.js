@@ -67,24 +67,50 @@ async function addLike(postID) {
 }
 
 async function removeLike(postID) {
-  url = `/users/like/${postID}`;
-  const likeAmount = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
+  const url = `/users/like/${postID}`;
+
+  try {
+    // Make the fetch call
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Only attempt to parse JSON if status is 200 (OK)
+    let likeData;
     if (response.status === 200) {
-      return response.json();
+      likeData = await response.json();
+    } else {
+      console.error("Request did not return a 200 status.");
+      return;
     }
-  });
 
-  const icon = doc.getElementById(`like_icon_${postID}`);
+    // Extract the like amount from the returned JSON.
+    // (Assuming the response has a property 'likes')
+    const likeAmount = likeData.likes;
 
-  const likeButton = doc.getElementById(`like_button_${postID}`);
-  likeButton.innerHTML = likeAmount;
+    // Use the document object to select elements
+    const icon = document.getElementById(`like_icon_${postID}`);
+    const likeButton = document.getElementById(`like_button_${postID}`);
 
-  icon.classList.remove("bi-heart");
+    // Check if elements exist before modifying them.
+    if (likeButton) {
+      likeButton.innerHTML = likeAmount;
+    } else {
+      console.warn(`like_button_${postID} not found`);
+    }
+
+    if (icon) {
+      icon.classList.remove("bi-heart");
+    } else {
+      console.warn(`like_icon_${postID} not found`);
+    }
+
+  } catch (error) {
+    console.error("Error in removeLike:", error);
+  }
 }
 
 function createPost() {
