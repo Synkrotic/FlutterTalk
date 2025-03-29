@@ -39,7 +39,7 @@ def viewPost(accountName, postId):
     
     return getFullPage(
         render_template(
-            "viewAccount.html",
+            "viewPost.html",
             displayName={
                 accountManager.getOrDefaultUserName(
                     accountManager.getUser(request)
