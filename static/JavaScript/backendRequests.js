@@ -89,7 +89,7 @@ async function removeLike(postID) {
 
     // Extract the like amount from the returned JSON.
     // (Assuming the response has a property 'likes')
-    const likeAmount = likeData.likes;
+    const likeAmount = likeData;
 
     // Use the document object to select elements
     const icon = document.getElementById(`like_icon_${postID}`);
