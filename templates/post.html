@@ -1,46 +1,94 @@
 {# templates/post.html #}
 <div class="post_container">
   <img
-    src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
-    alt="Profile picture of the user."
+          src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+          alt="Profile picture of the user."
   />
   <div>
     <span>
       <h4 class="post_display_name">
-        <a href="/users/@{{ post.accountName }}">
+        <a href="/users/@{{ post.accountName }}/">
           {{ post.displayName }}
         </a>
       </h4>
       <p class="post_account_name">
-        <a href="/users/@{{ post.accountName }}">
+        <a href="/users/@{{ post.accountName }}/">
           @{{ post.accountName }}
         </a>
       </p>
       <p class="post_age">⦁ {{ post.age }}</p>
     </span>
-    <pre cols="75">{{ post.content }}</pre>
+    <pre cols="75">
+{{ post.content }}
+    </pre>
     <div class="action_buttons_container">
       <button>
         <i class="bi bi-chat-left"></i>
         {{ post.commentAmount }}
       </button>
       <button
-        onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}')"
-        title="Copy the link to this post to your clipboard."
-        class="share_button"
-        id="share_button_{{ post.postID }}"
+              onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}')"
+              title="Share this post via your device's native share dialog."
+              class="share_button"
+              id="share_button_{{ post.postID }}"
       >
         <i class="bi bi-share"></i>
         {{ post.sharedAmount }}
       </button>
-      <button id="like_button_{{ post.postID }}" onclick="likePost('{{ post.postID}}');">
+      <button
+              id="like_button_{{ post.accountName }}_{{ post.postID }}"
+              onclick="likePost('{{ post.postID }}')"
+      >
         {% if post.liked %}
-        <i class="bi bi-heart-fill" id="like_icon_{{ post.postID }}"></i>
+        <i class="bi bi-heart-fill"></i>
         {% else %}
-        <i class="bi bi-heart" id="like_icon_{{ post.postID }}"></i>
+        <i class="bi bi-heart"></i>
         {% endif %}
-        <p id="like_amount_{{ post.postID }}">{{ post.likeAmount }}</p>
+        {{ post.likeAmount }}
       </button>
     </div>
   </div>
 </div>
+
+<script>
+  function sharePost(accountName, postID) {
+    // Construct the URL to be shared.
+    const url = window.location.origin + "/posts/" + postID + "/";
+    const title = "Post from @" + accountName;
+    const text = "Check out this post by " + accountName + "!";
+
+    // Combine title, text, and URL if Web Share API isn't supported
+    const shareText = title + "\n" + text + "\n" + url;
+
+    if (navigator.share) {
+      // Use Web Share API if supported
+      navigator
+              .share({
+                title: title,
+                text: text,
+                url: url,
+              })
+              .then(() => console.log("Post shared successfully"))
+              .catch((error) =>
+                      console.error("Error sharing post:", error)
+              );
+    } else if (navigator.clipboard) {
+      // Fallback: copy as text
+      navigator.clipboard
+              .writeText(shareText)
+              .then(() =>
+                      alert(
+                              "Web Share API not available. Share text copied to clipboard:\n" +
+                              shareText
+                      )
+              )
+              .catch((error) => {
+                console.error("Error copying share text:", error);
+                alert("Sharing is not supported on this browser.");
+              });
+    } else {
+      // Fallback: neither API is available
+      alert("Sharing is not supported on this browser.");
+    }
+  }
+</script>
