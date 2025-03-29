@@ -72,7 +72,7 @@ async function removeLike(postID) {
   try {
     // Make the fetch call
     const response = await fetch(url, {
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
@@ -107,7 +107,6 @@ async function removeLike(postID) {
     } else {
       console.warn(`like_icon_${postID} not found`);
     }
-
   } catch (error) {
     console.error("Error in removeLike:", error);
   }
