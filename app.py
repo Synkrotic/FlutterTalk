@@ -30,7 +30,7 @@ def getPosts(amount: int):
     return addCookiesToResponse(cookies, response)
 
 
-@app.route('/users/@<string:accountName>/<int:postID>')
+@app.route('/users/@<string:accountName>/<int:postId>')
 def viewPost(accountName, postId):
     post = postmanager.getPost(postId, request)
     
