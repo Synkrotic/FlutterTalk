@@ -80,11 +80,12 @@ async function removeLike(postID) {
   });
 
   const icon = doc.getElementById(`like_icon_${postID}`);
+
+  const likeButton = doc.getElementById(`like_button_${postID}`);
   likeButton.innerHTML = likeAmount;
+
   icon.classList.remove("bi-heart");
 }
-
-
 
 function createPost() {
   const contentArea = doc.getElementById("content-area");
