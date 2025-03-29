@@ -47,25 +47,52 @@ async function likePost(postID) {
 }
 
 async function addLike(postID) {
-  url = `/users/like/${postID}`;
+  const url = `/users/like/${postID}`;
+  const likeText = document.getElementById(`like_amount_${postID}`);
+  const icon = document.getElementById(`like_icon_${postID}`);
 
-  const likeAmount = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json();
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      if (data && typeof data.likes !== 'undefined') {
+        likeText.innerHTML = data.likes;
+
+        if (response.status === 201 || response.status === 200) {
+          icon.classList.remove("bi-heart");
+          icon.classList.add("bi-heart-fill");
+        }
+
+        if (data.message) {
+          console.log(`Like status for post ${postID}: ${data.message}`);
+        }
+
+      } else {
+        console.error(`Received success status ${response.status}, but 'likes' key missing in response data for post ${postID}:`, data);
+      }
+
+    } else {
+      console.error(`Failed to like post ${postID}. Status: ${response.status}`);
+      try {
+        const errorData = await response.json();
+        console.error('Error details:', errorData);
+        alert(`Error: ${errorData.error || response.statusText}`);
+      } catch (e) {
+        alert(`Error: ${response.statusText}`);
+      }
     }
-  });
 
-  const likeText = doc.getElementById(`like_amount_${postID}`);
-  const icon = doc.getElementById(`like_icon_${postID}`);
-
-  likeText.innerHTML = likeAmount.likes;
-  icon.classList.remove("bi-heart");
-  icon.classList.add("bi-heart-fill");
+  } catch (error) {
+    console.error(`Network error or other issue liking post ${postID}:`, error);
+    alert("Could not connect to the server to like the post.");
+  }
 }
 
 async function removeLike(postID) {
