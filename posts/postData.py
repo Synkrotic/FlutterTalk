@@ -6,7 +6,7 @@ import database
 
 def deleteLike(postID, user: User):
     with database.getSession() as session:
-        postQuery = postmanager.getPostQuery(postId=postID)
+        postQuery = postmanager.getPostQuery(session=session, postId=postID)
 
         if postQuery is None or postQuery.first() is None:
             return Response(status=401, response="Post not found")
