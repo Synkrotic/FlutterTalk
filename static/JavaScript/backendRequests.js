@@ -80,22 +80,23 @@ async function removeLike(postID) {
 
     // Only attempt to parse JSON if status is 200 (OK)
     let likeData;
+
     if (response.status === 200) {
       likeData = await response.json();
     } else {
-      console.error("Request did not return a 200 status.");
+      console.error("Request did not return a 200 status");
       return;
     }
 
-    // Extract the like amount from the returned JSON.
+    // Extract the like amount from the returned JSON
     // (Assuming the response has a property 'likes')
     const likeAmount = likeData;
 
     // Use the document object to select elements
     const icon = document.getElementById(`like_icon_${postID}`);
-    const likeButton = document.getElementById(`like_button_${postID}`);
+    const likeButton = document.getElementById(`like_amount_${postID}`);
 
-    // Check if elements exist before modifying them.
+    // Check if elements exist before modifying them
     if (likeButton) {
       likeButton.innerHTML = likeAmount;
     } else {
@@ -103,8 +104,8 @@ async function removeLike(postID) {
     }
 
     if (icon) {
-      icon.classList.remove("bi-heart");
-      icon.classList.add("bi-heart-fill");
+      icon.classList.remove("bi-heart-fill");
+      icon.classList.add("bi-heart");
     } else {
       console.warn(`like_icon_${postID} not found`);
     }

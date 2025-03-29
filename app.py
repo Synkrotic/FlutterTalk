@@ -57,6 +57,7 @@ def viewAccount(accountName):
         return render_template("errorPage.html", error="404 user not found!")
     
     user: User = accountManager.getUserByName(accountName)
+
     if user is None:
         return render_template("errorPage.html", error="404 user not found!")
     
@@ -65,25 +66,26 @@ def viewAccount(accountName):
     
     return addCookiesToResponse(cookies, response)
 
-
 @app.route('/users/addShare/<int:postID>')
 def addShare(postID):
     return postData.addShare(postID, accountManager.getUser(request))
 
-
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
 def likePost(postID):
     user: User = accountManager.getUser(request)
+
     match request.method:
         case 'DELETE':
             return postData.deleteLike(postID, user)
+
         case 'POST':
             return postData.addLike(postID, user)
+
         case 'GET':
             return getLike(postID, user)
+
         case _:
             return render_template("errorPage.html", error="Invalid method used")
-
 
 @app.route('/profile')
 @app.route('/profile/<string:action>')
