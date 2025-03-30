@@ -3,18 +3,18 @@ from datetime import datetime
 from typing import Type
 
 import pytz
+from sqlalchemy import not_, alias
 from sqlalchemy.orm import Session, Query
 
 import accountManager
 import database
 from globals import *
-from tables import Post, User, PostLike
+from tables import Post, User, PostLike, CommentLink
 
 
 
 def _getFormattedTime(posted: datetime) -> str:
     time = datetime.now(pytz.UTC) - posted
-    print(datetime.now(pytz.UTC), posted, time.seconds)
     if time.seconds < 60:
         return f"{time.seconds}s"
     elif time.seconds//60 < 60:
@@ -27,6 +27,11 @@ def _getFormattedTime(posted: datetime) -> str:
 def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], user: User | None=None) -> list[dict] | dict:
     def convert(post: Post) -> dict:
         with database.getSession() as session:
+            comments = getComments(post)
+            for comment in comments:
+                session.add(comment)
+
+                print(comment.user.account_name, comment.content)
             return {
                 "postID": post.id,
                 "accountName": post.user.account_name,
@@ -34,7 +39,7 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
                 "content": post.content,
                 "age": _getFormattedTime(post.time_created.replace(tzinfo=pytz.UTC)),
                 "likeAmount": post.likes,
-                "commentAmount": len(post.comments),
+                "commentAmount": 0 if comments is None else len(comments),
                 "sharedAmount": post.shares,
                 "liked": user is not None and session.query(PostLike)
                     .where(PostLike.post_id == post.id and PostLike.user_id == user.id).first()
@@ -58,7 +63,6 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
         post: Post | None = session.query(Post).where(Post.id == current_post).first()
         if post is None:
             return None, cookies
-        post.comments.where()
         return __postClassToDict(post, accountManager.getUser(request)), cookies
 
 
@@ -69,8 +73,9 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
     
     with database.getSession() as session:
-        posts = session.query(Post).where(Post.id > currentPost).limit(amount).all()
+        posts = session.query(Post).where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
         if len(posts) == 0:
+            print("no posts")
             return [], cookies
         return __postClassToDict(posts, accountManager.getUser(request)), cookies
 
@@ -103,4 +108,13 @@ def addPost(post: dict):
         session.add(post)
         session.commit()
         return
+
+
+def getComments(post: Post) -> list[Type[Post]]:
+    with (database.getSession() as session):
+        return session.query(Post)\
+            .join(CommentLink, CommentLink.comment == Post.id)\
+            .filter(CommentLink.parent == post.id)\
+            .all()
+
 

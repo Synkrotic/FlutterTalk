@@ -12,6 +12,7 @@ from posts import postmanager
 import tables
 
 def gen():
+    print("Generating dummy data...")
     users = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'user10']
     passwords = ['password1', 'password2', 'password3', 'password4', 'password5', 'password6', 'password7', 'password8', 'password9', 'password10']
     
@@ -38,12 +39,12 @@ def gen():
     for post in POSTS:
         postmanager.addPost(post)
         
-        
-if __name__ != '__main__':
+
+def checkVersion():
     if not pathlib.Path('database/dbVersion.txt').is_file():
         with open('database/dbVersion.txt', 'w') as f_current:
             f_current.write('-1')
-            
+    
     if not pathlib.Path('data.sqlite').is_file():
         database.create()
         gen()

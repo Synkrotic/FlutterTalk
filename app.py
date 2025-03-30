@@ -1,15 +1,12 @@
 from flask import render_template, request, redirect
-from sqlalchemy.orm import Session, Query
+import dummyData
 
 import accountManager
 import database
-import dummyData
-from posts import postmanager, postData
 from globals import *
+from posts import postmanager, postData
 from posts.postData import getLike
-from tables import User, Authentication, Post, PostLike
-
-
+from tables import User, Authentication
 
 errors = [] # TODO add errors in cookies or sum \_( '-')_/
 
@@ -22,12 +19,15 @@ def index():
     response.set_cookie("current_post", '0')
     return response
 
+
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
     posts, cookies = postmanager.getPosts(amount, request)
     response = Response(json.dumps(posts))
 
     return addCookiesToResponse(cookies, response)
+
+@app.route('/')
 
 
 @app.route('/users/@<string:accountName>/<int:postId>')
@@ -66,9 +66,11 @@ def viewAccount(accountName):
     
     return addCookiesToResponse(cookies, response)
 
+
 @app.route('/users/addShare/<int:postID>')
-def addShare(postID):
-    return postData.addShare(postID, accountManager.getUser(request))
+def addShare(postId):
+    return postData.addShare(postId, accountManager.getUser(request))
+
 
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
 def likePost(postID):
@@ -230,5 +232,6 @@ def getFullPage(renderedPage):
     return page
 
 if __name__ == '__main__':
-    # database.create()
+    dummyData.checkVersion()
+
     app.run(debug=True, host='0.0.0.0', port=3000)
