@@ -1,1 +1,6 @@
-<main>{% include "post.html" %}</main>
+<main>
+  <section class="post_comments_wrapper">
+    {% include "post.html" %}
+    <div class="comments_container">{% include "comment.html" %}</div>
+  </section>
+</main>
