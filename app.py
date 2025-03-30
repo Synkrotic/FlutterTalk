@@ -61,7 +61,7 @@ def viewAccount(accountName):
     return addCookiesToResponse(cookies, response)
 
 
-@app.route('/users/addShare/<int:postID>')
+@app.route('/users/addShare/<int:postId>')
 def addShare(postId):
     return postData.addShare(postId, accountManager.getUser(request))
 
