@@ -18,6 +18,9 @@ const createPostMenu = doc.getElementById("create-post-container");
 const contentArea = doc.getElementById("content-area");
 const contentCounter = doc.getElementById("char-counter");
 
+// Popup objects
+const popupContainer = doc.getElementById("popups-container");
+
 
 
 // Event listeners
