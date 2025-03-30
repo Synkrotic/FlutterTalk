@@ -98,5 +98,5 @@ def addShare(postID, user: User):
 
 def linkComment(postId, commentId):
     with database.getSession() as session:
-        session.add(tables.CommentLink(parent_id=postId, comment_id=commentId))
+        session.add(tables.CommentLink(parent=postId, comment=commentId))
         session.commit()
