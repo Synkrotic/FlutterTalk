@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 import accountManager
 import database
 import globals
-from posts import postmanager
+from posts import postmanager, postData
 import tables
 
 def gen():
@@ -33,11 +33,27 @@ def gen():
             'shares': random.randint(0, 10000)
         }
     
+        for i in range(1, 100)  # Generating 50 entries
+    ]
+    COMMENTS = [
+        {
+            'user_id': i % 9+1,
+            'has_parent': True,
+            'content': ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(0, 100)))
+        }
+    
         for i in range(1, 1000)  # Generating 50 entries
     ]
+
     
     for post in POSTS:
         postmanager.addPost(post)
+        
+    for comment in COMMENTS:
+        commentId = postmanager.addPost(comment)
+        postData.linkComment(random.randint(1, 200), commentId)
+        
+
         
 
 def checkVersion():
