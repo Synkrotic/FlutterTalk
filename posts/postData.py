@@ -1,5 +1,6 @@
 from flask import Response
 
+import json
 import tables
 from posts import postmanager
 from tables import PostLike, User, Post
@@ -88,7 +89,7 @@ def getLike(postID, user: User):
 def addShare(postID, user: User):
     with database.getSession() as session:
         if user is None:
-            return Response(status=401, response="You must be logged in to share a post")
+            return Response(status=401, response=json.dumps({"error": "You must be logged in to share a post!"}))
         
         post: Post | None = session.query(Post).where(Post.id == postID).first()
         post.shares += 1

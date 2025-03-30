@@ -5,7 +5,7 @@ function sharePost(accountName, postID) {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => {
+  }).then(async (response) => {
     if (response.status === 200) {
       if (location.protocol !== 'https:')
         alert(`You're not on https, no link copied to clipboard.\nLink to post is http://${window.location.host}/users/@${accountName}/${postID}`);
@@ -16,6 +16,9 @@ function sharePost(accountName, postID) {
         /(\d+)/,
         (match) => parseInt(match) + 1
       );
+    } else {
+      const msg = await response.json();
+      addPopup(false, `Failed to share post.${msg.error}`);
     }
   });
 }
