@@ -1,36 +1,43 @@
-<div class="post_container comment_container">
-  <img
-    src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
-    alt="Profile picture of the user."
-  />
-  <div>
-    <span>
-      <h4 class="post_display_name">
-        <a href="/users/@">Bert</a>
-      </h4>
-      <p class="post_account_name">
-        <a href="/users/@">@ernie</a>
-      </p>
-      <p class="post_age">⦁ 1m</p>
-    </span>
-    <pre cols="75">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</pre>
-    <div class="action_buttons_container">
-      <button>
-        <i class="bi bi-chat-left"></i>
-        999
-      </button>
-      <button
-        title="Copy the link to this post to your clipboard."
-        class="share_button"
-        id="share_button_"
-      >
-        <i class="bi bi-share"></i>
-        999
-      </button>
-      <button id="like_button_">
-        <i class="bi bi-heart-fill" id="like_icon_"></i>
-        <p id="like_amount_">999</p>
-      </button>
+<div class="post_comments_wrapper">
+  <div class="post_container comment_container">
+    <img
+      src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+      alt="Profile picture of the user."
+    />
+    <div>
+      <span>
+        <h4 class="post_display_name">
+          <a href="/users/@">Bert</a>
+        </h4>
+        <p class="post_account_name">
+          <a href="/users/@">@ernie</a>
+        </p>
+        <p class="post_age">⦁ 1m</p>
+      </span>
+      <pre cols="75">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</pre>
+      <div class="action_buttons_container">
+        <button>
+          <i class="bi bi-chat-left"></i>
+          999
+        </button>
+        <button
+          title="Copy the link to this comment to your clipboard."
+          class="share_button"
+          id="share_button_"
+        >
+          <i class="bi bi-share"></i>
+          999
+        </button>
+        <button id="like_button_">
+          <i class="bi bi-heart-fill" id="like_icon_"></i>
+          <p id="like_amount_">999</p>
+        </button>
+      </div>
     </div>
+  </div>
+  <div class="comments_container">
+    {% if range(0, 3)|random >= 1  %}
+      {% include "comment.html" %}
+    {% endif %}
   </div>
 </div>

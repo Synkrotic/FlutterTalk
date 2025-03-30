@@ -186,6 +186,7 @@ main div nav {
 }
 
 .post_container {
+  all: none !important;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -372,35 +373,25 @@ main div nav {
 .post_comments_wrapper {
   height: max-content;
   width: 100%;
+  overflow-y: scroll;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-end;
   position: relative;
+  border-bottom: 2px solid var(--darkGrayBlue) !important;
+  margin-bottom: 0.5rem;
 }
 
 .comments_container {
-  width: 90%;
+  width: calc(100% - 1rem);
   height: max-content;
-  overflow-y: auto;
+  overflow-y: scroll;
   scroll-behavior: smooth;
   border-left: 2px solid var(--darkGrayBlue);
+  background-color: var(--darkBlackish);
 }
-
-.comment_container::before {
-  content: "";
-  position: absolute;
-  height: 40%;
-  width: 8%;
-  transform: translate(-135%, 0%);
-  clip-path: polygon(
-    0 0,
-    5px 0,
-    5px calc(100% - 5px),
-    100% calc(100% - 5px),
-    100% 100%,
-    0 100%
-  );
-  background-color: var(--darkGrayBlue);
-}
+/* .comments_container:last-child { border-bottom: none !important; } */
+/* .post_comments_wrapper:last-child { border-bottom: none !important; } */
+/* .post_comments_wrapper:first-child { border-top: none !important; } */

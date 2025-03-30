@@ -1,5 +1,5 @@
 function sharePost(accountName, postID) {
-  const url = `/users/addShare/${postID}`;
+  const url = `/posts/addShare/${postID}`;
   fetch(url, {
     method: "GET",
     headers: {
