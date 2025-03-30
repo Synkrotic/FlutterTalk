@@ -27,6 +27,7 @@ def __getAuthToken(userid):
     
     if auth is None:
         token: str
+
         while True:
             token = secrets.token_hex()
             if session.query(tables.Authentication).where(tables.Authentication.token == token).first() is None:
@@ -97,13 +98,12 @@ def getUser(request: Request) -> tables.User | None:
         return None
     if token is None:
         return None
-    print(token)
     if token == globals.ADMIN_TOKEN:
         if isinstance(request, Request):
             if request.remote_addr != "127.0.0.1":
                 print ("attempted admin login from", request.remote_addr)
                 return None
-            print("admin login from", request.remote_addr)
+            print("admin access from", request.remote_addr)
             return tables.User(**ADMIN)
     
     session: Session = database.getSession()

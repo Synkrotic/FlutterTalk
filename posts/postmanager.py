@@ -27,11 +27,10 @@ def _getFormattedTime(posted: datetime) -> str:
 def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], user: User | None=None) -> list[dict] | dict:
     def convert(post: Post) -> dict:
         with database.getSession() as session:
-            comments = getComments(post)
-            for comment in comments:
-                session.add(comment)
+            session.merge(post)
 
-                print(comment.user.account_name, comment.content)
+            comments = getComments(post, session)
+            commentsView = __postClassToDict(comments, user)
             return {
                 "postID": post.id,
                 "accountName": post.user.account_name,
@@ -43,7 +42,8 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
                 "sharedAmount": post.shares,
                 "liked": user is not None and session.query(PostLike)
                     .where(PostLike.post_id == post.id and PostLike.user_id == user.id).first()
-                         is not None
+                         is not None,
+                "comments": commentsView
             }
     
     if isinstance(posts, Post):
@@ -71,7 +71,7 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     if getCookie(request, 'current_post') is not None:
         currentPost = getCookie(request, 'current_post')
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
-    
+
     with database.getSession() as session:
         posts = session.query(Post).where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
         if len(posts) == 0:
@@ -93,7 +93,7 @@ def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, lis
         return __postClassToDict(posts, accountManager.getUser(request)), cookies
 
 
-def getPost(postId: int, request: Request) -> dict | None:
+def getPostDict(postId: int, request: Request) -> dict | None:
     with database.getSession() as session:
         return __postClassToDict(session.query(Post).where(Post.id == postId).first(), accountManager.getUser(request))
 
@@ -110,11 +110,16 @@ def addPost(post: dict):
         return post.id
 
 
-def getComments(post: Post) -> list[Type[Post]]:
-    with (database.getSession() as session):
-        return session.query(Post)\
+def getComments(post: Post, session: Session | None = None) -> list[Type[Post]]:
+    localSession = session is None
+    if localSession:
+        session = database.getSession()
+    result = session.query(Post)\
             .join(CommentLink, CommentLink.comment == Post.id)\
             .filter(CommentLink.parent == post.id)\
             .all()
-
+    if localSession:
+        session.close()
+        
+    return result
 

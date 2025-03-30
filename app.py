@@ -32,7 +32,7 @@ def getPosts(amount: int):
 
 @app.route('/posts/view/<int:postId>')
 def viewPost(postId):
-    post = postmanager.getPost(postId, request)
+    post = postmanager.getPostDict(postId, request)
     
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
