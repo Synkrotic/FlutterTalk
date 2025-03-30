@@ -27,6 +27,7 @@ def __getAuthToken(userid):
     
     if auth is None:
         token: str
+
         while True:
             token = secrets.token_hex()
             if session.query(tables.Authentication).where(tables.Authentication.token == token).first() is None:
