@@ -2,9 +2,9 @@
   <section class="post_comments_wrapper">
     {% include "post.html" %}
     <div class="comments_container">
-      {% include "comment.html" %}
-      {% include "comment.html" %}
-      {% include "comment.html" %}
+      {% for comment in post.comments %}
+        {% include "comment.html" %}
+      {% endfor %}
     </div>
   </section>
 </main>
