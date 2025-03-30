@@ -30,8 +30,8 @@ def getPosts(amount: int):
 @app.route('/')
 
 
-@app.route('/users/@<string:accountName>/<int:postId>')
-def viewPost(accountName, postId):
+@app.route('/posts/view/<int:postId>')
+def viewPost(postId):
     post = postmanager.getPost(postId, request)
     
     if post is None:
@@ -40,12 +40,6 @@ def viewPost(accountName, postId):
     return getFullPage(
         render_template(
             "viewPost.html",
-            displayName={
-                accountManager.getOrDefaultUserName(
-                    accountManager.getUser(request)
-                )
-            },
-            accountName=f'{accountName}',
             post=post
         )
     )
