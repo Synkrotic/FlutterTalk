@@ -209,7 +209,7 @@ def closePopup(errorID):
 @app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
 def addPopup(errorType, error):
     errors.append({errorType: error})
-    return "Successfully added the popup!", 200
+    return render_template('popup.html', popupType=errorType, errorID=str(len(errors) - 1), errorText=error), 200
 
 
 @app.errorhandler(404)

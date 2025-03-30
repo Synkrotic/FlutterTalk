@@ -16,12 +16,15 @@
     </span>
     <pre cols="75">{{ post.content }}</pre>
     <div class="action_buttons_container">
-      <button>
+      <button
+        onclick="event.stopPropagation();"
+        id="comment_button_{{ post.postID }}"
+      >
         <i class="bi bi-chat-left"></i>
         {{ post.commentAmount }}
       </button>
       <button
-        onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}');"
+        onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}'); event.stopPropagation();"
         title="Copy the link to this post to your clipboard."
         class="share_button"
         id="share_button_{{ post.postID }}"
@@ -31,7 +34,7 @@
       </button>
       <button
         id="like_button_{{ post.postID }}"
-        onclick="likePost('{{ post.postID }}');"
+        onclick="likePost('{{ post.postID }}'); event.stopPropagation();"
       >
         {% if post.liked %}
         <i class="bi bi-heart-fill" id="like_icon_{{ post.postID }}"></i>

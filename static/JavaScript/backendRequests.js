@@ -8,7 +8,8 @@ function sharePost(accountName, postID) {
   }).then(async (response) => {
     if (response.status === 200) {
       if (location.protocol !== 'https:')
-        alert(`You're not on https, no link copied to clipboard.\nLink to post is http://${window.location.host}/users/@${accountName}/${postID}`);
+        addPopup(false, `You're not on https, no link copied to clipboard.\n
+          Link to post is http://${window.location.host}/users/@${accountName}/${postID}`);
       else
         copyShareLinkToClipboard(accountName, postID);
       const share_button = doc.getElementById(`share_button_${postID}`);
@@ -39,8 +40,6 @@ async function likePost(postID) {
     const data = await response.json();
     likedByUser = data.userLiked;
   }
-
-  console.log("test", likedByUser);
 
   if (likedByUser) {
     removeLike(postID);
@@ -86,9 +85,11 @@ async function addLike(postID) {
       try {
         const errorData = await response.json();
         console.error('Error details:', errorData);
-        alert(`Error: ${errorData.error || response.statusText}`);
+        addPopup(false, `Failed to like post.\n
+          ${errorData.error || response.statusText}`);
       } catch (e) {
-        alert(`Error: ${response.statusText}`);
+        addPopup(false, `Failed to like post.\n
+          ${response.statusText}`);
       }
     }
   } catch (error) {
@@ -133,6 +134,8 @@ async function removeLike(postID) {
       console.warn(`like_icon_${postID} not found`);
     }
   } catch (error) {
+    addPopup(false, `Failed to remove like.\n
+      ${error.message}`);
     console.error("Error in removeLike:", error);
   }
 }
@@ -185,9 +188,10 @@ function addPopup(errorType, errorText) {
   try {
     fetch(`/addPopup/${errorType ? "success" : "error"}/${errorText}`, {
       method: "POST",
-    }).then((res) => {
+    }).then(async (res) => {
       if (res.status === 200) {
-        window.location.reload();
+        const popupHTML = await res.text();
+        popupContainer.insertAdjacentHTML("beforeend", popupHTML);
       } else {
         throw new Error("Failed to add popup!");
       }
@@ -205,7 +209,11 @@ function closePopup(id) {
       method: "POST",
     }).then((res) => {
       if (res.status === 200) {
-        window.location.reload();
+        const popup = doc.getElementById(`POPUP_CONTAINER_${errorID}`);
+        if (popup)
+          popup.remove();
+        else
+          console.error(`Popup with ID ${id} not found.`);
       } else {
         throw new Error("Failed to close popup!");
       }

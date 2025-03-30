@@ -363,6 +363,7 @@ main div nav {
   align-items: center;
   transition: 0.5s;
   overflow: visible;
+  user-select: none;
 }
 
 .popup-close-button:hover {
@@ -392,6 +393,8 @@ main div nav {
   border-left: 2px solid var(--darkGrayBlue);
   background-color: var(--darkBlackish);
 }
-/* .comments_container:last-child { border-bottom: none !important; } */
-/* .post_comments_wrapper:last-child { border-bottom: none !important; } */
-/* .post_comments_wrapper:first-child { border-top: none !important; } */
+
+/* .comment_container { */
+  /* border-top: 2px solid var(--darkGrayBlue); */
+  /* border-radius: 0 0 0 2vh; */
+/* } */
