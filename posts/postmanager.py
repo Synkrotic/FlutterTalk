@@ -27,7 +27,10 @@ def _getFormattedTime(posted: datetime) -> str:
 def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], user: User | None=None) -> list[dict] | dict:
     def convert(post: Post) -> dict:
         with database.getSession() as session:
-            comments = __postClassToDict(getComments(post))
+            session.merge(post)
+
+            comments = getComments(post, session)
+            commentsView = __postClassToDict(comments, user)
             return {
                 "postID": post.id,
                 "accountName": post.user.account_name,
@@ -40,7 +43,7 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
                 "liked": user is not None and session.query(PostLike)
                     .where(PostLike.post_id == post.id and PostLike.user_id == user.id).first()
                          is not None,
-                "comments": comments
+                "comments": commentsView
             }
     
     if isinstance(posts, Post):
@@ -107,11 +110,16 @@ def addPost(post: dict):
         return post.id
 
 
-def getComments(post: Post) -> list[Type[Post]]:
-    with (database.getSession() as session):
-        return session.query(Post)\
+def getComments(post: Post, session: Session | None = None) -> list[Type[Post]]:
+    localSession = session is None
+    if localSession:
+        session = database.getSession()
+    result = session.query(Post)\
             .join(CommentLink, CommentLink.comment == Post.id)\
             .filter(CommentLink.parent == post.id)\
             .all()
-
+    if localSession:
+        session.close()
+        
+    return result
 
