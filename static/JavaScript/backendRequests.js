@@ -91,7 +91,6 @@ async function addLike(postID) {
         alert(`Error: ${response.statusText}`);
       }
     }
-
   } catch (error) {
     console.error(`Network error or other issue liking post ${postID}:`, error);
     alert("Could not connect to the server to like the post.");
@@ -102,7 +101,6 @@ async function removeLike(postID) {
   const url = `/users/like/${postID}`;
 
   try {
-    // Make the fetch call
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -110,7 +108,6 @@ async function removeLike(postID) {
       },
     });
 
-    // Only attempt to parse JSON if status is 200 (OK)
     let likeData;
 
     if (response.status === 200) {
@@ -120,17 +117,11 @@ async function removeLike(postID) {
       return;
     }
 
-    // Extract the like amount from the returned JSON
-    // (Assuming the response has a property 'likes')
-    const likeAmount = likeData;
-
-    // Use the document object to select elements
     const icon = document.getElementById(`like_icon_${postID}`);
     const likeButton = document.getElementById(`like_amount_${postID}`);
 
-    // Check if elements exist before modifying them
     if (likeButton) {
-      likeButton.innerHTML = likeAmount;
+      likeButton.innerHTML = likeData;
     } else {
       console.warn(`like_button_${postID} not found`);
     }
