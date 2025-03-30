@@ -1,4 +1,6 @@
 from flask import Response
+
+import tables
 from posts import postmanager
 from tables import PostLike, User, Post
 
@@ -93,3 +95,8 @@ def addShare(postID, user: User):
         session.commit()
         
         return str(post.shares)
+
+def linkComment(postId, commentId):
+    with database.getSession() as session:
+        session.add(tables.CommentLink(parent_id=postId, comment_id=commentId))
+        session.commit()

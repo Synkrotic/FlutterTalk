@@ -44,8 +44,11 @@ class Post(Base):
 
 class CommentLink(Base):
     __tablename__ = 'comment'
+    parent_id = Column('parent_id', Integer, ForeignKey('post.id'))
+    comment_id = Column('comment_id', Integer, ForeignKey('post.id'),  primary_key=True)
+    
     parent = Column('parent', Integer, ForeignKey('post.id'))
-    comment = Column('comment', Integer, ForeignKey('post.id'),  primary_key=True)
+    comment = Column('comment', Integer, ForeignKey('post.id'))
     
 
 class PostLike(Base):

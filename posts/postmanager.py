@@ -107,7 +107,7 @@ def addPost(post: dict):
         post = Post(**post)
         session.add(post)
         session.commit()
-        return
+        return post.id
 
 
 def getComments(post: Post) -> list[Type[Post]]:

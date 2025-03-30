@@ -147,16 +147,22 @@ def logout():
 
 
 @app.route('/post', methods=['POST'])
-def createPost():
+@app.route('/post/<int:parentId>', methods=['POST'])
+def createPost(parentId=None):
     user = accountManager.getUser(request)
     if user is None:
         return json.dumps({"statusText": "User is not logged in!"}), 401, { "ContentType": 'application/json' }
     
     content = list(request.get_json().values())[0]
-    postmanager.addPost({
+    
+    postId = postmanager.addPost({
+        "has_parent": parentId is not None,
         "user_id": user.id,
         "content": content
     })
+    
+    if parentId is not None:
+        postData.linkComment(parentId, postId)
     
     return redirect('/'), 200 # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
 
