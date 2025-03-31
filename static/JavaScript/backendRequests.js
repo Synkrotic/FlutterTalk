@@ -12,10 +12,11 @@ function sharePost(accountName, postID) {
           Link to post is http://${window.location.host}/users/@${accountName}/${postID}`);
       else
         copyShareLinkToClipboard(accountName, postID);
-      const share_button = doc.getElementById(`share_button_${postID}`);
+      const share_button = document.getElementById(`share_button_${postID}`);
+      if (!share_button) return;
       share_button.innerHTML = share_button.innerHTML.replace(
         /(\d+)/,
-        (match) => parseInt(match) + 1
+        (match) => (parseInt(match) + 1).toString()
       );
     } else {
       const msg = await response.json();
@@ -64,10 +65,10 @@ async function addLike(postID) {
     if (response.ok) {
       const data = await response.json();
 
-      if (data && typeof data.likes !== 'undefined') {
+      if (data && typeof data.likes !== 'undefined' && likeText) {
         likeText.innerHTML = data.likes;
 
-        if (response.status === 201 || response.status === 200) {
+        if (response.ok && icon) {
           icon.classList.remove("bi-heart");
           icon.classList.add("bi-heart-fill");
         }
@@ -141,7 +142,8 @@ async function removeLike(postID) {
 }
 
 function createPost() {
-  const contentArea = doc.getElementById("content-area");
+  const contentArea = document.getElementById("content-area");
+  if (!contentArea) return;
   const postContent = contentArea.value;
 
   const url = "/post";
@@ -189,7 +191,7 @@ function addPopup(errorType, errorText) {
     fetch(`/addPopup/${errorType ? "success" : "error"}/${errorText}`, {
       method: "POST",
     }).then(async (res) => {
-      if (res.status === 200) {
+      if (res.ok && popupContainer) {
         const popupHTML = await res.text();
         popupContainer.insertAdjacentHTML("beforeend", popupHTML);
       } else {
@@ -203,13 +205,13 @@ function addPopup(errorType, errorText) {
 
 
 function closePopup(id) {
-  errorID = id.split("-")[1];
+  const errorID = id.split("-")[1];
   try {
     fetch(`/closePopup/${errorID}`, {
       method: "POST",
     }).then((res) => {
       if (res.status === 200) {
-        const popup = doc.getElementById(`POPUP_CONTAINER_${errorID}`);
+        const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
         if (popup)
           popup.remove();
         else

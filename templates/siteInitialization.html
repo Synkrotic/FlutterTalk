@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlutterTalk</title>
     <!-- Favicon -->
     <link
       rel="icon"
@@ -13,6 +14,10 @@
     <script
       defer
       src="{{ url_for('static', filename='JavaScript/script.js') }}"
+    ></script>
+    <script
+      defer
+      src="{{ url_for('static', filename='JavaScript/infinitePostScroll.js') }}"
     ></script>
     <script
       defer
@@ -54,9 +59,8 @@
     {% include('createPost.html') %}
     <section id="popups-container">
       {% for index in range(errors|length) %}
-        {% set errorType = errors[index].keys()|list|first %}
-        {% with errorID=index, popupType=errorType, errorText=errors[index][errorType] %}
-          {% include 'popup.html' %}
+        {% with errorID=errors[index][0], popupType=errors[index][-1].type, errorText=errors[index][-1].text %}
+          {% include "popup.html" %}
         {% endwith %}
       {% endfor %}
     </section>

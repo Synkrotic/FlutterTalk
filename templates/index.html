@@ -11,9 +11,13 @@
       </button>
     </nav>
   </div>
-  <article id="main_section">
+  <section id="main_post_section">
     {% for post in posts %}
-    {% include "post.html" %}
+      {% include "post.html" %}
     {% endfor %}
-  </article>
+    <div
+      id="posts_loading_spinner"
+      class="loading_spinner_container hidden"
+    ><span class="loading_spinner center"></span></div>
+  </section>
 </main>

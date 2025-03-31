@@ -1,4 +1,4 @@
-<div>
+<div class="post_comments_wrapper">
   <div class="post_container comment_container">
     <img
       src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
@@ -18,30 +18,32 @@
       <div class="action_buttons_container">
         <button
           onclick=""
-          id="comment_button_{{ post.postID }}"
+          class="comment_element"
+          id="comment_button_{{ comment.postID }}"
         >
           <i class="bi bi-chat-left"></i>
           {{ comment.commentAmount }}
         </button>
         <button
-          onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}');"
+          onclick="sharePost('{{ comment.accountName }}', '{{ comment.postID }}');"
           title="Copy the link to this post to your clipboard."
-          class="share_button"
-          id="share_button_{{ post.postID }}"
+          class="share_button comment_element"
+          id="share_button_{{ comment.postID }}"
         >
           <i class="bi bi-share"></i>
           {{ comment.sharedAmount }}
         </button>
         <button
-          id="like_button_{{ post.postID }}"
+          class="comment_element"
+          id="like_button_{{ comment.postID }}"
           onclick="likePost('{{ post.postID }}');"
         >
           {% if post.liked %}
-          <i class="bi bi-heart-fill" id="like_icon_{{ post.postID }}"></i>
+          <i class="bi bi-heart-fill" id="like_icon_{{ comment.postID }}"></i>
           {% else %}
-          <i class="bi bi-heart" id="like_icon_{{ post.postID }}"></i>
+          <i class="bi bi-heart" id="like_icon_{{ comment.postID }}"></i>
           {% endif %}
-          <p id="like_amount_{{ post.postID }}">{{ comment.likeAmount }}</p>
+          <p id="like_amount_{{ comment.postID }}">{{ comment.likeAmount }}</p>
         </button>
       </div>
     </div>

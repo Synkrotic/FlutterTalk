@@ -1,4 +1,5 @@
-from flask import render_template, request, redirect
+import random
+from flask import render_template, request, redirect # type: ignore
 import dummyData
 
 import accountManager
@@ -8,7 +9,13 @@ from posts import postmanager, postData
 from posts.postData import getLike
 from tables import User, Authentication
 
-errors = [] # TODO add errors in cookies or sum \_( '-')_/
+errors = [] #* [id, {"type": "", "text": ""}]
+
+
+@app.route('/getHTMLFile/<string:filename>', methods=['POST'])
+def getHTMLFile(filename: str):
+    with open(f"templates/{filename}", 'r') as file:
+        return file.read(), 200
 
 
 @app.route('/')
@@ -27,7 +34,7 @@ def getPosts(amount: int):
 
     return addCookiesToResponse(cookies, response)
 
-@app.route('/')
+#! @app.route('/') ???
 
 
 @app.route('/posts/view/<int:postId>')
@@ -200,7 +207,10 @@ def settings():
 @app.route("/closePopup/<int:errorID>", methods=['POST'])
 def closePopup(errorID):
     try:
-        errors.pop(int(errorID))
+        for error in errors:
+            if error[0] == errorID:
+                errors.remove(error)
+                break
     except IndexError:
         return "Error: No popup with this ID found!", 404
     return "Successfully closed the popup!", 200
@@ -208,8 +218,9 @@ def closePopup(errorID):
 
 @app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
 def addPopup(errorType, error):
-    errors.append({errorType: error})
-    return render_template('popup.html', popupType=errorType, errorID=str(len(errors) - 1), errorText=error), 200
+    errorID = random.randint(1, 10_000_000)
+    errors.append([errorID, {"type": errorType, "text": error}])
+    return render_template('popup.html', popupType=errorType, errorID=str(errorID), errorText=error), 200
 
 
 @app.errorhandler(404)
