@@ -3,10 +3,7 @@ const postLoadingIcon = document.getElementById('posts_loading_spinner');
 let lastTime = new Date().getTime();
 
 function loadNewPostsEvent() {
-  if (!postsContainer || !postLoadingIcon) { 
-    console.error('Post container or loading icon not found');
-    return;
-  }
+  if (!postsContainer || !postLoadingIcon) return;
 
   postsContainer.addEventListener('scroll', loadNewPosts);
 }

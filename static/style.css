@@ -411,7 +411,6 @@ main div nav {
 .post_comments_wrapper {
   height: max-content;
   width: 100%;
-  overflow-y: scroll;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
@@ -425,8 +424,12 @@ main div nav {
 .comments_container {
   width: calc(100% - 1rem);
   height: max-content;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
   border-left: 2px solid var(--darkGrayBlue);
   background-color: var(--darkBlackish);
+}
+
+.scrollable {
+  overflow-y: scroll !important;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--darkGrayBlue) var(--darkBlackish);
 }
