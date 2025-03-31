@@ -34,8 +34,6 @@ def getPosts(amount: int):
 
     return addCookiesToResponse(cookies, response)
 
-#! @app.route('/') ???
-
 
 @app.route('/posts/view/<int:postId>')
 def viewPost(postId):
@@ -62,10 +60,11 @@ def viewAccount(accountName):
     if user is None:
         return render_template("errorPage.html", error="404 user not found!")
     
-    posts, cookies = postmanager.getPostsOfUserByID(user.id, 10, request)
+    posts, _ = postmanager.getPostsOfUserByID(user.id, 10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts)))
     
-    return addCookiesToResponse(cookies, response)
+    response.set_cookie("current_post", '0')
+    return response
 
 
 @app.route('/posts/addShare/<int:postId>')
@@ -76,19 +75,16 @@ def addShare(postId):
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
 def likePost(postID):
     user: User = accountManager.getUser(request)
-
     match request.method:
         case 'DELETE':
             return postData.deleteLike(postID, user)
-
         case 'POST':
             return postData.addLike(postID, user)
-
         case 'GET':
             return getLike(postID, user)
-
         case _:
             return render_template("errorPage.html", error="Invalid method used")
+
 
 @app.route('/profile')
 @app.route('/profile/<string:action>')
@@ -96,7 +92,6 @@ def viewProfile(action="login"):
     response = Response()
     user: User = accountManager.getUser(request)
     
-    print("user:", user)
     if user is None:
         response.set_data(getFullPage(render_template("viewProfile.html", action=action)))
         return response

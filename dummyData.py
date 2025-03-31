@@ -33,7 +33,7 @@ def gen():
             'shares': random.randint(0, 10000)
         }
     
-        for i in range(1, 100)  # Generating 50 entries
+        for i in range(1, 1000)  # Generating 50 entries
     ]
     COMMENTS = [
         {
@@ -44,6 +44,15 @@ def gen():
     
         for i in range(1, 1000)  # Generating 50 entries
     ]
+    NESTED = [
+        {
+            'user_id': i % 9 + 1,
+            'has_parent': True,
+            'content': ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(0, 100)))
+        }
+        
+        for i in range(1, 100)  # Generating 50 entries
+    ]
 
     
     for post in POSTS:
@@ -51,9 +60,11 @@ def gen():
         
     for comment in COMMENTS:
         commentId = postmanager.addPost(comment)
-        postData.linkComment(random.randint(1, 200), commentId)
-        
-
+        postData.linkComment(random.randint(1, 10), commentId)
+    
+    for comment in NESTED:
+        commentId = postmanager.addPost(comment)
+        postData.linkComment(random.randint(1000, 1200), commentId)
         
 
 def checkVersion():
