@@ -4,7 +4,7 @@ const mainSection = document.getElementById("main_post_section");
 // Navbar objects
 const navbar = document.getElementById("main-nav");
 const accountButton = document.getElementById("account_button");
-const logoutButton = document.getElementById("logout_menu_button");
+const accountActionButtons = document.getElementsByClassName("account_button_actions");
 
 const headerNavButtons = document.getElementsByClassName("header_nav_btn");
 const scrollUpButton = document.getElementById("scroll_up_button");
@@ -83,11 +83,11 @@ if (contentArea) {
   });
 }
 
-if (logoutButton && accountButton) {
+if (accountActionButtons && accountButton) {
   document.addEventListener("mouseover", function (event) {
     if (!event) return;
     if (
-      !logoutButton.contains(event.target) &&
+      !Array.from(accountActionButtons).some(el => el.contains(event.target)) &&
       !accountButton.contains(event.target)
     ) {
       accountButton.classList.remove("active");

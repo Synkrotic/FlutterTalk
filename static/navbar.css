@@ -115,7 +115,7 @@ body nav {
   transition: 0.2s;
 }
 
-#logout_menu_button {
+.account_button_actions {
   all: unset;
   opacity: 0;
   position: absolute;
@@ -133,18 +133,24 @@ body nav {
   transition: 0.2s;
   z-index: -5;
 }
-#logout_menu_button i {
+.account_button_actions i {
   margin: 0vh 0.9vh;
 }
-#logout_menu_button:hover {
+.account_button_actions:hover {
   background-color: var(--attentionBlue);
   outline: 1px solid snow;
   transition: 0.5s;
 }
-.active ~ #logout_menu_button {
+.active ~ .account_button_actions {
   transform: translate(-1vw, 6vh);
   opacity: 1;
   z-index: 5;
+}
+#account_menu_button:hover ~ #logout_menu_button {
+  border-top: 1px solid snow;
+}
+.active ~ #logout_menu_button {
+  transform: translate(-1vw, 9vh);
 }
 
 

@@ -8,7 +8,11 @@
       <b>{{ displayName }}</b>
       <p>@{{ accountName }}</p>
     </span>
-    <button id="logout_menu_button" title="Log out of your account." onclick="logout()">
+    <button class="account_button_actions" id="account_menu_button" title="Go to your profile." onclick="goToPage('/users/@{{ accountName }}')">
+      <i class="bi bi-person"></i>
+      Profile
+    </button>
+    <button class="account_button_actions" id="logout_menu_button" title="Log out of your account." onclick="logout()">
       <i class="bi bi-box-arrow-right"></i>
       Logout
     </button>
