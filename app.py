@@ -14,7 +14,7 @@ errors = [] #* [id, {"type": "", "text": ""}]
 
 @app.route('/getHTMLFile/<string:filename>', methods=['POST'])
 def getHTMLFile(filename: str):
-    with open(f"templates/{filename}", 'r') as file:
+    with open(f"templates/{filename}", 'r', encoding="utf-8") as file:
         return file.read(), 200
 
 
@@ -223,9 +223,15 @@ def addPopup(errorType, error):
     return render_template('popup.html', popupType=errorType, errorID=str(errorID), errorText=error), 200
 
 
+@app.route("/postMedia")
+def postMedia():
+    pass
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
+
 
 
 def getFullPage(renderedPage):
