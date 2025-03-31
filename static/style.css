@@ -210,7 +210,7 @@ main div nav {
     var(--darkBlue) 50%,
     #0000 80%
   );
-  animation: spin 2s linear infinite;
+  animation: spin 1s linear infinite;
   position: relative;
 }
 @keyframes spin {
