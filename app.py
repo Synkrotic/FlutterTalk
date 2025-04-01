@@ -29,7 +29,12 @@ def getPosts(amount: int):
 
     return addCookiesToResponse(cookies, response)
 
-
+@app.route('/users/isLoggedIn', methods=['GET'])
+def isLoggedIn():
+    user = accountManager.getUser(request)
+    if user is None:
+        return json.dumps({'logged_in':False, 'username': None}), 200
+    return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postId):
     post = postmanager.getPost(postId, request)
