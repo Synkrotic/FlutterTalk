@@ -64,3 +64,11 @@ class Authentication(Base):
     token = Column(VARCHAR(16), primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False, unique=True)
     time_created = Column(DateTime, nullable=False, default=func.now())
+
+class MediaEntry(Base):
+    __tablename__ = 'media'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    media_type = Column(String, nullable=False)
+    media_url = Column(String, nullable=False)
