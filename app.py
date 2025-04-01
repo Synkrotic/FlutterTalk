@@ -196,7 +196,7 @@ def help():
 
 @app.route("/settings")
 def settings():
-    return render_template("settings.html")
+    return getFullPage(render_template("settings.html"))
 
 
 @app.route("/closePopup/<int:errorID>", methods=['POST'])
