@@ -44,7 +44,7 @@ def isLoggedIn():
     return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
 
 
-@app.route('/posts/view/<int:postID>')
+@app.route('/posts/view/<int:postId>')
 def viewPost(postId):
     post = postmanager.getPostDict(postId, request)
     
