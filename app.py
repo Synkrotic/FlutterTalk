@@ -211,10 +211,11 @@ def closePopup(errorID):
             if error[0] == errorID:
                 errors.remove(error)
                 break
+
     except IndexError:
         return "Error: No popup with this ID found!", 404
-    return "Successfully closed the popup!", 200
 
+    return "Successfully closed the popup!", 200
 
 @app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
 def addPopup(errorType, error):
