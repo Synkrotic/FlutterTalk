@@ -27,18 +27,6 @@ def index():
     return response
 
 
-@app.route('/posts/view/<int:postId>')
-def viewPost(postId):
-    post = postmanager.getPostDict(postId, request)
-    if post is None:
-        return render_template("errorPage.html", error="404 post not found!")
-    return getFullPage(
-        render_template(
-            "viewPost.html",
-            post=post
-        )
-    )
-
 
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
@@ -56,7 +44,7 @@ def isLoggedIn():
     return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
 
 
-@app.route('/posts/<int:postID>')
+@app.route('/posts/view/<int:postID>')
 def viewPost(postId):
     post = postmanager.getPostDict(postId, request)
     
