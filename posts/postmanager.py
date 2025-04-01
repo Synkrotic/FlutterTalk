@@ -1,17 +1,20 @@
 from datetime import datetime
+from datetime import datetime
 from typing import Type
-from globals import *
-from tables import Post, User, PostLike, CommentLink
-from sqlalchemy import not_
-from sqlalchemy.orm import Session, Query
 
 import pytz
+from sqlalchemy import not_, alias
+from sqlalchemy.orm import Session, Query
+
 import accountManager
 import database
+from globals import *
+from tables import Post, User, PostLike, CommentLink
+
+
 
 def _getFormattedTime(posted: datetime) -> str:
     time = datetime.now(pytz.UTC) - posted
-
     if time.seconds < 60:
         return f"{time.seconds}s"
     elif time.seconds//60 < 60:
@@ -28,7 +31,6 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
 
             comments = getComments(post, session)
             commentsView = __postClassToDict(comments, user)
-
             return {
                 "postID": post.id,
                 "accountName": post.user.account_name,
@@ -53,45 +55,35 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
 def getPostOfFeed(request) -> (dict | None, list[Cookie]):
     current_post = 0
     cookies = []
-
     if request.cookies.get('current_post') is not None:
         current_post = request.cookies.get('current_post')
     else:
         cookies = addCookie([], Cookie("current_post", current_post))
-
     with database.getSession() as session:
         post: Post | None = session.query(Post).where(Post.id == current_post).first()
-
         if post is None:
             return None, cookies
-
         return __postClassToDict(post, accountManager.getUser(request)), cookies
 
 
 def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     currentPost = 0
-
     if getCookie(request, 'current_post') is not None:
         currentPost = getCookie(request, 'current_post')
-
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
 
     with database.getSession() as session:
         posts = session.query(Post).where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
-
         if len(posts) == 0:
             print("no posts")
             return [], cookies
-
         return __postClassToDict(posts, accountManager.getUser(request)), cookies
 
 
 def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, list[Cookie]):
     currentPost = 0
-
     if getCookie(request, 'current_post') is not None:
         currentPost = getCookie(request, 'current_post')
-
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
     
     with database.getSession() as session:
