@@ -34,15 +34,18 @@ def getPosts(amount: int):
 
     return addCookiesToResponse(cookies, response)
 
+
 @app.route('/users/isLoggedIn', methods=['GET'])
 def isLoggedIn():
     user = accountManager.getUser(request)
     if user is None:
         return json.dumps({'logged_in':False, 'username': None}), 200
     return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
+
+
 @app.route('/users/@<string:accountName>/<int:postID>')
 def viewPost(accountName, postId):
-    post = postmanager.getPost(postId, request)
+    post = postmanager.getPostDict(postId, request)
     
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
@@ -216,11 +219,13 @@ def closePopup(errorID):
     return "Successfully closed the popup!", 200
 
 
+CurrentErrorId = 0
 @app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
 def addPopup(errorType, error):
-    errorID = random.randint(1, 10_000_000)
-    errors.append([errorID, {"type": errorType, "text": error}])
-    return render_template('popup.html', popupType=errorType, errorID=str(errorID), errorText=error), 200
+    global CurrentErrorId
+    CurrentErrorId += 1
+    errors.append([CurrentErrorId, {"type": errorType, "text": error}])
+    return render_template('popup.html', popupType=errorType, errorID=str(CurrentErrorId), errorText=error), 200
 
 
 @app.route("/postMedia")
