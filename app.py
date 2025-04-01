@@ -34,10 +34,15 @@ def getPosts(amount: int):
 
     return addCookiesToResponse(cookies, response)
 
-
-@app.route('/posts/view/<int:postId>')
-def viewPost(postId):
-    post = postmanager.getPostDict(postId, request)
+@app.route('/users/isLoggedIn', methods=['GET'])
+def isLoggedIn():
+    user = accountManager.getUser(request)
+    if user is None:
+        return json.dumps({'logged_in':False, 'username': None}), 200
+    return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
+@app.route('/users/@<string:accountName>/<int:postID>')
+def viewPost(accountName, postId):
+    post = postmanager.getPost(postId, request)
     
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
@@ -91,7 +96,7 @@ def likePost(postID):
 def viewProfile(action="login"):
     response = Response()
     user: User = accountManager.getUser(request)
-    
+
     if user is None:
         response.set_data(getFullPage(render_template("viewProfile.html", action=action)))
         return response
@@ -156,7 +161,7 @@ def createPost(parentId=None):
         return json.dumps({"statusText": "User is not logged in!"}), 401, { "ContentType": 'application/json' }
     
     content = list(request.get_json().values())[0]
-    
+
     postId = postmanager.addPost({
         "has_parent": parentId is not None,
         "user_id": user.id,
@@ -165,7 +170,7 @@ def createPost(parentId=None):
     
     if parentId is not None:
         postData.linkComment(parentId, postId)
-    
+
     return redirect('/'), 200 # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
 
 
@@ -226,7 +231,6 @@ def postMedia():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
-
 
 
 def getFullPage(renderedPage):
