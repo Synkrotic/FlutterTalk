@@ -1,13 +1,13 @@
 # FlutterTalk
 
-## Features
+### Features
 - Likes
 - Comments
 - Infinite post scroll
 - Password authentication
 - Pocker, girls & drugs
 
-## Installation
+### Installation
 
 Run the following command in your terminal
 ```
@@ -17,5 +17,5 @@ pip install bcrypt
 pip install pytz
 ```
 
-## Help, slaafwerk!!! :(
+### Help, slaafwerk!!! :(
 [Report to the European Court of Human Rights](https://www.echr.coe.int)
