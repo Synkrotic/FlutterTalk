@@ -1,9 +1,7 @@
 # Security Policy
 
-## Supported Versions
+### Supported Versions
+- None
 
-None
-
-## Reporting a Vulnerability
-
-E-mail sergei
+### Reporting a Vulnerability
+[E-mail Sergei](mailto:topscrech@icloud.com)
