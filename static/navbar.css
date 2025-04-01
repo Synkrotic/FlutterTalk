@@ -129,13 +129,12 @@ body nav {
   flex-wrap: nowrap;
   flex-direction: row;
   align-items: center;
-  border-radius: 99999999999px;
   transition: 0.2s;
   z-index: -5;
 }
-.account_button_actions i {
-  margin: 0vh 0.9vh;
-}
+
+.account_button_actions i { margin: 0vh 0.9vh; }
+
 .account_button_actions:hover {
   background-color: var(--attentionBlue);
   outline: 1px solid snow;
@@ -146,12 +145,10 @@ body nav {
   opacity: 1;
   z-index: 5;
 }
-#account_menu_button:hover ~ #logout_menu_button {
-  border-top: 1px solid snow;
-}
-.active ~ #logout_menu_button {
-  transform: translate(-1vw, 9vh);
-}
+
+#logout_menu_button { border-radius: 0 0 99999999999px 99999999999px; }
+#account_menu_button:hover ~ #logout_menu_button { border-top: 1px solid snow; }
+.active ~ #logout_menu_button { transform: translate(-1vw, 9vh); }
 
 
 

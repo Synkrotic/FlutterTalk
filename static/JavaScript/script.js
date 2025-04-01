@@ -56,9 +56,10 @@ if (textAreas) {
 
 if (contentArea) {
   contentArea.addEventListener("input", function () {
+    console.log(Math.ceil(this.scrollHeight / parseFloat(getComputedStyle(this).lineHeight)));
     contentArea.scrollTop = contentArea.scrollHeight;
     const rows = Math.ceil(this.scrollHeight / parseFloat(getComputedStyle(this).lineHeight));
-    if (rows > 15) {
+    if (rows > 16) {
       contentArea.value = this.value.slice(0, -1);
     }
 

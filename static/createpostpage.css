@@ -33,7 +33,7 @@
   all: unset;
   white-space: pre-wrap;
   word-wrap: break-word;
-  background-color: #00000055;
+  background-color: var(--blackish);
   border-radius: 1em;
   max-width: calc(100% - 2em);
   width: calc(100% - 2em);
