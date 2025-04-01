@@ -1,17 +1,13 @@
 from datetime import datetime
-from datetime import datetime
 from typing import Type
-
-import pytz
-from sqlalchemy import not_, alias
+from sqlalchemy import not_
 from sqlalchemy.orm import Session, Query
-
-import accountManager
-import database
 from globals import *
 from tables import Post, User, PostLike, CommentLink
 
-
+import pytz
+import accountManager
+import database
 
 def _getFormattedTime(posted: datetime) -> str:
     time = datetime.now(pytz.UTC) - posted
