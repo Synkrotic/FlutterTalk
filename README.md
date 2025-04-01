@@ -4,6 +4,7 @@
 - Likes
 - Comments
 - Infinite post scroll
+- Password authentication
 - Pocker, girls & drugs
 
 ## Installation
