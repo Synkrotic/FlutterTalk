@@ -5,6 +5,7 @@
 - Comments
 - Infinite post scroll
 - Password authentication
+- Password hashing
 - Pocker, girls & drugs
 
 ### Installation
