@@ -1,5 +1,4 @@
-{# templates/post.html #}
-<div class="post_container">
+<div class="post_container" onclick="goToPage('/posts/view/{{ post.postID }}');">
   <img
     src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
     alt="Profile picture of the user."
@@ -7,25 +6,24 @@
   <div>
     <span>
       <h4 class="post_display_name">
-        <a href="/users/@{{ post.accountName }}">
-          {{ post.displayName }}
-        </a>
+        <a href="/users/@{{ post.accountName }}">{{ post.displayName }}</a>
       </h4>
       <p class="post_account_name">
-        <a href="/users/@{{ post.accountName }}">
-          @{{ post.accountName }}
-        </a>
+        <a href="/users/@{{ post.accountName }}">@{{ post.accountName }}</a>
       </p>
       <p class="post_age">⦁ {{ post.age }}</p>
     </span>
     <pre cols="75">{{ post.content }}</pre>
     <div class="action_buttons_container">
-      <button>
+      <button
+        onclick="event.stopPropagation();"
+        id="comment_button_{{ post.postID }}"
+      >
         <i class="bi bi-chat-left"></i>
         {{ post.commentAmount }}
       </button>
       <button
-        onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}')"
+        onclick="sharePost('{{ post.accountName }}', '{{ post.postID }}'); event.stopPropagation();"
         title="Copy the link to this post to your clipboard."
         class="share_button"
         id="share_button_{{ post.postID }}"
@@ -33,7 +31,10 @@
         <i class="bi bi-share"></i>
         {{ post.sharedAmount }}
       </button>
-      <button id="like_button_{{ post.postID }}" onclick="likePost('{{ post.postID}}');">
+      <button
+        id="like_button_{{ post.postID }}"
+        onclick="likePost('{{ post.postID }}'); event.stopPropagation();"
+      >
         {% if post.liked %}
         <i class="bi bi-heart-fill" id="like_icon_{{ post.postID }}"></i>
         {% else %}

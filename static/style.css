@@ -4,6 +4,11 @@
 
 * {
   font-family: Arial, Helvetica, sans-serif;
+  scrollbar-color: var(--darkGrayBlue) var(--blackish);
+}
+
+.center {
+  align-self: center;
 }
 
 body {
@@ -176,15 +181,49 @@ main div nav {
   }
 }
 
-#main_section {
+#main_post_section {
   overflow-y: auto;
   scroll-behavior: smooth;
   scrollbar-color: var(--darkGrayBlue) var(--blackish);
   height: 100%;
   padding-bottom: 20vh;
 }
+.loading_spinner_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2em;
+
+  width: 100%;
+  height: max-content;
+}
+.loading_spinner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  -webkit-mask-image: radial-gradient(circle, transparent 50%, black 51%);
+  mask-image: radial-gradient(circle, transparent 50%, black 51%);
+  background-image: radial-gradient(
+    farthest-corner at 40px 40px,
+    var(--attentionBlue) 0%,
+    var(--darkBlue) 50%,
+    #0000 80%
+  );
+  animation: spin 1s linear infinite;
+  position: relative;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 .post_container {
+  all: none !important;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -315,10 +354,10 @@ main div nav {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  
+
   left: 50%;
   transform: translate(-50%, 0px);
-    
+
   z-index: 999;
 }
 
@@ -338,8 +377,12 @@ main div nav {
   justify-content: center;
   align-items: center;
 }
-.popup-container.error { background-color: var(--attentionRed); }
-.popup-container.success { background-color: var(--attentionGreen); }
+.popup-container.error {
+  background-color: var(--attentionRed);
+}
+.popup-container.success {
+  background-color: var(--attentionGreen);
+}
 
 .popup-close-button {
   all: unset;
@@ -349,7 +392,7 @@ main div nav {
   aspect-ratio: 1;
   border-radius: 50%;
   position: absolute;
-  
+
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
@@ -357,9 +400,36 @@ main div nav {
   align-items: center;
   transition: 0.5s;
   overflow: visible;
+  user-select: none;
 }
 
 .popup-close-button:hover {
   font-size: 2.5vh;
   transition: 0.5s;
+}
+
+.post_comments_wrapper {
+  height: max-content;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  position: relative;
+  border-bottom: 2px solid var(--darkGrayBlue) !important;
+  margin-bottom: 0.5rem;
+}
+
+.comments_container {
+  width: calc(100% - 1rem);
+  height: max-content;
+  border-left: 2px solid var(--darkGrayBlue);
+  background-color: var(--darkBlackish);
+}
+
+.scrollable {
+  overflow-y: scroll !important;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--darkGrayBlue) var(--darkBlackish);
 }

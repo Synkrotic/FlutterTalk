@@ -1,0 +1,56 @@
+<div class="post_comments_wrapper">
+  <div class="post_container comment_container">
+    <img
+      src="https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
+      alt="Profile picture of the user."
+    />
+    <div>
+      <span>
+        <h4 class="post_display_name">
+          <a href="/users/@{{ comment.accountName }}">{{ comment.displayName }}</a>
+        </h4>
+        <p class="post_account_name">
+          <a href="/users/@{{ comment.accountName }}">@{{ comment.accountName }}</a>
+        </p>
+        <p class="post_age">⦁ {{ comment.age }}</p>
+      </span>
+      <pre cols="75">{{ comment.content }}</pre>
+      <div class="action_buttons_container">
+        <button
+          onclick=""
+          class="comment_element"
+          id="comment_button_{{ comment.postID }}"
+        >
+          <i class="bi bi-chat-left"></i>
+          {{ comment.commentAmount }}
+        </button>
+        <button
+          onclick="sharePost('{{ comment.accountName }}', '{{ comment.postID }}');"
+          title="Copy the link to this post to your clipboard."
+          class="share_button comment_element"
+          id="share_button_{{ comment.postID }}"
+        >
+          <i class="bi bi-share"></i>
+          {{ comment.sharedAmount }}
+        </button>
+        <button
+          class="comment_element"
+          id="like_button_{{ comment.postID }}"
+          onclick="likePost('{{ post.postID }}');"
+        >
+          {% if post.liked %}
+          <i class="bi bi-heart-fill" id="like_icon_{{ comment.postID }}"></i>
+          {% else %}
+          <i class="bi bi-heart" id="like_icon_{{ comment.postID }}"></i>
+          {% endif %}
+          <p id="like_amount_{{ comment.postID }}">{{ comment.likeAmount }}</p>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="comments_container">
+    {% for comment in comment.comments %}
+      {% include "comment.html" %}
+    {% endfor %}
+  </div>
+</div>

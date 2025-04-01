@@ -1,3 +1,10 @@
-<main>
-  
+<main class="scrollable">
+  <section class="post_comments_wrapper">
+    {% include "post.html" %}
+    <div class="comments_container">
+      {% for comment in post.comments %}
+        {% include "comment.html" %}
+      {% endfor %}
+    </div>
+  </section>
 </main>

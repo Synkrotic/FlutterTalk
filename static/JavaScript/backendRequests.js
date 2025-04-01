@@ -1,21 +1,26 @@
 function sharePost(accountName, postID) {
-  const url = `/users/addShare/${postID}`;
+  const url = `/posts/addShare/${postID}`;
   fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => {
+  }).then(async (response) => {
     if (response.status === 200) {
       if (location.protocol !== 'https:')
-        alert(`You're not on https, no link copied to clipboard.\nLink to post is http://${window.location.host}/users/@${accountName}/${postID}`);
+        addPopup(false, `You're not on https, no link copied to clipboard.\n
+          Link to post is http://${window.location.host}/users/@${accountName}/${postID}`);
       else
         copyShareLinkToClipboard(accountName, postID);
-      const share_button = doc.getElementById(`share_button_${postID}`);
+      const share_button = document.getElementById(`share_button_${postID}`);
+      if (!share_button) return;
       share_button.innerHTML = share_button.innerHTML.replace(
         /(\d+)/,
-        (match) => parseInt(match) + 1
+        (match) => (parseInt(match) + 1).toString()
       );
+    } else {
+      const msg = await response.json();
+      addPopup(false, `Failed to share post.${msg.error}`);
     }
   });
 }
@@ -24,67 +29,121 @@ function sharePost(accountName, postID) {
 async function likePost(postID) {
   const url = `/users/like/${postID}`;
 
-  likedByUser = await fetch(url, {
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json().userLiked;
-    }
   });
 
-  if (likedByUser)
-    removeLike(postID);
-  else
-    addLike(postID);
+  let likedByUser;
+  if (response.status === 200) {
+    const data = await response.json();
+    likedByUser = data.userLiked;
+  }
 
-  //window.location.reload();
+  if (likedByUser) {
+    removeLike(postID);
+  } else {
+    addLike(postID);
+  }
 }
 
 async function addLike(postID) {
-  url = `/users/like/${postID}`;
-  const likeAmount = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response.json();
-    }
-  });
+  const url = `/users/like/${postID}`;
+  const likeText = document.getElementById(`like_amount_${postID}`);
+  const icon = document.getElementById(`like_icon_${postID}`);
 
-  const likeText = doc.getElementById(`like_amount_${postID}`);
-  const icon = doc.getElementById(`like_icon_${postID}`);
-  likeText.value = likeAmount;
-  icon.classList.remove("bi-heart");
-  icon.classList.add("bi-heart-fill");
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      if (data && typeof data.likes !== 'undefined' && likeText) {
+        likeText.innerHTML = data.likes;
+
+        if (response.ok && icon) {
+          icon.classList.remove("bi-heart");
+          icon.classList.add("bi-heart-fill");
+        }
+
+        if (data.message) {
+          console.log(`Like status for post ${postID}: ${data.message}`);
+        }
+
+      } else {
+        console.error(`Received success status ${response.status}, but 'likes' key missing in response data for post ${postID}:`, data);
+      }
+
+    } else {
+      console.error(`Failed to like post ${postID}. Status: ${response.status}`);
+      try {
+        const errorData = await response.json();
+        console.error('Error details:', errorData);
+        addPopup(false, `Failed to like post.\n
+          ${errorData.error || response.statusText}`);
+      } catch (e) {
+        addPopup(false, `Failed to like post.\n
+          ${response.statusText}`);
+      }
+    }
+  } catch (error) {
+    console.error(`Network error or other issue liking post ${postID}:`, error);
+    alert("Could not connect to the server to like the post.");
+  }
 }
 
 async function removeLike(postID) {
-  url = `/users/like/${postID}`;
-  const likeAmount = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.status === 200) {
-      return response;
-    }
-  });
+  const url = `/users/like/${postID}`;
 
-  const icon = doc.getElementById(`like_icon_${postID}`);
-  likeButton.innerHTML = likeAmount;
-  icon.classList.remove("bi-heart");
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let likeData;
+
+    if (response.status === 200) {
+      likeData = await response.json();
+    } else {
+      console.error("Request did not return a 200 status");
+      return;
+    }
+
+    const icon = document.getElementById(`like_icon_${postID}`);
+    const likeButton = document.getElementById(`like_amount_${postID}`);
+
+    if (likeButton) {
+      likeButton.innerHTML = likeData;
+    } else {
+      console.warn(`like_button_${postID} not found`);
+    }
+
+    if (icon) {
+      icon.classList.remove("bi-heart-fill");
+      icon.classList.add("bi-heart");
+    } else {
+      console.warn(`like_icon_${postID} not found`);
+    }
+  } catch (error) {
+    addPopup(false, `Failed to remove like.\n
+      ${error.message}`);
+    console.error("Error in removeLike:", error);
+  }
 }
 
-
-
 function createPost() {
-  const contentArea = doc.getElementById("content-area");
+  const contentArea = document.getElementById("content-area");
+  if (!contentArea) return;
   const postContent = contentArea.value;
 
   const url = "/post";
@@ -131,9 +190,10 @@ function addPopup(errorType, errorText) {
   try {
     fetch(`/addPopup/${errorType ? "success" : "error"}/${errorText}`, {
       method: "POST",
-    }).then((res) => {
-      if (res.status === 200) {
-        window.location.reload();
+    }).then(async (res) => {
+      if (res.ok && popupContainer) {
+        const popupHTML = await res.text();
+        popupContainer.insertAdjacentHTML("beforeend", popupHTML);
       } else {
         throw new Error("Failed to add popup!");
       }
@@ -145,13 +205,17 @@ function addPopup(errorType, errorText) {
 
 
 function closePopup(id) {
-  errorID = id.split("-")[1];
+  const errorID = id.split("-")[1];
   try {
     fetch(`/closePopup/${errorID}`, {
       method: "POST",
     }).then((res) => {
       if (res.status === 200) {
-        window.location.reload();
+        const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
+        if (popup)
+          popup.remove();
+        else
+          console.error(`Popup with ID ${id} not found.`);
       } else {
         throw new Error("Failed to close popup!");
       }

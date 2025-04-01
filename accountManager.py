@@ -4,8 +4,9 @@ from typing import Type
 
 from flask import Request
 from sqlalchemy import and_, func, insert
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, InstrumentedAttribute
 
+import bcrypt
 import database
 import globals
 import tables
@@ -26,6 +27,7 @@ def __getAuthToken(userid):
     
     if auth is None:
         token: str
+
         while True:
             token = secrets.token_hex()
             if session.query(tables.Authentication).where(tables.Authentication.token == token).first() is None:
@@ -42,14 +44,25 @@ def __getAuthToken(userid):
     return token
 
 
+def genPassword(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+def checkPassword(password: str, hashed: str | InstrumentedAttribute) -> bool:
+    return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
+
 def login(username: str, password: str) -> str | None:
     if username == globals.ADMIN["account_name"]:
         raise Exception("Cannot get token for admin")
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(
-        and_(tables.User.account_name == username, tables.User.password == password)
+        and_(tables.User.account_name == username)
         ).first()
+
     if user is None:
+        session.close()
+        return None
+
+    if not checkPassword(password, user.password):
         session.close()
         return None
     session.close()
@@ -72,7 +85,7 @@ def createAccount(username: str, password: str):
         return False
     else:
         session: Session = database.getSession()
-        user = tables.User(account_name=username, password=password)
+        user = tables.User(account_name=username, password=genPassword(password))
         session.add(user)
         session.commit()
         return True
@@ -85,20 +98,19 @@ def getUser(request: Request) -> tables.User | None:
         return None
     if token is None:
         return None
-    
-    if token is globals.ADMIN_TOKEN:
+    if token == globals.ADMIN_TOKEN:
         if isinstance(request, Request):
             if request.remote_addr != "127.0.0.1":
                 print ("attempted admin login from", request.remote_addr)
                 return None
-            print("admin login from", request.remote_addr)
+            print("admin access from", request.remote_addr)
             return tables.User(**ADMIN)
     
     session: Session = database.getSession()
     return session.query(tables.User).where(tables.Authentication.token == token).join(tables.Authentication).first()
 
 
-def getUserByName(accountName: int) -> tables.User | None:
+def getUserByName(accountName: int) -> tables.User | None | Type[tables.User]:
     session: Session = database.getSession()
     user: Type[tables.User] = session.query(tables.User).where(
         tables.User.account_name == accountName

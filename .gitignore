@@ -13,3 +13,4 @@ data.sqlite
 /posts/__pycache__
 .http
 removeDatabase.bat
+dbVersion.txt

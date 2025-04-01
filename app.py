@@ -1,17 +1,21 @@
-from flask import render_template, request, redirect
-from sqlalchemy.orm import Session, Query
+import random
+from flask import render_template, request, redirect # type: ignore
+import dummyData
 
 import accountManager
 import database
-import json
-from posts import postmanager, postData
 from globals import *
+from posts import postmanager, postData
 from posts.postData import getLike
-from tables import User, Authentication, Post, PostLike
+from tables import User, Authentication
+
+errors = [] #* [id, {"type": "", "text": ""}]
 
 
-
-errors = [] # TODO add errors in cookies or sum \_( '-')_/
+@app.route('/getHTMLFile/<string:filename>', methods=['POST'])
+def getHTMLFile(filename: str):
+    with open(f"templates/{filename}", 'r', encoding="utf-8") as file:
+        return file.read(), 200
 
 
 @app.route('/')
@@ -21,6 +25,7 @@ def index():
 
     response.set_cookie("current_post", '0')
     return response
+
 
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
@@ -44,13 +49,7 @@ def viewPost(accountName, postId):
     
     return getFullPage(
         render_template(
-            "viewAccount.html",
-            displayName={
-                accountManager.getOrDefaultUserName(
-                    accountManager.getUser(request)
-                )
-            },
-            accountName=f'{accountName}',
+            "viewPost.html",
             post=post
         )
     )
@@ -62,18 +61,20 @@ def viewAccount(accountName):
         return render_template("errorPage.html", error="404 user not found!")
     
     user: User = accountManager.getUserByName(accountName)
+
     if user is None:
         return render_template("errorPage.html", error="404 user not found!")
     
-    posts, cookies = postmanager.getPostsOfUserByID(user.id, 10, request)
+    posts, _ = postmanager.getPostsOfUserByID(user.id, 10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts)))
     
-    return addCookiesToResponse(cookies, response)
+    response.set_cookie("current_post", '0')
+    return response
 
 
-@app.route('/users/addShare/<int:postID>')
-def addShare(postID):
-    return postData.addShare(postID, accountManager.getUser(request))
+@app.route('/posts/addShare/<int:postId>')
+def addShare(postId):
+    return postData.addShare(postId, accountManager.getUser(request))
 
 
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
@@ -95,8 +96,7 @@ def likePost(postID):
 def viewProfile(action="login"):
     response = Response()
     user: User = accountManager.getUser(request)
-    
-    print("user:", user)
+
     if user is None:
         response.set_data(getFullPage(render_template("viewProfile.html", action=action)))
         return response
@@ -154,17 +154,23 @@ def logout():
 
 
 @app.route('/post', methods=['POST'])
-def createPost():
+@app.route('/post/<int:parentId>', methods=['POST'])
+def createPost(parentId=None):
     user = accountManager.getUser(request)
     if user is None:
         return json.dumps({"statusText": "User is not logged in!"}), 401, { "ContentType": 'application/json' }
     
     content = list(request.get_json().values())[0]
-    postmanager.addPost({
+
+    postId = postmanager.addPost({
+        "has_parent": parentId is not None,
         "user_id": user.id,
         "content": content
     })
     
+    if parentId is not None:
+        postData.linkComment(parentId, postId)
+
     return redirect('/'), 200 # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
 
 
@@ -201,7 +207,10 @@ def settings():
 @app.route("/closePopup/<int:errorID>", methods=['POST'])
 def closePopup(errorID):
     try:
-        errors.pop(int(errorID))
+        for error in errors:
+            if error[0] == errorID:
+                errors.remove(error)
+                break
     except IndexError:
         return "Error: No popup with this ID found!", 404
     return "Successfully closed the popup!", 200
@@ -209,8 +218,14 @@ def closePopup(errorID):
 
 @app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
 def addPopup(errorType, error):
-    errors.append({errorType: error})
-    return "Successfully added the popup!", 200
+    errorID = random.randint(1, 10_000_000)
+    errors.append([errorID, {"type": errorType, "text": error}])
+    return render_template('popup.html', popupType=errorType, errorID=str(errorID), errorText=error), 200
+
+
+@app.route("/postMedia")
+def postMedia():
+    pass
 
 
 @app.errorhandler(404)
@@ -233,5 +248,6 @@ def getFullPage(renderedPage):
     return page
 
 if __name__ == '__main__':
-    # database.create()
+    dummyData.checkVersion()
+
     app.run(debug=True, host='0.0.0.0', port=3000)
