@@ -20,6 +20,9 @@ const contentCounter = document.getElementById("char-counter");
 // Popup objects
 const popupContainer = document.getElementById("popups-container");
 
+// Search objects
+const searchBar = document.getElementById("main_search_bar");
+
 
 
 // Event listeners
@@ -42,6 +45,46 @@ if (scrollUpButton && mainSection) {
       top: 0,
       behavior: "smooth",
     });
+  });
+}
+
+if (searchBar) {
+  searchBar.addEventListener("input", function () {
+    const searchValue = this.value;
+    if (searchValue.length < 1) return;
+
+    setTimeout(async () => {
+      const searchValue2 = this.value;
+      if (searchValue !== searchValue2) return;
+
+      const postsContainer = document.getElementById("search_results_container");
+      if (!postsContainer) return;
+
+      postsContainer.removeEventListener("scroll", loadNewPosts);
+      console.log(postsContainer.children.length);
+      for (let childIndex = 0; childIndex < postsContainer.children.length; childIndex++) {
+        let child = postsContainer.children[childIndex];
+        console.log(childIndex, child);
+        if (!child) continue;
+
+        if (child.classList.contains("loading_spinner_container")) continue;
+        postsContainer.removeChild(child);
+      }
+
+      loadNewPosts(0, searchValue, postsContainer);
+      const status = await fetch(`/getPosts/10?query=${searchValue}`).then((response) => {
+        if (response.ok) { return response.json(); }
+        return false;
+      });
+      console.log(status)
+      if (status.length > 0) addInfiniteScrollToContainer(postsContainer);
+      else {
+        const noResults = document.createElement("div");
+        noResults.className = "no_results";
+        noResults.innerText = "No results found!";
+        postsContainer.appendChild(noResults);
+      }
+    }, 1000);
   });
 }
 
@@ -110,6 +153,25 @@ function copyShareLinkToClipboard(accountName, postID) {
   setTimeout(() => {
     share_button.className = share_button.className.replace(" active", "");
   }, 1200);
+}
+
+
+// General functions
+function fillJinjaVars(html, object) {
+  if (!object || !html) {
+    console.error('Post object or html is null or undefined');
+    return false;
+  }
+
+  const regex = /{{\s*post\.(\w+)\s*}}/g;
+  return html.replace(regex, (match, p1) => {
+    if (object[p1] !== undefined) {
+      return object[p1];
+    } else {
+      console.warn(`Property ${p1} not found in object`);
+      return match;
+    }
+  });
 }
 
 

@@ -16,6 +16,7 @@
     display: flex;
     align-items: center;
 }
+.search_bar_container.wide_search_bar { width: 84%; }
 
 .search_bar_icon {
     color: #3e5879;
@@ -59,8 +60,11 @@
 }
 
 hr {
+  height: 1px;
   margin-top: 3vh;
-  /* margin-bottom: 1vh; */
+  color: var(--darkGrayBlue);
+  background-color: var(--darkGrayBlue);
+  border-color: var(--darkGrayBlue);
 }
 
 .sidebar a {

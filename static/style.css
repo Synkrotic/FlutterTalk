@@ -526,3 +526,24 @@ main div nav {
   flex-direction: column;
   justify-content: flex-start;
 }
+
+#search_results_container {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.no_results {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2vh;
+  color: var(--darkGrayBlue);
+}
+
+.sticky { position: sticky; }
+.scroll_y { overflow-y: scroll !important; }

@@ -22,7 +22,7 @@ def getHTMLFile(filename: str):
 @app.route('/')
 def index():
     posts, _ = postmanager.getPosts(10, request)
-    response = Response(getFullPage(render_template("index.html", posts=posts)))
+    response = Response(getFullPage(render_template("index.html")))
 
     response.set_cookie("current_post", '0')
     return response
