@@ -25,8 +25,12 @@
           <input type="text" name="accountname" id="accountname-input" class="form-control" value="{{ user.accountName }}">
         </div>
         <div class="input-container">
+          <label for="location" class="form-label">Location</label>
+          <input type="text" name="location" id="location-input" class="form-control" value="{{ user.location }}">
+        </div>
+        <div class="input-container">
           <label for="bio" class="form-label">Biography</label>
-          <textarea name="bio" class="form-input text_area" maxlength="500" id="bio-area"></textarea>
+          <textarea name="bio" class="form-input text_area" maxlength="500" id="bio-area">{{ user.bio }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary save-button">Save</button>
 

@@ -150,6 +150,7 @@ def updateProfile(request: Request):
         user.display_name = request.form["name"]
         user.bio = request.form["bio"]
         user.account_name = request.form["accountname"]
+        user.location = request.form["location"]
         session.commit()
         session.flush()
     
