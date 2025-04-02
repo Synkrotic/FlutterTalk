@@ -18,11 +18,19 @@
     </button>
   </button>
   <button class="nav_button" id="home_button" title="Go to homepage." onclick="goToPage('/')">
-    <i class="bi bi-house-door"></i>
+    {% if activeID==0 %}
+      <i class="bi bi-house-door-fill"></i>
+    {% else %}
+      <i class="bi bi-house-door"></i>
+    {% endif %}
     <p>Home</p>
   </button>
   <button class="nav_button" id="search_button" title="Go to search." onclick="goToPage('/search')">
-    <i class="bi bi-search"></i>
+    {% if activeID==1 %}
+      <i class="bi bi-search-heart-fill"></i>
+    {% else %}
+      <i class="bi bi-search"></i>
+    {% endif %}
     <p>Search</p>
   </button>
   <button
@@ -31,27 +39,51 @@
     title="Go to notifications."
     onclick="goToPage('/notifications')"
   >
-    <i class="bi bi-bell"></i>
+    {% if activeID==2 %}
+      <i class="bi bi-bell-fill"></i>
+    {% else %}
+      <i class="bi bi-bell"></i>
+    {% endif %}
     <p>Notifications</p>
   </button>
   <button class="nav_button" id="messages_button" title="Go to messages." onclick="goToPage('/messages')">
-    <i class="bi bi-chat-dots"></i>
+    {% if activeID==3 %}
+      <i class="bi bi-chat-dots-fill"></i>
+    {% else %}
+      <i class="bi bi-chat-dots"></i>
+    {% endif %}
     <p>Chat</p>
   </button>
   <button class="nav_button" id="feeds_button" title="Go to your different feeds." onclick="goToPage('/feeds')">
+    {% if activeID==4 %}
+    <i class="bi bi-layers-fill" style="font-size: 2vh; margin-left: 0.6vw !important;"></i>
+    {% else %}
     <i class="bi bi-hash" style="font-size: 3vh; margin-left: 0.1vw !important;"></i>
+    {% endif %}
     <p>Feeds</p>
   </button>
   <button class="nav_button" id="lists_button" title="Go to lists." onclick="goToPage('/lists')">
-    <i class="bi bi-list-ul"></i>
+    {% if activeID==5 %}
+      <i class="bi bi-list-check"></i>
+    {% else %}
+      <i class="bi bi-list-ul"></i>
+    {% endif %}
     <p>Lists</p>
   </button>
   <button class="nav_button" id="profile_button" title="Go to profile." onclick="goToPage('/profile')">
-    <i class="bi bi-person-circle"></i>
+    {% if activeID==6 %}
+      <i class="bi bi-person-fill-gear"></i>
+    {% else %}
+      <i class="bi bi-person-circle"></i>
+    {% endif %}
     <p>Profile</p>
   </button>
   <button class="nav_button" id="settings_button" title="Go to settings." onclick="goToPage('/settings')">
-    <i class="bi bi-gear"></i>
+    {% if activeID==7 %}
+      <i class="bi bi-gear-fill"></i>
+    {% else %}
+      <i class="bi bi-gear"></i>
+    {% endif %}
     <p>Settings</p>
   </button>
   <button class="nav_button" id="new_post_button" title="Create a new post." onclick="toggleCreatePost()">

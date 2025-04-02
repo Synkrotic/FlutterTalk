@@ -22,7 +22,7 @@ def getHTMLFile(filename: str):
 @app.route('/')
 def index():
     posts, _ = postmanager.getPosts(10, request)
-    response = Response(getFullPage(render_template("index.html")))
+    response = Response(getFullPage(render_template("index.html"), 0))
 
     response.set_cookie("current_post", '0')
     return response
@@ -50,14 +50,28 @@ def isLoggedIn():
 
 @app.route('/posts/view/<int:postId>')
 def viewPost(postId):
-    post = postmanager.getPostDict(postId, request)
-    
+    post = postmanager.getPostDict(postId, request)    
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
+
+    user: User = accountManager.getUserByName(post.get('accountName'))
+    if user is None:
+        return render_template("errorPage.html", error="404 post not found!")
+
+    account = {
+        "displayName": accountManager.getOrDefaultUserName(user),
+        "accountName": accountManager.getOrDefaultUserName(user),
+        "bio": user.bio,
+        "location": user.location,
+        "likedAmount": 0,
+        "followersAmount": 0,
+        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+    }
 
     return getFullPage(
         render_template(
             "viewPost.html",
+            account=account,
             post=post
         )
     )
@@ -111,7 +125,7 @@ def likePost(postID):
 
 @app.route('/search')
 def searchPosts():
-    return getFullPage(render_template("search.html"))
+    return getFullPage(render_template("search.html"), 1)
 
 
 @app.route('/profile')
@@ -121,7 +135,7 @@ def viewProfile(action="login", displayData:dict=None):
     user: User = accountManager.getUser(request)
 
     if user is None:
-        response.set_data(getFullPage(render_template("viewProfile.html", action=action)))
+        response.set_data(getFullPage(render_template("viewProfile.html", action=action), 6))
         return response
     
     if displayData is not None:
@@ -135,7 +149,7 @@ def viewProfile(action="login", displayData:dict=None):
         "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
     }
     
-    response.set_data(getFullPage(render_template("viewProfile.html", user=account)))
+    response.set_data(getFullPage(render_template("viewProfile.html", user=account), 6))
     return response
 
 
@@ -227,7 +241,7 @@ def help():
 
 @app.route("/settings")
 def settings():
-    return getFullPage(render_template("settings.html"))
+    return getFullPage(render_template("settings.html"), 7)
 
 
 @app.route("/closePopup/<int:errorID>", methods=['POST'])
@@ -275,12 +289,15 @@ def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
 
 
-def getFullPage(renderedPage):
+def getFullPage(renderedPage, activePageID=-1):
+    print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
+    
     page = render_template("siteInitialization.html", errors=errors)
     page += render_template(
         "navbar.html",
         displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
-        accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}'
+        accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}',
+        activeID=activePageID
     )
     
     page += renderedPage
