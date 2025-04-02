@@ -109,6 +109,11 @@ def likePost(postID):
             return render_template("errorPage.html", error="Invalid method used")
 
 
+@app.route('/search')
+def searchPosts(query):
+    return getFullPage(render_template("search.html"))
+
+
 @app.route('/profile')
 @app.route('/profile/<string:action>')
 def viewProfile(action="login"):
