@@ -16,7 +16,7 @@ def search(searchTerm: str):
         for term in split:
             if term.startswith('@'):
                 term = term[1:]
-                all_posts.append( session.query(Post).where( Post.user.account_name.contains(term)) )
+                all_posts.append( session.query(Post).join(Post.user).where( User.account_name.contains(term)) )
             else:
                 all_posts.append( session.query(Post).where( Post.content.contains(term)) )
         

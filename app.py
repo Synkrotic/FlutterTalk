@@ -21,10 +21,10 @@ def getHTMLFile(filename: str):
 
 @app.route('/')
 def index():
-    posts, _ = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html"), 0))
-
     response.set_cookie("current_post", '0')
+    response.cache_control.no_store = True
+
     return response
 
 
@@ -36,7 +36,7 @@ def getPosts(amount: int):
     else:
         posts, cookies = postmanager.getPosts(amount, request)
     response = Response(json.dumps(posts))
-
+    response.cache_control.no_store = True
     return addCookiesToResponse(cookies, response)
 
 
