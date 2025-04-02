@@ -1,17 +1,20 @@
+import json
 import secrets
 from datetime import timedelta
 from typing import Type
 
+import bcrypt
 from flask import Request
 from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session, InstrumentedAttribute
 
-import bcrypt
 import database
 import globals
 import tables
 from globals import ADMIN
 from tables import Authentication
+
+
 
 TOKEN_DURATION = timedelta(7)
 
@@ -133,3 +136,27 @@ def getOrDefaultDisplayNameName(user: tables.User) -> str:
         return 'anonymous'
     else:
         return user.account_name
+
+
+def updateProfile(request: Request):
+    user = getUser(request)
+    if user is None:
+        return json.dumps({"errorText": "User is not logged in!"}), 401, {'ContentType': 'application/json'}, None
+    if user.account_name != request.form["accountname"] and _checkExists(request.form["accountname"]):
+        return 'name_exists', None
+    
+    with database.getSession() as session:
+        user = session.merge(user)
+        user.display_name = request.form["name"]
+        user.bio = request.form["bio"]
+        user.account_name = request.form["accountname"]
+        session.commit()
+        session.flush()
+    
+        return 'success', {
+            "displayName": user.display_name,
+            "accountName": user.account_name,
+            "bio": user.bio,
+            "location": user.location,
+            "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+        }

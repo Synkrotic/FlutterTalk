@@ -116,7 +116,7 @@ def searchPosts():
 
 @app.route('/profile')
 @app.route('/profile/<string:action>')
-def viewProfile(action="login"):
+def viewProfile(action="login", displayData:dict=None):
     response = Response()
     user: User = accountManager.getUser(request)
 
@@ -124,7 +124,10 @@ def viewProfile(action="login"):
         response.set_data(getFullPage(render_template("viewProfile.html", action=action)))
         return response
     
-    account = {
+    if displayData is not None:
+        account = displayData
+    else:
+        account = {
         "displayName": accountManager.getOrDefaultUserName(user),
         "accountName": accountManager.getOrDefaultUserName(user),
         "bio": user.bio,
@@ -252,6 +255,19 @@ def addPopup(errorType, error):
 @app.route("/postMedia")
 def postMedia():
     postMedia(request)
+    
+@app.route("/saveProfile", methods=['POST'])
+def updateProfile():
+    status, result = accountManager.updateProfile(request)
+    if status == 'name_exists':
+        addPopup('error', 'Name already exists!')
+        return redirect('/profile')
+    if status == 'success':
+        addPopup('success', 'Profile updated! changes take affect after a while.')
+        return viewProfile(displayData=result)
+    if status == 'error':
+        addPopup('error', 'Error updating profile!')
+        return redirect('/profile')
 
 
 @app.errorhandler(404)
@@ -260,8 +276,6 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage):
-    print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
-    
     page = render_template("siteInitialization.html", errors=errors)
     page += render_template(
         "navbar.html",
