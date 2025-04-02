@@ -110,7 +110,7 @@ def likePost(postID):
 
 
 @app.route('/search')
-def searchPosts(query):
+def searchPosts():
     return getFullPage(render_template("search.html"))
 
 
