@@ -54,7 +54,7 @@ def viewPost(postId):
     
     if post is None:
         return render_template("errorPage.html", error="404 post not found!")
-    
+
     return getFullPage(
         render_template(
             "viewPost.html",
@@ -73,8 +73,18 @@ def viewAccount(accountName):
     if user is None:
         return render_template("errorPage.html", error="404 user not found!")
     
+    account = {
+        "displayName": accountManager.getOrDefaultUserName(user),
+        "accountName": accountManager.getOrDefaultUserName(user),
+        "bio": user.bio,
+        "location": user.location,
+        "likedAmount": 0,
+        "followersAmount": 0,
+        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+    }
+
     posts, _ = postmanager.getPostsOfUserByID(user.id, 10, request)
-    response = Response(getFullPage(render_template("index.html", posts=posts)))
+    response = Response(getFullPage(render_template("viewAccount.html", account=account, posts=posts)))
     
     response.set_cookie("current_post", '0')
     return response

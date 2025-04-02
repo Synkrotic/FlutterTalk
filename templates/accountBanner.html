@@ -1,0 +1,42 @@
+<header class="account_header">
+  <div id="header_gradient"></div>
+  <div class="account_header_content">
+    <div class="flex_horizontal user_img_name_container">
+      <img
+        src="{{ account.pfp }}"
+        alt="Profile picture of {{ account.displayName }}"
+        class="banner_pfp"
+      >
+      <div class="account_header_names flex_vertical">
+        <h1>{{ account.displayName }}</h1>
+        <h3>@{{ account.accountName }}</h3>
+      </div>
+    </div>
+
+    {% if account.location %}
+      <div class="account_header_location flex_horizontal">
+        <i class="bi bi-geo-alt-fill"></i>
+        <a href="https://www.google.nl/maps/place/{{ account.location }}/">{{ account.location }}</a>
+      </div>
+    {% endif %}
+
+{% if account.bio %}
+  <pre class="account_header_bio">
+{{ account.bio }}
+    </pre>
+{% endif %}
+
+    <div class="account_header_stats flex_horizontal">
+      <div class="account_header_stat">
+        <i class="bi bi-heart-fill"></i>
+        <h5>{{ account.likedAmount }}</h5>
+      </div>
+      <button
+        class="account_header_stat"
+        title="Follow"
+      >
+        <i class="bi bi-person-fill-add"></i>
+        <h5>{{ account.followersAmount }}</h5>
+      </button>
+  </div>
+</header>

@@ -1,19 +1,5 @@
 <main>
-  <div id="header_container">
-    <header>
-      <h2 id="app_name">FlutterTalk</h2>
-      <img
-        id="header_fluttertalk_logo"
-        src="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
-        alt="An image of the FlutterTalk logo."
-      />
-      <button id="hashtags_btn">#</button>
-    </header>
-    <nav>
-      <button class="header_nav_btn active_page">Discover</button>
-      <button class="header_nav_btn">Following</button>
-    </nav>
-  </div>
+  {% include "accountBanner.html" %}
   <section id="main_section">
     {% for post in posts %}
       {% include "post.html" %}

@@ -136,3 +136,10 @@ function toggleCreatePost() {
   createPostMenu.classList.toggle("hide-menu");
   contentArea.focus();
 }
+
+async function goToUserPage() {
+  const isLoggedIn =  await fetch('/users/isLoggedIn').then((response) => { return response.json(); });
+  console.log(isLoggedIn);
+
+  goToPage(`/${isLoggedIn.logged_in ? `users/@${isLoggedIn.username}` : 'profile'}`);    
+}
