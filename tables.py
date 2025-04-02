@@ -21,6 +21,7 @@ class User(Base):
     bio = Column(Text)
     profile_pic = Column(String)
     location = Column(String)
+    banner_color = Column(String, default="#000000")
     
     posts = relationship('Post', back_populates='user', cascade='all, delete-orphan')
     post_likes = relationship('PostLike', back_populates='user', cascade='all, delete-orphan')
@@ -71,4 +72,3 @@ class MediaEntry(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     media_type = Column(String, nullable=False)
-    media_url = Column(String, nullable=False)

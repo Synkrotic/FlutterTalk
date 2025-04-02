@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Type
-from sqlalchemy import not_
+from sqlalchemy import not_, union_all
 from sqlalchemy.orm import Session, Query
 from globals import *
 from tables import Post, User, PostLike, CommentLink
@@ -62,14 +62,16 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
         return __postClassToDict(post, accountManager.getUser(request)), cookies
 
 
-def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
+def getPosts(amount: int, request: Request, subSet: Query | None = None) -> (dict, list[Cookie]):
     currentPost = 0
     if getCookie(request, 'current_post') is not None:
         currentPost = getCookie(request, 'current_post')
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
-
     with database.getSession() as session:
-        posts = session.query(Post).where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
+        if subSet is not None:
+            posts = subSet.where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
+        else:
+            posts = session.query(Post).where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
         if len(posts) == 0:
             print("no posts")
             return [], cookies

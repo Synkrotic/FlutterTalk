@@ -7,6 +7,7 @@ import database
 from globals import *
 from posts import postmanager, postData
 from posts.postData import getLike
+from search import search
 from tables import User, Authentication
 
 errors = [] #* [id, {"type": "", "text": ""}]
@@ -30,7 +31,10 @@ def index():
 
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
-    posts, cookies = postmanager.getPosts(amount, request)
+    if request.args.get('query') is not None:
+        posts, cookies = postmanager.getPosts(amount, request, search(request.args.get('query')))
+    else:
+        posts, cookies = postmanager.getPosts(amount, request)
     response = Response(json.dumps(posts))
 
     return addCookiesToResponse(cookies, response)
@@ -232,7 +236,7 @@ def addPopup(errorType, error):
 
 @app.route("/postMedia")
 def postMedia():
-    pass
+    postMedia(request)
 
 
 @app.errorhandler(404)
