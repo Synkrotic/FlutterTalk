@@ -119,6 +119,6 @@ def getComments(post: Post, session: Session | None = None) -> list[Type[Post]]:
             .all()
     if localSession:
         session.close()
-        
+    print(result)
     return result
 

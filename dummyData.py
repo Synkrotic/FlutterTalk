@@ -33,39 +33,26 @@ def gen():
             'shares': random.randint(0, 10000)
         }
     
-        for i in range(1, 1000)  # Generating 50 entries
+        for i in range(1, 400)  # Generating 50 entries
     ]
-    COMMENTS = [
-        {
+
+    for post in POSTS:
+        postID = postmanager.addPost(post)
+        for i in range(random.randint(0, 5)):
+            commentId = postmanager.addPost({
             'user_id': i % 9+1,
             'has_parent': True,
             'content': ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(0, 100)))
-        }
-    
-        for i in range(1, 1000)  # Generating 50 entries
-    ]
-    NESTED = [
-        {
-            'user_id': i % 9 + 1,
-            'has_parent': True,
-            'content': ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(0, 100)))
-        }
-        
-        for i in range(1, 100)  # Generating 50 entries
-    ]
+        })
+            for j in range(random.randint(0, 2)):
+                nestedCommentId = postmanager.addPost({
+                'user_id': j % 9+1,
+                'has_parent': True,
+                'content': ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(0, 100)))
+            })
+                postData.linkComment(commentId, nestedCommentId)
+            postData.linkComment(postID, commentId)
 
-    
-    for post in POSTS:
-        postmanager.addPost(post)
-        
-    for comment in COMMENTS:
-        commentId = postmanager.addPost(comment)
-        postData.linkComment(random.randint(1, 10), commentId)
-    
-    for comment in NESTED:
-        commentId = postmanager.addPost(comment)
-        postData.linkComment(random.randint(1000, 1200), commentId)
-        
 
 def checkVersion():
     if not pathlib.Path('database/dbVersion.txt').is_file():
