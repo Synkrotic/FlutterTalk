@@ -56,8 +56,9 @@ button.save-button {
 .input-container textarea {
   min-width: 100%;
   max-width: 100%;
-  min-height: 4vh;
+  min-height: 15vh;
   max-height: 15vh;
+  resize: none;
   overflow-y: scroll !important;
   color: black;
 }

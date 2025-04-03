@@ -194,6 +194,11 @@ function addPopup(errorType, errorText) {
       if (res.ok && popupContainer) {
         const popupHTML = await res.text();
         popupContainer.insertAdjacentHTML("beforeend", popupHTML);
+        setTimeout(() => {
+          const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
+          if (popup)
+            closePopup(errorID);
+        }, 20000)
       } else {
         throw new Error("Failed to add popup!");
       }
