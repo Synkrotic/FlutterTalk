@@ -7,10 +7,11 @@ function sharePost(accountName, postID) {
     },
   }).then(async (response) => {
     if (response.status === 200) {
-      if (location.protocol !== 'https:')
-        addPopup(false, `You're not on https, no link copied to clipboard.\n
-          Link to post is http://${window.location.host}/users/@${accountName}/${postID}`);
-      else
+      if (location.protocol !== 'https:') {
+        // const shareUrl = encodeURIComponent(`flutter-sucks.topscrech.dev/users/@${accountName}/${postID}`);
+        // addPopup(false, `You're not on https, no link copied to clipboard. Link to post is ${shareUrl}`);
+        alert(`You're not on https, no link copied to clipboard. Link to post is https://flutter-sucks.topscrech.dev/users/@${accountName}/${postID}`);
+      } else
         copyShareLinkToClipboard(accountName, postID);
       const share_button = document.getElementById(`share_button_${postID}`);
       if (!share_button) return;
