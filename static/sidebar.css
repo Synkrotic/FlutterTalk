@@ -69,7 +69,7 @@ hr {
 
 .sidebar a {
   margin-left: 1vw;
-  color: var(--darkBlue);
+  color: var(--darkGrayBlue);
 }
 .sidebar a:hover {
   color: var(--attentionBlue);
