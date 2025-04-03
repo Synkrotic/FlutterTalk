@@ -1,6 +1,9 @@
 from flask import Response
 
 import json
+
+from sqlalchemy import and_
+
 import tables
 from posts import postmanager
 from tables import PostLike, User, Post
@@ -14,7 +17,7 @@ def deleteLike(postID, user: User):
         if postQuery is None or postQuery.first() is None:
             return Response(status=401, response="Post not found")
 
-        postLike = session.query(PostLike).where(PostLike.post_id == postID and PostLike.user_id == user.id).first()
+        postLike = session.query(PostLike).where(and_(PostLike.post_id == postID, PostLike.user_id == user.id)).first()
 
         if postLike is None:
             return Response(status=400, response="You have not liked this post")
@@ -72,7 +75,7 @@ def getLike(postID, user: User):
         if user is not None:
             userLiked = (
                 session.query(PostLike)
-                .where((PostLike.post_id == postID) & (PostLike.user_id == user.id))
+                .where(and_(PostLike.post_id == postID,PostLike.user_id == user.id))
                 .first()
                 is not None
             )

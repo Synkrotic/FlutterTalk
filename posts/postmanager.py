@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Type
 from sqlalchemy import not_, union_all
+from sqlalchemy import not_, and_
 from sqlalchemy.orm import Session, Query
 from globals import *
 from tables import Post, User, PostLike, CommentLink
@@ -37,7 +38,7 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
                 "commentAmount": 0 if comments is None else len(comments),
                 "sharedAmount": post.shares,
                 "liked": user is not None and session.query(PostLike)
-                    .where(PostLike.post_id == post.id and PostLike.user_id == user.id).first()
+                    .where(and_(PostLike.post_id == post.id, PostLike.user_id == user.id)).first()
                          is not None,
                 "comments": commentsView
             }

@@ -126,16 +126,16 @@ def getUserByName(accountName: int) -> tables.User | None | Type[tables.User]:
 
 def getOrDefaultUserName(user: tables.User) -> str:
     if user is None:
-        return 'anonymous'
+        return 'nog logged in'
     else:
         return user.account_name
 
 
-def getOrDefaultDisplayNameName(user: tables.User) -> str:
+def getOrDefaultDisplayName(user: tables.User) -> str:
     if user is None:
         return 'anonymous'
     else:
-        return user.account_name
+        return user.display_name
 
 
 def updateProfile(request: Request):

@@ -67,5 +67,5 @@ function addInfiniteScrollToContainer(container=postsContainer) {
   container.addEventListener('scroll', loadNewPosts);
 }
 
-window.onload = loadNewPosts;
+window.addEventListener("load", loadNewPosts)
 addInfiniteScrollToContainer();

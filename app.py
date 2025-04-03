@@ -21,7 +21,8 @@ def getHTMLFile(filename: str):
 
 @app.route('/')
 def index():
-    response = Response(getFullPage(render_template("index.html"), 0))
+    posts, _ = postmanager.getPosts(10, request)
+    response = Response(getFullPage(render_template("index.html", posts=posts), 0, ))
     response.set_cookie("current_post", '0')
     response.cache_control.no_store = True
 
@@ -32,6 +33,7 @@ def index():
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
     if request.args.get('query') is not None:
+        print(request.args.get('query'))
         posts, cookies = postmanager.getPosts(amount, request, search(request.args.get('query')))
     else:
         posts, cookies = postmanager.getPosts(amount, request)
@@ -88,7 +90,7 @@ def viewAccount(accountName):
         return render_template("errorPage.html", error="404 user not found!")
     
     account = {
-        "displayName": accountManager.getOrDefaultUserName(user),
+        "displayName": accountManager.getOrDefaultDisplayName(user),
         "accountName": accountManager.getOrDefaultUserName(user),
         "bio": user.bio,
         "location": user.location,
