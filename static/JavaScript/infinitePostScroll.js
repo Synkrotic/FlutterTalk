@@ -6,7 +6,10 @@ async function loadNewPosts(recursionLevel = 0, query = null, container = postsC
   if (!container || !postLoadingIcon) return false;
 
   if (container.scrollTop + container.clientHeight < container.scrollHeight * 0.9) return false;
-  if (recursionLevel > 5) { console.log(recursionLevel); addPopup(false, "Unable to load more posts!"); return false; }
+  if (recursionLevel > 5) {
+    addPopup(false, "Unable to load more posts!");
+    return false;
+  }
 
   const now = new Date().getTime();
   const timeDelta = now - lastTime;
