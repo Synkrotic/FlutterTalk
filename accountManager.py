@@ -126,7 +126,7 @@ def getUserByName(accountName: int) -> tables.User | None | Type[tables.User]:
 
 def getOrDefaultUserName(user: tables.User) -> str:
     if user is None:
-        return 'nog logged in'
+        return 'anonymous'
     else:
         return user.account_name
 

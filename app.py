@@ -23,7 +23,7 @@ def getHTMLFile(filename: str):
 def index():
     posts, _ = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts), 0, ))
-    response.set_cookie("current_post", '0')
+    response.set_cookie("current_post", '10')
     response.cache_control.no_store = True
 
     return response
@@ -144,7 +144,7 @@ def viewProfile(action="login", displayData:dict=None):
         account = displayData
     else:
         account = {
-            "displayName": accountManager.getOrDefaultUserName(user),
+            "displayName": accountManager.getOrDefaultDisplayName(user),
             "accountName": accountManager.getOrDefaultUserName(user),
             "bio": user.bio,
             "location": user.location,
@@ -292,12 +292,11 @@ def page_not_found(e):
 
 
 def getFullPage(renderedPage, activePageID=-1):
-    print(accountManager.getOrDefaultUserName(accountManager.getUser(request)))
-    
+
     page = render_template("siteInitialization.html", errors=errors)
     page += render_template(
         "navbar.html",
-        displayName=accountManager.getOrDefaultUserName(accountManager.getUser(request)),
+        displayName=accountManager.getOrDefaultDisplayName(accountManager.getUser(request)),
         accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}',
         activeID=activePageID
     )
