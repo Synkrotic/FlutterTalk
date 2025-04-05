@@ -307,5 +307,6 @@ def getFullPage(renderedPage, activePageID=-1):
 
 if __name__ == '__main__':
     dummyData.checkVersion()
-
+    app.config['SQLALCHEMY_POOL_SIZE'] = 30
+    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 5
     app.run(debug=True, host='0.0.0.0', port=3000)
