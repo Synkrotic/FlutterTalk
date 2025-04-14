@@ -72,3 +72,9 @@ class MediaEntry(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     media_type = Column(String, nullable=False)
+    
+class Following(Base):
+    __tablename__ = 'following'
+    
+    follower_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    following_id = Column(Integer, ForeignKey('user.id'), primary_key=True)

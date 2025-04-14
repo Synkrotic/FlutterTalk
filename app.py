@@ -4,6 +4,7 @@ import dummyData
 
 import accountManager
 import database
+import userData
 from globals import *
 from posts import postmanager, postData
 from posts.postData import getLike
@@ -21,8 +22,9 @@ def getHTMLFile(filename: str):
 
 @app.route('/')
 def index():
+    print("index")
     posts, _ = postmanager.getPosts(10, request)
-    response = Response(getFullPage(render_template("index.html", posts=posts), 0, ))
+    response = Response(getFullPage(render_template("index.html", posts=posts), 10))
     response.set_cookie("current_post", '10')
     response.cache_control.no_store = True
 
@@ -32,11 +34,7 @@ def index():
 
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
-    if request.args.get('query') is not None:
-        print(request.args.get('query'))
-        posts, cookies = postmanager.getPosts(amount, request, search(request.args.get('query')))
-    else:
-        posts, cookies = postmanager.getPosts(amount, request)
+    posts, cookies = postmanager.getPosts(amount, request)
     response = Response(json.dumps(posts))
     response.cache_control.no_store = True
     return addCookiesToResponse(cookies, response)
@@ -48,6 +46,9 @@ def isLoggedIn():
     if user is None:
         return json.dumps({'logged_in':False, 'username': None}), 200
     return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
+
+
+
 
 
 @app.route('/posts/view/<int:postId>')
@@ -94,8 +95,8 @@ def viewAccount(accountName):
         "accountName": accountManager.getOrDefaultUserName(user),
         "bio": user.bio,
         "location": user.location,
-        "likedAmount": 0,
-        "followersAmount": 0,
+        "likedAmount": user.likes,
+        "followersAmount": user.followers,
         "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
     }
 
@@ -111,8 +112,25 @@ def addShare(postId):
     return postData.addShare(postId, accountManager.getUser(request))
 
 
+@app.route('/users/follow/<string:accountName>', methods=['POST', 'DELETE', 'GET'])
+def follow(accountName):
+    user: User = accountManager.getUser(request)
+    if user is None:
+        return render_template("errorPage.html", error="404 user not found!")
+    
+    match request.method:
+        case 'DELETE':
+            return userData.removeFollowing(user, accountName)
+        case 'POST':
+            return userData.addFollowing(user, accountName)
+        case 'GET':
+            return userData.getFollowing(user, accountName)
+        case _:
+            return render_template("errorPage.html", error="Invalid method used")
+
+
 @app.route('/users/like/<int:postID>', methods=['POST', 'DELETE', 'GET'])
-def likePost(postID):
+def like(postID):
     user: User = accountManager.getUser(request)
     match request.method:
         case 'DELETE':
@@ -307,6 +325,6 @@ def getFullPage(renderedPage, activePageID=-1):
 
 if __name__ == '__main__':
     dummyData.checkVersion()
-    app.config['SQLALCHEMY_POOL_SIZE'] = 30
-    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 5
+    app.config['SQLALCHEMY_POOL_SIZE'] = 300
+    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 500
     app.run(debug=True, host='0.0.0.0', port=3000)

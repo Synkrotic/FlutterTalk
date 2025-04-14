@@ -104,7 +104,7 @@ def getUser(request: Request) -> tables.User | None:
     if token == globals.ADMIN_TOKEN:
         if isinstance(request, Request):
             if request.remote_addr != "127.0.0.1":
-                print ("attempted admin login from", request.remote_addr)
+                print ("attempted admin access from ", request.remote_addr)
                 return None
             print("admin access from", request.remote_addr)
             return tables.User(**ADMIN)

@@ -3,7 +3,10 @@ from typing import Type
 from sqlalchemy import not_, union_all
 from sqlalchemy import not_, and_
 from sqlalchemy.orm import Session, Query
+
+import userData
 from globals import *
+from search import search
 from tables import Post, User, PostLike, CommentLink
 
 import pytz
@@ -63,19 +66,36 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
         return __postClassToDict(post, accountManager.getUser(request)), cookies
 
 
-def getPosts(amount: int, request: Request, subSet: Query | None = None) -> (dict, list[Cookie]):
+def getSubset(request: Request, session: Session) -> Query | None:
+    if request.args.get('query') is not None:
+        return search(request.args.get('query'))
+    if request.args.get('following') is not None:
+        user = accountManager.getUser(request)
+        if user is not None:
+            print('logged in')
+            return userData.getFollowingPosts(user, session)
+        else:
+            print('not logged in')
+            return session.query(Post)
+    return session.query(Post)
+
+
+def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     currentPost = 0
     if getCookie(request, 'current_post') is not None:
         currentPost = getCookie(request, 'current_post')
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
+    
     with database.getSession() as session:
-        if subSet is not None:
-            posts = subSet.where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
-        else:
-            posts = session.query(Post).where(not_(Post.has_parent)).offset(currentPost).limit(amount).all()
+        posts = getSubset(request, session)\
+            .where(not_(Post.has_parent))\
+            .offset(currentPost)\
+            .limit(amount)\
+            .all()
         if len(posts) == 0:
-            print("no posts")
             return [], cookies
+        
+        print(__postClassToDict(posts, accountManager.getUser(request)))
         return __postClassToDict(posts, accountManager.getUser(request)), cookies
 
 
@@ -119,6 +139,5 @@ def getComments(post: Post, session: Session | None = None) -> list[Type[Post]]:
             .all()
     if localSession:
         session.close()
-    print(result)
     return result
 
