@@ -91,6 +91,7 @@ header span {
   font-weight: bold;
   display: flex;
   justify-content: center;
+  align-items: center;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -514,6 +515,15 @@ main div nav {
 .account_header_stat > i {
   scale: 1.5;
 }
+
+.follow_button {
+  background-color: var(--darkBlue);
+  width: 8vh;
+  height: 4vh;
+  border-radius: 9999999px;
+  transition: 0.5s;
+}
+.follow_button:hover { background-color: var(--attentionBlue); }
 
 .flex_horizontal {
   display: flex;

@@ -1,6 +1,10 @@
 <header class="account_header">
   <div id="header_gradient"></div>
+  {% if account.banner_color %}
+  <div class="account_header_content" style="background-color: '{{ account.banner_color }}';">
+  {% else %}
   <div class="account_header_content">
+  {% endif %}
     <div class="flex_horizontal user_img_name_container">
       <img
         src="{{ account.pfp }}"
@@ -26,17 +30,18 @@
     </pre>
 {% endif %}
 
-    <div class="account_header_stats flex_horizontal">
-      <div class="account_header_stat">
-        <i class="bi bi-heart-fill"></i>
-        <h5>{{ account.likedAmount }}</h5>
-      </div>
-      <button
-        class="account_header_stat"
-        title="Follow"
-      >
-        <i class="bi bi-person-fill-add"></i>
-        <h5>{{ account.followersAmount }}</h5>
-      </button>
+  <div class="account_header_stats flex_horizontal">
+    <button
+      class="account_header_stat follow_button"
+      onclick="followUser('{{ account.accountName }}')"
+      title="Follow"
+    >
+      <i class="bi bi-person-fill-add"></i>
+      <h5>{{ account.followersAmount }}</h5>
+    </button>
+    <div class="account_header_stat">
+      <i class="bi bi-heart-fill"></i>
+      <h5>{{ account.likedAmount }}</h5>
+    </div>
   </div>
 </header>

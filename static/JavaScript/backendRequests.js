@@ -142,6 +142,52 @@ async function removeLike(postID) {
   }
 }
 
+async function followUser(accountName) {
+  const url = `/users/follow/${accountName}`;
+  response = await fetch(url)
+  if (!response.ok) {
+    addPopup(false, `Failed to follow user. ${response.statusText}`);
+    return;
+  }
+
+  statusJson = await response.json();
+  followStatus = statusJson.status;
+
+  if (followStatus) {
+    removeFollow(accountName);
+  } else {
+    addFollow(accountName);
+  }
+}
+
+async function addFollow(accountName) {
+  const url = `/users/follow/${accountName}`;
+  response = await fetch(url, {method: "POST"});
+  if (!response.ok) {
+    addPopup(false, `Failed to follow user. ${response.statusText}`);
+    return;
+  }
+
+  statusJson = await response.json();
+  followStatus = statusJson.status;
+  console.log(followStatus);
+  addPopup(true, `You are now following ${accountName}`);
+}
+
+async function removeFollow(accountName) {
+  const url = `/users/follow/${accountName}`;
+  response = await fetch(url, {method: "DELETE"});
+  if (!response.ok) {
+    addPopup(false, `Failed to unfollow user. ${response.statusText}`);
+    return;
+  }
+
+  statusJson = await response.json();
+  followStatus = statusJson.status;
+  console.log(followStatus);
+  addPopup(true, `You are no longer following ${accountName}`);
+}
+
 function createPost() {
   const contentArea = document.getElementById("content-area");
   if (!contentArea) return;
@@ -195,11 +241,11 @@ function addPopup(errorType, errorText) {
       if (res.ok && popupContainer) {
         const popupHTML = await res.text();
         popupContainer.insertAdjacentHTML("beforeend", popupHTML);
-        setTimeout(() => {
-          const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
-          if (popup)
-            closePopup(errorID);
-        }, 20000)
+        // setTimeout(() => {
+          // const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
+          // if (popup)
+            // closePopup(errorID);
+        // }, 20000)
       } else {
         throw new Error("Failed to add popup!");
       }

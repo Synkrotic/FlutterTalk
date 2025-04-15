@@ -3,18 +3,18 @@
 <!--Header with title, logo & hashtag icon -->
     {% include "header.html" %}
     <nav>
-      <button class="header_nav_btn active_page">
+      <button class="header_nav_btn" onclick="goToPage('/')">
         Discover
       </button>
-      <button class="header_nav_btn">
+      <button class="header_nav_btn" onclick="goToPage('?following=true')">
         Following
       </button>
     </nav>
   </div>
   <section id="main_post_section">
-      {% for post in posts %}
-        {% include "post.html" %}
-      {% endfor %}
+    {% for post in posts %}
+      {% include "post.html" %}
+    {% endfor %}
     <div
       id="posts_loading_spinner"
       class="loading_spinner_container"

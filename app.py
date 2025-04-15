@@ -24,7 +24,7 @@ def getHTMLFile(filename: str):
 def index():
     print("index")
     posts, _ = postmanager.getPosts(10, request)
-    response = Response(getFullPage(render_template("index.html", posts=posts), 10))
+    response = Response(getFullPage(render_template("index.html", posts=posts), 0))
     response.set_cookie("current_post", '10')
     response.cache_control.no_store = True
 
@@ -116,15 +116,15 @@ def addShare(postId):
 def follow(accountName):
     user: User = accountManager.getUser(request)
     if user is None:
-        return render_template("errorPage.html", error="404 user not found!")
+        return render_template("errorPage.html", error="404 user not found!"), 404
     
     match request.method:
         case 'DELETE':
-            return userData.removeFollowing(user, accountName)
+            return json.dumps({"status": userData.removeFollowing(user, accountName)})
         case 'POST':
-            return userData.addFollowing(user, accountName)
+            return json.dumps({"status": userData.addFollowing(user, accountName)})
         case 'GET':
-            return userData.getFollowing(user, accountName)
+            return json.dumps({"status": userData.getFollowing(user, accountName)})
         case _:
             return render_template("errorPage.html", error="Invalid method used")
 

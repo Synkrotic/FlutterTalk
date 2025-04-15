@@ -25,20 +25,6 @@ const searchBar = document.getElementById("main_search_bar");
 
 
 
-// Event listeners
-for (let i = 0; i < headerNavButtons.length; i++) {
-  headerNavButtons[i].addEventListener("click", function () {
-    if (this.className.includes(" active_page")) return;
-    this.className = this.className.replace(" deactive_page", "");
-    const current = document.getElementsByClassName("active_page");
-    current[0].className = current[0].className.replace(
-      "active_page",
-      "deactive_page"
-    );
-    this.className += " active_page";
-  });
-}
-
 if (scrollUpButton && mainSection) {
   scrollUpButton.addEventListener("click", function () {
     mainSection.scrollTo({
