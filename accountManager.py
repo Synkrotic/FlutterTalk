@@ -134,6 +134,8 @@ def getOrDefaultUserName(user: tables.User) -> str:
 def getOrDefaultDisplayName(user: tables.User) -> str:
     if user is None:
         return 'anonymous'
+    elif user.display_name is None:
+        return user.account_name
     else:
         return user.display_name
 
