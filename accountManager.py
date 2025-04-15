@@ -7,6 +7,7 @@ import bcrypt
 from flask import Request
 from sqlalchemy import and_, func, insert
 from sqlalchemy.orm import Session, InstrumentedAttribute
+from werkzeug.exceptions import BadRequest
 
 import database
 import globals
@@ -149,11 +150,14 @@ def updateProfile(request: Request):
     
     with database.getSession() as session:
         user = session.merge(user)
-        user.display_name = request.form["name"]
-        user.bio = request.form["bio"]
-        user.account_name = request.form["accountname"]
-        user.location = request.form["location"]
-        user.banner_color = request.form["banner_color"]
+        try:
+            user.display_name = request.form["name"]
+            user.bio = request.form["bio"]
+            user.account_name = request.form["accountname"]
+            user.location = request.form["location"]
+            user.banner_color = request.form["banner_color"]
+        except BadRequest as e:
+            return 'bad_request', None
         session.commit()
         session.flush()
     
@@ -162,5 +166,6 @@ def updateProfile(request: Request):
             "accountName": user.account_name,
             "bio": user.bio,
             "location": user.location,
+            "bannerColor": user.banner_color,
             "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
         }

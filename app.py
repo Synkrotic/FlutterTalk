@@ -31,7 +31,6 @@ def index():
     return response
 
 
-
 @app.route('/getPosts/<int:amount>')
 def getPosts(amount: int):
     posts, cookies = postmanager.getPosts(amount, request)
@@ -46,9 +45,6 @@ def isLoggedIn():
     if user is None:
         return json.dumps({'logged_in':False, 'username': None}), 200
     return json.dumps({'logged_in':True, 'username': accountManager.getOrDefaultUserName(user)}), 200
-
-
-
 
 
 @app.route('/posts/view/<int:postId>')
@@ -118,14 +114,17 @@ def follow(accountName):
     user: User = accountManager.getUser(request)
     if user is None:
         return render_template("errorPage.html", error="404 user not found!"), 404
+    toFollow = accountManager.getUserByName(accountName)
+    if toFollow is None:
+        return render_template("errorPage.html", error="404 user not found!"), 404
     
     match request.method:
         case 'DELETE':
-            return json.dumps({"status": userData.removeFollowing(user, accountName)})
+            return json.dumps(userData.removeFollowing(user, toFollow))
         case 'POST':
-            return json.dumps({"status": userData.addFollowing(user, accountName)})
+            return json.dumps(userData.addFollowing(user, toFollow))
         case 'GET':
-            return json.dumps({"status": userData.getFollowing(user, accountName)})
+            return json.dumps(userData.getFollowing(user, toFollow))
         case _:
             return render_template("errorPage.html", error="Invalid method used")
 
