@@ -1,10 +1,10 @@
+{% if account.banner_color %}
+<header class="account_header" style="background-color: {{ account.banner_color }};">
+{% else %}
 <header class="account_header">
+{% endif %}
   <div id="header_gradient"></div>
-  {% if account.banner_color %}
-  <div class="account_header_content" style="background-color: '{{ account.banner_color }}';">
-  {% else %}
   <div class="account_header_content">
-  {% endif %}
     <div class="flex_horizontal user_img_name_container">
       <img
         src="{{ account.pfp }}"

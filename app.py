@@ -98,6 +98,7 @@ def viewAccount(accountName):
         "likedAmount": user.likes,
         "followersAmount": user.followers,
         "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+        "banner_color": user.banner_color,
     }
 
     posts, _ = postmanager.getPostsOfUserByID(user.id, 10, request)
@@ -167,6 +168,7 @@ def viewProfile(action="login", displayData:dict=None):
             "bio": user.bio,
             "location": user.location,
             "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+            "banner_color": user.banner_color,
         }
     
     response.set_data(getFullPage(render_template("viewProfile.html", user=account), 6))

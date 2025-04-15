@@ -42,6 +42,8 @@
           {% endif %}
           <textarea name="bio" class="form-control text_area" maxlength="500" id="bio-area">{{ bio }}</textarea>
         </div>
+        <label for="banner_color">Banner Colour</label>
+        <input type="color" name="banner_color" id="banner_color" class="form-control" value="{{ user.banner_color }}">
         <button type="submit" class="btn btn-primary save-button">Save</button>
 
       </form>
