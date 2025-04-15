@@ -113,11 +113,13 @@ def addShare(postId):
 def follow(accountName):
     user: User = accountManager.getUser(request)
     if user is None:
-        return render_template("errorPage.html", error="404 user not found!"), 404
+        return render_template("errorPage.html", error="You need to be logged in!"), 404
     toFollow = accountManager.getUserByName(accountName)
     if toFollow is None:
-        return render_template("errorPage.html", error="404 user not found!"), 404
-    
+        return render_template("errorPage.html", error="Tried to follow a non existing user!"), 401
+    if user.id == toFollow.id:
+        return render_template("errorPage.html", error="You cannot follow yourself!"), 403
+
     match request.method:
         case 'DELETE':
             return json.dumps(userData.removeFollowing(user, toFollow))

@@ -146,12 +146,20 @@ async function followUser(accountName) {
   const url = `/users/follow/${accountName}`;
   response = await fetch(url)
   if (!response.ok) {
-    addPopup(false, `Failed to follow user. ${response.statusText}`);
+    if (response.status === 404) {
+      msg = "You need to be logged in!";
+    } else if (response.status === 403) {
+      msg = "You cannot follow yourself!";
+    } else if (response.status === 401) {
+      msg = "Tried to follow a non existing user!";
+    } else {
+      msg = response.statusText;
+    }
+    addPopup(false, `Failed to follow user. ${msg}`);
     return;
   }
 
-  statusJson = await response.json();
-  followStatus = statusJson.status;
+  followStatus = await response.json();
 
   if (followStatus) {
     removeFollow(accountName);
@@ -168,9 +176,6 @@ async function addFollow(accountName) {
     return;
   }
 
-  statusJson = await response.json();
-  followStatus = statusJson.status;
-  console.log(followStatus);
   addPopup(true, `You are now following ${accountName}`);
 }
 
@@ -182,9 +187,6 @@ async function removeFollow(accountName) {
     return;
   }
 
-  statusJson = await response.json();
-  followStatus = statusJson.status;
-  console.log(followStatus);
   addPopup(true, `You are no longer following ${accountName}`);
 }
 
