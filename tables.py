@@ -21,7 +21,7 @@ class User(Base):
     bio = Column(Text)
     profile_pic = Column(String)
     location = Column(String)
-    banner_color = Column(String, default="#000000")
+    banner_color = Column(String, default="#529AFF")
     
     posts = relationship('Post', back_populates='user', cascade='all, delete-orphan')
     post_likes = relationship('PostLike', back_populates='user', cascade='all, delete-orphan')

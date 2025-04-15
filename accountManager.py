@@ -153,6 +153,7 @@ def updateProfile(request: Request):
         user.bio = request.form["bio"]
         user.account_name = request.form["accountname"]
         user.location = request.form["location"]
+        user.banner_color = request.form["banner_color"]
         session.commit()
         session.flush()
     
