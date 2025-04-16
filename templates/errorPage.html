@@ -15,14 +15,19 @@
       as="style"
       onload="this.onload=null;this.rel='stylesheet'"
     />
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='navbar.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
     <script
       defer
       src="{{ url_for('static', filename='JavaScript/script.js') }}"
     ></script>
   </head>
   <body>
-    <img src="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}"
-         alt="Logo of FlutterTalk">
+    <img src="{{ url_for('static', filename='Assets/Media/FlutterTalk_Logo.svg') }}" alt="Logo of FlutterTalk">
     <h1 id="appname">FlutterTalk</h1>
     <div id="error_container">
       <h1>Oops! Something went wrong!</h1>

@@ -2,17 +2,56 @@
   --darkBlackish: #0f131a;
   --blackish: #191d28;
   --darkBlue: #213555;
+  --pickledBlueWood: #2c3b50;
   --mediumBlue: #455682;
   --moderateBlue: #3e5879;
+  --eastBay: #3e5879;
   --attentionBlue: #529aff;
   --darkCyan: #4c585b;
   --darkGrayBlue: #7e99a3;
   --powderBlue: #9eb3c2;
   --grayBlue: #a5bfcc;
-  --lightRed: #ffaaaa;
+  --whiteText: snow;
+
+
+  --lightBackground: #7c868a;
+  --lightSurface: #a9cad4;
+  --lightGray: #e2e8f0;
+  --cloudGray: #d1d5db;
+  --coolWhite: #ffffff;
+  --softBlueGray: #cbd5e1;
+  --dustyBlue: #a0aec0;
+  --steelBlue: #718096;
+  --textBlue: #334155;
+  --primaryBlue: #3b82f6;
+  --tealAccent: #38b2ac;
+  --headingText: #1e293b;
+  --bodyText: #334155;
+
+
 
   --attentionRed: #ff4d4d;
   --attentionGreen: #00cc66;
+  
+
+
+
+
+
+  --background: var(--blackish);
+  --secondaryBackground: var(--darkblackish);
+  --primaryColor: var(--darkBlue);
+  --secondaryColor: var(--mediumBlue);
+  --tertiaryColor: var(--moderateBlue);
+  --quaternaryColor: var(--darkCyan);
+  --quinaryColor: var(--darkGrayBlue);
+  --senaryColor: var(--powderBlue);
+  --septenaryColor: var(--grayBlue);
+  --octonaryColor: var(--pickledBlueWood);
+  --nonaryColor: var(--eastBay);
+
+  --ctaColor: var(--attentionBlue);
+  --textColor: var(--whiteText);
 }
 
 @font-face {
@@ -40,17 +79,21 @@ body nav {
   height: 6vh;
   background: none;
   border: none;
-  color: white;
   font-size: calc(7vh * 0.3);
   display: flex;
   justify-content: flex-start;
   align-items: center;
   border-radius: 0.5em;
+  color: var(--textColor);
 }
 
 .nav_button i {
   margin-left: 0.5vw;
   margin-right: 0.5vw;
+}
+
+#account_button {
+  z-index: 3;
 }
 
 #account_button img {
@@ -89,7 +132,7 @@ body nav {
 #account_button:hover span,
 #account_button.active span {
   opacity: 1;
-  color: var(--grayBlue);
+  color: var(--septenaryColor);
   font-size: 70%;
   transition: 0.2s;
   width: 65%;
@@ -122,8 +165,8 @@ body nav {
   width: 10vw;
   height: 3vh;
   transform: translate(-1vw, 3vh);
-  background-color: var(--darkBlue);
-  color: white;
+  background-color: var(--primaryColor);
+  color: var(--textColor);
   font-size: 1.5vh;
   display: flex;
   flex-wrap: nowrap;
@@ -131,13 +174,14 @@ body nav {
   align-items: center;
   transition: 0.2s;
   z-index: -5;
+  position: absolute;
 }
 
 .account_button_actions i { margin: 0vh 0.9vh; }
 
 .account_button_actions:hover {
-  background-color: var(--attentionBlue);
-  outline: 1px solid snow;
+  background-color: var(--ctaColor);
+  outline: 1px solid var(--textColor);
   transition: 0.5s;
 }
 .active ~ .account_button_actions {
@@ -147,10 +191,15 @@ body nav {
 }
 
 #logout_menu_button { border-radius: 0 0 99999999999px 99999999999px; }
-#account_menu_button:hover ~ #logout_menu_button { border-top: 1px solid snow; }
+
+#account_menu_button:hover ~ #logout_menu_button { border-top: 1px solid var(--textColor); }
 .active ~ #logout_menu_button { transform: translate(-1vw, 9vh); }
-
-
+.active ~ #account_menu_button > * { transform: translateY(-1vw, 6vh); }
+.active ~ #account_menu_button {
+  height: 4vh;
+  transform: translate(-1vw, 5vh);
+  z-index: 1;
+}
 
 #settings_button i {
   height: unset;
@@ -166,8 +215,8 @@ body nav {
 }
 
 #new_post_button {
-  background-color: var(--darkBlue);
-  color: white;
+  background-color: var(--primaryColor);
+  color: var(--textColor);
   font-size: calc(7vh * 0.3);
   display: flex;
   justify-content: center;
@@ -182,7 +231,7 @@ body nav {
 }
 
 #new_post_button:hover {
-  background-color: var(--attentionBlue);
+  background-color: var(--ctaColor);
   transition: 0.5s;
 }
 
@@ -201,7 +250,7 @@ body nav {
 }
 
 #scroll_up_button:hover i {
-  color: #529aff;
+  color: var(--ctaColor);
   transition: 0.5s;
 }
 
@@ -211,7 +260,7 @@ body nav {
 
 body nav button:hover:not(#scroll_up_button):not(#new_post_button),
 #account_button.active {
-  background-color: var(--darkBlue);
+  background-color: var(--primaryColor);
   transition: 0.5s;
 }
 

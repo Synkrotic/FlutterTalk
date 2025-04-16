@@ -292,7 +292,7 @@ function addPopup(errorType, errorText) {
         setTimeout(() => {
           const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
           if (popup)
-            closePopup(errorID);
+            closePopup(`POPUP_${errorID}`);
         }, 20000)
       } else {
         throw new Error("Failed to add popup!");
@@ -306,12 +306,17 @@ function addPopup(errorType, errorText) {
 
 function closePopup(id) {
   try {
-    const popupID = id.toString().split('-')[1];
+    const popupIDArr = id.toString().split('_');
+    const popupID = popupIDArr[popupIDArr.length - 1];
+    if (!popupID) return;
+
     const popup = document.getElementById(`POPUP_CONTAINER_${popupID}`);
-    const popupType = popup.classList[-1];
-    const popupText = popup.querySelector(".popup-text").innerHTML;
     if (!popup) return;
-  
+    
+    const popupType = popup.classList[popup.classList.length - 1];
+    const popupText = popup.querySelector(".popup-text").innerHTML;
+    if (!popupText || !popupType) return;
+
     document.cookie = `POPUP-${popupID}={"type": ${popupType}, "text": "${popupText}"}; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;`;
     popup.remove();
   } catch (error) {

@@ -5,7 +5,10 @@
       onclick="
         let dialog = document.getElementById('{{ id }}');
         let lastClass = dialog.classList[dialog.classList.length - 1];
-        dialog.classList.replace(lastClass, 'closed_dialog');
+        if (lastClass.includes('parentID='))
+          dialog.classList.replace(lastClass, 'closed_dialog');
+        else
+          dialog.classList.add('closed_dialog');
         setTimeout(() => {
           dialog.close();
         }, 500);

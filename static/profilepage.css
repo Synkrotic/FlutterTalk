@@ -26,7 +26,8 @@ div.input-container > input {
   margin: 2px 0 22px 0;
   display: inline-block;
   border: none;
-  background: #f1f1f1;
+  background: var(--textColor);
+  color: var(--secondaryBackground);
 }
 
 input.save-button {
@@ -53,6 +54,7 @@ input.save-button {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  color: var(--textColor);
 }
 
 .input-container textarea {
@@ -62,14 +64,14 @@ input.save-button {
   max-height: 15vh;
   resize: none;
   overflow-y: scroll !important;
-  color: black;
+  color: var(--secondaryBackground);
+  background-color: var(--textColor);
 }
 
 #register-link {
-  /* text-align: center; */
   align-self: center;
   transform: translate(-2vw, -1vh);
-  color: snow;
+  color: var(--textColor);
   margin-top: 2vh;
 }
 
@@ -101,6 +103,6 @@ input.save-button {
   width: 10vh;
   left: 10px;
   bottom: 32px;
-  border: 2px solid snow;
+  border: 2px solid var(--textColor);
   border-radius: 50%;
 }

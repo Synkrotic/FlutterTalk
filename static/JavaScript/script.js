@@ -24,7 +24,6 @@ const searchBar = document.getElementById("main_search_bar");
 
 
 
-
 // Event listeners
 if (scrollUpButton && mainSection) {
   scrollUpButton.addEventListener("click", function () {

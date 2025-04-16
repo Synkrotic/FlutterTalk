@@ -9,8 +9,8 @@
   z-index: 10;
   background-image: radial-gradient(
     circle at bottom left,
-    color-mix(in srgb, var(--darkBlue) 90%, transparent),
-    color-mix(in srgb, var(--blackish) 97%, transparent) 80%);
+    color-mix(in srgb, var(--primaryColor) 90%, transparent),
+    color-mix(in srgb, var(--background) 97%, transparent) 80%);
   background-color: transparent;
   border-radius: 3em;
   outline: 2px solid #12121277;
@@ -22,7 +22,7 @@
   opacity: 0 !important;
 }
 .dialog_container > * {
-  color: snow;
+  color: var(--textColor);
 }
 ::backdrop {
   background-color: #12121277;
@@ -40,7 +40,7 @@
   all: unset;
   white-space: pre-wrap;
   word-wrap: break-word;
-  background-color: var(--blackish);
+  background-color: var(--background);
   border-radius: 1em;
   max-width: calc(100% - 2em);
   width: calc(100% - 2em);
@@ -48,7 +48,7 @@
   resize: none;
   overflow-x: hidden;
   overflow-y: scroll !important;
-  color: snow;
+  color: var(--textColor);
   padding: 1em;
   padding-bottom: 3em;
   text-wrap: normal;

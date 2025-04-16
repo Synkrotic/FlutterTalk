@@ -1,49 +1,49 @@
 .sidebar {
- display: flex;
- flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .search_bar_container {
-    width: 60%;
-    height: 5vh;
-    margin-top: 5%;
-    margin-left: 8%;
-    background: #2c3b50;
-    opacity: 0.8;
-    padding: 3px 1rem !important;
-    border-radius: 0.5em;
-    margin-bottom: 3vh;
-    display: flex;
-    align-items: center;
+  width: 60%;
+  height: 5vh;
+  margin-top: 5%;
+  margin-left: 8%;
+  background: var(--octonaryColor);
+  opacity: 0.8;
+  padding: 3px 1rem !important;
+  border-radius: 0.5em;
+  margin-bottom: 3vh;
+  display: flex;
+  align-items: center;
 }
 .search_bar_container.wide_search_bar { width: 84%; }
 
 .search_bar_icon {
-    color: #3e5879;
-    font-size: 1.25rem !important;
+  color: var(--nonaryColor);
+  font-size: 1.25rem !important;
 }
 
 .search_bar {
-    height: 100%;
-    width: 100%;
-    border: none;
-    background: none;
-    padding-left: 0.8rem !important; /* Reduced padding */
-    color: #3e5879;
-    line-height: 100%;
-    font: normal 1.2rem sans-serif !important;
+  height: 100%;
+  width: 100%;
+  border: none;
+  background: none;
+  padding-left: 0.8rem !important;
+  color: var(--nonaryColor);
+  line-height: 100%;
+  font: normal 1.2rem sans-serif !important;
 }
 
 .search_bar_container:hover {
-  outline: 3px solid #3e5879;
+  outline: 3px solid var(--nonaryColor);
 }
 
 .search_bar_container:hover .search_bar_icon {
-  color: #a7b7cb;
+  color: var(--septenaryColor);
 }
 
 .search_bar::placeholder {
-  color: #3e5879;
+  color: var(--nonaryColor);
   font: normal 1.2rem sans-serif !important;
 }
 
@@ -52,28 +52,28 @@
 }
 
 .search_bar_container:focus-within {
-  outline: 3px solid var(--attentionBlue);
+  outline: 3px solid var(--ctaColor);
 }
 
 .search_bar_container:focus-within .search_bar_icon {
-  color: var(--attentionBlue);
+  color: var(--ctaColor);
 }
 
 hr {
   height: 1px;
   margin-top: 3vh;
-  color: var(--darkGrayBlue);
-  background-color: var(--darkGrayBlue);
-  border-color: var(--darkGrayBlue);
+  color: var(--quinaryColor);
+  background-color: var(--quinaryColor);
+  border-color: var(--quinaryColor);
 }
 
 .sidebar a {
   margin-left: 1vw;
   width: max-content;
-  color: var(--darkGrayBlue);
+  color: var(--septenaryColor);
 }
 .sidebar a:hover {
-  color: var(--attentionBlue);
+  color: var(--ctaColor);
 }
 .sidebar nav a {
   margin: 0;
