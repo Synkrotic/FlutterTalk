@@ -83,9 +83,10 @@ def getSubset(request: Request, session: Session) -> Query | None:
 
 def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     currentPost = 0
-    if getCookie(request, 'current_post') is not None:
+    if request.args.get('restart') is not None or getCookie(request, 'current_post') is not None:
+        cookies = addCookie([], Cookie("current_post", currentPost + amount))
+    else:
         currentPost = getCookie(request, 'current_post')
-    cookies = addCookie([], Cookie("current_post", currentPost + amount))
     
     with database.getSession() as session:
         posts = getSubset(request, session)\

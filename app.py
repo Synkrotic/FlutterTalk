@@ -1,17 +1,18 @@
 import random
-from flask import render_template, request, redirect # type: ignore
-import dummyData
+
+from flask import render_template, request, redirect  # type: ignore
 
 import accountManager
 import database
+import dummyData
 import mediaManager
 import userData
+from forms import UpdateProfileForm
 from globals import *
 from posts import postmanager, postData
 from posts.postData import getLike
-from search import search
 from tables import User, Authentication
-from forms import UpdateProfileForm
+
 
 
 @app.route('/getHTMLFile/<string:filename>', methods=['GET'])
