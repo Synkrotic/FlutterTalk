@@ -25,14 +25,11 @@ def _getFormattedTime(posted: datetime) -> str:
     else:
         return f"{time.days}d"
 
-def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], user: User | None=None) -> list[dict] | dict:
+def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], session: Session, user: User | None=None) -> list[dict] | dict:
     def convert(post: Post) -> dict:
-        with database.getSession() as session:
-            session.merge(post)
-
             comments = getComments(post, session)
-            commentsView = __postClassToDict(comments, user)
-            pfp = mediaManager.getMediaURL(post.user.profile_pic, "png")
+            commentsView = __postClassToDict(comments, session, user)
+            pfp = mediaManager.getMediaURL(post.user.profile_pic, "MEDIA")
             return {
                 "postID": post.id,
                 "accountName": post.user.account_name,
@@ -62,16 +59,17 @@ def getPostOfFeed(request) -> (dict | None, list[Cookie]):
         current_post = request.cookies.get('current_post')
     else:
         cookies = addCookie([], Cookie("current_post", current_post))
+        
     with database.getSession() as session:
         post: Post | None = session.query(Post).where(Post.id == current_post).first()
         if post is None:
             return None, cookies
-        return __postClassToDict(post, accountManager.getUser(request)), cookies
+        return __postClassToDict(post, session, accountManager.getUser(request)), cookies
 
 
 def getSubset(request: Request, session: Session) -> Query | None:
     if request.args.get('query') is not None:
-        return search(request.args.get('query'))
+        return search(request.args.get('query'), session)
     if request.args.get('following') is not None:
         user = accountManager.getUser(request)
         if user is not None:
@@ -98,7 +96,7 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
         if len(posts) == 0:
             return [], cookies
         
-        return __postClassToDict(posts, accountManager.getUser(request)), cookies
+        return __postClassToDict(posts, session, accountManager.getUser(request)), cookies
 
 
 def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, list[Cookie]):
@@ -111,12 +109,12 @@ def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, lis
         posts = session.query(Post).where(Post.id > currentPost, Post.user_id == userID).limit(amount).all()
         if len(posts) == 0:
             return [], cookies
-        return __postClassToDict(posts, accountManager.getUser(request)), cookies
+        return __postClassToDict(posts, session, accountManager.getUser(request)), cookies
 
 
 def getPostDict(postId: int, request: Request) -> dict | None:
     with database.getSession() as session:
-        return __postClassToDict(session.query(Post).where(Post.id == postId).first(), accountManager.getUser(request))
+        return __postClassToDict(session.query(Post).where(Post.id == postId).first(), session, accountManager.getUser(request))
 
 
 def getPostQuery(session: Session, postId: int) -> Query | None:

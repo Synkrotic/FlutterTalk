@@ -133,7 +133,7 @@ def searchPosts():
 
 
 @app.route('/profile')
-@app.route('/profile/<string:action>')
+@app.route('/profile/<string:action>', )
 def viewProfile(action="login", displayData:dict=None):
     response = Response()
     user: User = accountManager.getUser(request)
@@ -254,7 +254,7 @@ def postMedia():
 @app.route("/media/<string:url>", methods=['GET'])
 def getMedia(url):
     response = mediaManager.getMedia(url, 'MEDIA', request)
-    return response if response is not None else json.dumps({'success':False}), 400
+    return (response, 200) if response is not None else (json.dumps({'success':False}), 400)
 
     
 @app.route("/saveProfile", methods=['POST'])
@@ -292,11 +292,11 @@ def addPopup(errorType, error, response=None):
 def getFullPage(renderedPage, activePageID=-1):
     page = render_template("siteInitialization.html")
     user = accountManager.getUser(request)
-    pfp = mediaManager.getMediaURL(user.profile_pic if user is not None else None, "png")
+    pfp = mediaManager.getMediaURL(user.profile_pic if user is not None else None, "MEDIA") if user is not None else DEFAULT_PFP
     page += render_template(
         "navbar.html",
         displayName=accountManager.getOrDefaultDisplayName(accountManager.getUser(request)),
-        pfp=pfp if pfp is not None else "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+        pfp=pfp if pfp is not None else DEFAULT_PFP,
         accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}',
         activeID=activePageID
     )

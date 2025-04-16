@@ -9,10 +9,12 @@ ADMIN = data = {
     "password": "_",
     "display_name": "ADMIN",
     "bio": "ADMIN",
-    "profile_pic": 999999999999999999,
+    "profile_pic": 1,
     "location": "ADMIN"
 }
 ADMIN_TOKEN = "ADMIN"
+
+DEFAULT_PFP = "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
 
 class Cookie:
     def __init__(self, key, content, httponly=False, duration=None):

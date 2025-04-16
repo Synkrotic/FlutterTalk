@@ -26,21 +26,25 @@ def postMedia(file, user: tables.User, fileType: str):
         return None, 400
 
     with database.getSession() as session:
-        media = tables.MediaEntry(user_id=user.id, media_type=fileType)
+        media = tables.MediaEntry(user_id=user.id, media_type=getExtension(file.filename))
         session.add(media)
         session.commit()
-        file.save(f"/media/{media.id}.{getExtension(file.filename)}")
+        file.save(os.path.realpath(f"media/{media.id}.{getExtension(file.filename)}"))
         return media.id, 200
         
 
-def getMediaURL(mediaID: int, fileType: str):
+def getMediaURL(mediaId: int, fileType: str):
+    if mediaId is None or fileType is None:
+        return None
     with database.getSession() as session:
-        media = session.query(tables.MediaEntry).filter(tables.MediaEntry.id == mediaID).first()
+        media = session.query(tables.MediaEntry).filter(tables.MediaEntry.id == mediaId).first()
         if media is None:
+            print("media not found", mediaId, fileType)
             return None
-        if media.media_type != fileType:
+        if media.media_type not in ALLOWED_EXTENSIONS[fileType]:
+            print("media type not allowed")
             return None
-        return f"/media/{mediaID}.{fileType}"
+        return f"/media/{mediaId}.{media.media_type}"
     
     
 def getMedia(url: str, fileType: str, request: Request):

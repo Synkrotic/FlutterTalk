@@ -142,7 +142,7 @@ def getOrDefaultDisplayName(user: tables.User) -> str:
 def updateProfile(request: Request):
     user = getUser(request)
     if user is None:
-        return json.dumps({"errorText": "User is not logged in!"}), 401, {'ContentType': 'application/json'}, None
+        return 'error', None
     if user.account_name != request.form["accountname"] and _checkExists(request.form["accountname"]):
         return 'name_exists', None
     
@@ -167,5 +167,5 @@ def updateProfile(request: Request):
             "bio": user.bio,
             "location": user.location,
             "bannerColor": user.banner_color,
-            "pfp": "media/999999999999999999.png",
+            "pfp": mediaManager.getMediaURL(user.profile_pic, "MEDIA") if user.profile_pic is not None else "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg"
         }
