@@ -1,6 +1,6 @@
 import random
 
-from flask import render_template, request, redirect  # type: ignore
+from flask import render_template, request, redirect, flash  # type: ignore
 
 import accountManager
 import database
@@ -133,9 +133,9 @@ def searchPosts():
     return getFullPage(render_template("search.html"), 1)
 
 
-@app.route('/profile')
-@app.route('/profile/<string:action>', )
-def viewProfile(action="login", displayData:dict=None):
+@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/profile/<string:action>', methods=['GET', 'POST'])
+def viewProfile(action="login"):
     response = Response()
     user: User = accountManager.getUser(request)
 
@@ -143,11 +143,18 @@ def viewProfile(action="login", displayData:dict=None):
         response.set_data(getFullPage(render_template("viewProfile.html", action=action), 6))
         return response
     
-    if displayData is not None:
-        account = displayData
-    else:
-        account = userData.getUserDict(user)
-    
+    account = userData.getUserDict(user)
+    if request.method == 'POST':
+        status, result = accountManager.updateProfile(request)
+        if status == 'name_exists':
+            addPopup('error', 'Name already exists!', response)
+        elif status == 'success':
+            account = result
+            addPopup('success', 'Profile updated! changes take affect after a while.', response)
+        elif status == 'error':
+            addPopup('error', 'Error updating profile!', response)
+        
+        
     form = UpdateProfileForm()
     response.set_data(getFullPage(render_template("viewProfile.html", user=account, form=form), 6))
     return response
@@ -258,18 +265,6 @@ def getMedia(url):
     return (response, 200) if response is not None else (json.dumps({'success':False}), 400)
 
     
-@app.route("/saveProfile", methods=['POST'])
-def updateProfile():
-    status, result = accountManager.updateProfile(request)
-    if status == 'name_exists':
-        response = redirect('/profile')
-        return addPopup('error', 'Name already exists!', response)
-    if status == 'success':
-        response = viewProfile(displayData=result)
-        return addPopup('success', 'Profile updated! changes take affect after a while.', response)
-    if status == 'error':
-        response = redirect('/profile')
-        return addPopup('error', 'Error updating profile!', response)
 
 
 @app.errorhandler(404)

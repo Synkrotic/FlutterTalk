@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session, InstrumentedAttribute
 from werkzeug.exceptions import BadRequest
 
 import database
+import forms
 import globals
 import mediaManager
 import tables
@@ -146,14 +147,15 @@ def updateProfile(request: Request):
     if user.account_name != request.form["accountname"] and _checkExists(request.form["accountname"]):
         return 'name_exists', None
     
+    form = forms.UpdateProfileForm(request.form)
     with database.getSession() as session:
         user = session.merge(user)
         try:
-            user.display_name = request.form["name"]
-            user.bio = request.form["bio"]
-            user.account_name = request.form["accountname"]
-            user.location = request.form["location"]
-            user.banner_color = request.form["banner_color"]
+            user.display_name = form.name.data
+            user.bio = form.bio.data
+            user.account_name = form.accountname.data
+            user.location = form.location.data
+            user.banner_color = form.banner_color.data
             url, _ = mediaManager.postMedia(request.files.get('pfp'), user, 'MEDIA')
             user.profile_pic = url if url is not None else user.profile_pic
         except BadRequest as e:
