@@ -242,28 +242,6 @@ def settings():
     return getFullPage(render_template("settings.html"), 7)
 
 
-@app.route("/closePopup/<int:errorID>", methods=['POST'])
-def closePopup(errorID):
-    try:
-        for error in errors:
-            if error[0] == errorID:
-                errors.remove(error)
-                break
-
-    except IndexError:
-        return "Error: No popup with this ID found!", 404
-
-    return "Successfully closed the popup!", 200
-
-CurrentErrorId = 0
-@app.route("/addPopup/<string:errorType>/<string:error>", methods=['POST'])
-def addPopup(errorType, error):
-    global CurrentErrorId
-    CurrentErrorId += 1
-    errors.append([CurrentErrorId, {"type": errorType, "text": error}])
-    return render_template('popup.html', popupType=errorType, errorID=str(CurrentErrorId), errorText=error), 200
-
-
 @app.route("/postMedia")
 def postMedia():
     postMedia(request)
@@ -272,19 +250,32 @@ def postMedia():
 def updateProfile():
     status, result = accountManager.updateProfile(request)
     if status == 'name_exists':
-        addPopup('error', 'Name already exists!')
-        return redirect('/profile')
+        response = redirect('/profile')
+        return addPopup('error', 'Name already exists!', response)
     if status == 'success':
-        addPopup('success', 'Profile updated! changes take affect after a while.')
-        return viewProfile(displayData=result)
+        response = viewProfile(displayData=result)
+        return addPopup('success', 'Profile updated! changes take affect after a while.', response)
     if status == 'error':
-        addPopup('error', 'Error updating profile!')
-        return redirect('/profile')
+        response = redirect('/profile')
+        return addPopup('error', 'Error updating profile!', response)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("errorPage.html", error="404 page not found!"), 404
+
+
+def addPopup(errorType, error, response=None):
+    if not response:
+        response = Response()
+
+    errorID = random.randint(0, 1_000_000_000)
+    popupInfo = {
+        "type": errorType,
+        "text": error
+    }
+    response.set_cookie(f"POPUP-{errorID}", str(popupInfo))
+    return response
 
 
 def getFullPage(renderedPage, activePageID=-1):
