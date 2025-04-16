@@ -86,7 +86,14 @@
     {% endif %}
     <p>Settings</p>
   </button>
-  <button class="nav_button" id="new_post_button" title="Create a new post." onclick="toggleCreatePost()">
+  <button
+    class="nav_button"
+    id="new_post_button"
+    title="Create a new post."
+    onclick="
+      post_dialog.showModal();
+      document.getElementById('post_dialog').classList.remove('closed_dialog');"
+  >
     <i class="bi bi-pencil-square"></i>
     <b>New Post</b>
   </button>

@@ -54,9 +54,21 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
     />
+    <!-- Own dialog stylesheet -->
+    <link
+      rel="preload"
+      href="{{ url_for('static', filename='dialog.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
   </head>
   <body>
-    {% include('createPost.html') %}
+    {% with header="Create Post", id="post_dialog", action="createPost(this);" %}
+      {% include('dialog.html') %}
+    {% endwith %}
+    {% with header="Add Comment", id="comment_dialog", action="addComment(this);" %}
+      {% include('dialog.html') %}
+    {% endwith %}
     <section id="popups-container">
       {% for index in range(errors|length) %}
         {% with errorID=errors[index][0], popupType=errors[index][-1].type, errorText=errors[index][-1].text %}

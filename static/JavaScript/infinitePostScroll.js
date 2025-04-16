@@ -28,7 +28,7 @@ async function loadNewPosts(recursionLevel = 0, query = null, container = postsC
     return false;
   }
 
-  const postHTML = await fetch(`/getHTMLFile/post.html`, { method: "POST" }).then((response) => {
+  const postHTML = await fetch(`/getHTMLFile/post.html`, { method: "GET" }).then((response) => {
     if (response.ok) { return response; }
     else return false;
   });

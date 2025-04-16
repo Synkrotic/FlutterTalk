@@ -1,4 +1,4 @@
-#create-post-container {
+.dialog_container {
   position: fixed;
   height: 40vh;
   width: 30vw;
@@ -11,17 +11,24 @@
     circle at bottom left,
     color-mix(in srgb, var(--darkBlue) 90%, transparent),
     color-mix(in srgb, var(--blackish) 97%, transparent) 80%);
+  background-color: transparent;
   border-radius: 3em;
-  outline: 2px solid #121212;
+  outline: 2px solid #12121277;
   opacity: 1;
   transition: 0.5s;
 }
-.hide-menu { 
+.closed_dialog {
   height: 0px !important;
   opacity: 0 !important;
 }
-
-#post-header {
+.dialog_container > * {
+  color: snow;
+}
+::backdrop {
+  background-color: #12121277;
+  backdrop-filter: blur(1px);
+}
+.dialog_header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,7 +36,7 @@
   width: 26vw;
 }
 
-#create-post-container textarea {
+.dialog_container textarea {
   all: unset;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -46,9 +53,9 @@
   padding-bottom: 3em;
   text-wrap: normal;
 }
-#create-post-container textarea::placeholder { font-size: large; }
+.dialog_container textarea::placeholder { font-size: large; }
 
-.post-menu-button {
+.dialog_menu_button {
   border-radius: 99999999px;
   width: 17%;
   height: auto;
@@ -56,7 +63,7 @@
   margin-top: 3vh; 
 }
 
-#char-counter {
+.dialog_char_counter {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;

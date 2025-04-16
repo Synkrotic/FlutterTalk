@@ -190,10 +190,13 @@ async function removeFollow(accountName) {
   addPopup(true, `You are no longer following ${accountName}`);
 }
 
-function createPost() {
-  const contentArea = document.getElementById("content-area");
+function createPost(submitButton) {
+  const header = submitButton.parentElement;
+  const dialog = header.parentElement;
+  const contentArea = header.nextElementSibling;
   if (!contentArea) return;
   const postContent = contentArea.value;
+  if (contentArea.length < 1) return;
 
   const url = "/post";
   fetch(url, {
@@ -205,7 +208,41 @@ function createPost() {
   }).then((response) => {
     if (response.status === 200) {
       contentArea.value = "";
+      dialog.classList.add("closed_dialog");
+      dialog.close();
       addPopup(true, "Post created successfully!");
+    } else {
+      response.json().then((data) => {
+        addPopup(false, data.statusText);
+      });
+    }
+  });
+}
+
+function addComment(submitButton) {
+  const header = submitButton.parentElement;
+  const dialog = header.parentElement;
+  const contentArea = header.nextElementSibling;
+  if (!contentArea) return;
+  const commentContent = contentArea.value;
+  if (commentContent.length < 1) return;
+
+  const parentID = dialog.classList.value.split('=')[1];
+
+  const url = `/post/${parentID}`;
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content: commentContent })
+  }).then((response) => {
+    if (response.status === 200) {
+      contentArea.value = "";
+      let lastClass = dialog.classList[dialog.classList.length - 1];
+      dialog.classList.replace(lastClass, 'closed_dialog');
+      setTimeout(dialog.close(), 500)
+      addPopup(true, "Comment added successfully!");
     } else {
       response.json().then((data) => {
         addPopup(false, data.statusText);
@@ -236,18 +273,27 @@ function logout() {
 
 
 function addPopup(errorType, errorText) {
+  url = "/getHTMLFile/popup.html";
   try {
-    fetch(`/addPopup/${errorType ? "success" : "error"}/${errorText}`, {
-      method: "POST",
+    fetch(url, {
+      method: "GET",
     }).then(async (res) => {
       if (res.ok && popupContainer) {
-        const popupHTML = await res.text();
+        const errorID = Math.floor(Math.random() * 1000000);
+        document.cookie = `POPUP-${errorID}={"type": ${errorType}, "text": "${errorText}"}; path=/;`;
+
+        let popupHTML = await res.text();
+        popupHTML = popupHTML.replace("{{ popupType|lower }}", errorType ? "success" : "error");
+        popupHTML = popupHTML.replace("{{ popupType|upper }}", errorType ? "SUCCESS" : "ERROR");
+        popupHTML = popupHTML.replace("{{ errorID }}", errorID);
+        popupHTML = popupHTML.replace("{{ errorID }}", errorID);
+        popupHTML = popupHTML.replace("{{ errorText }}", errorText);
         popupContainer.insertAdjacentHTML("beforeend", popupHTML);
-        // setTimeout(() => {
-          // const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
-          // if (popup)
-            // closePopup(errorID);
-        // }, 20000)
+        setTimeout(() => {
+          const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
+          if (popup)
+            closePopup(errorID);
+        }, 20000)
       } else {
         throw new Error("Failed to add popup!");
       }
@@ -259,22 +305,34 @@ function addPopup(errorType, errorText) {
 
 
 function closePopup(id) {
-  const errorID = id.split("-")[1];
   try {
-    fetch(`/closePopup/${errorID}`, {
-      method: "POST",
-    }).then((res) => {
-      if (res.status === 200) {
-        const popup = document.getElementById(`POPUP_CONTAINER_${errorID}`);
-        if (popup)
-          popup.remove();
-        else
-          console.error(`Popup with ID ${id} not found.`);
-      } else {
-        throw new Error("Failed to close popup!");
-      }
-    });
+    const popupID = id.toString().split('-')[1];
+    const popup = document.getElementById(`POPUP_CONTAINER_${popupID}`);
+    const popupType = popup.classList[-1];
+    const popupText = popup.querySelector(".popup-text").innerHTML;
+    if (!popup) return;
+  
+    document.cookie = `POPUP-${popupID}={"type": ${popupType}, "text": "${popupText}"}; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;`;
+    popup.remove();
   } catch (error) {
-    console.error(error);
+    console.error("Error closing popup:", error);
   }
 }
+
+function loadPopups() {
+  const allCookies = document.cookie.split("; ");
+  allCookies.forEach(cookie => {
+    if (cookie.startsWith("POPUP-")) {
+      const cookieValue = cookie.split("=")[1];
+      const popupData = JSON.parse(decodeURIComponent(cookieValue));
+      const popupID = cookie.split("=")[0].split("-")[1];
+
+      if (popupData) {
+        addPopup(popupData.type, popupData.text);
+        document.cookie = `POPUP-${popupID}={"type": ${popupData.type}, "text": "${popupData.text}"}; expires=Thu, 1 jan 2000 12:00:00 UTC; path=/;`;
+      }
+    }
+  });
+}
+
+loadPopups();

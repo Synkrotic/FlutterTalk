@@ -1,0 +1,31 @@
+<dialog id="{{ id }}" class="dialog_container closed_dialog">
+  <div class="dialog_header">
+    <button
+      class="btn btn-primary dialog_menu_button"
+      onclick="
+        let dialog = document.getElementById('{{ id }}');
+        let lastClass = dialog.classList[dialog.classList.length - 1];
+        dialog.classList.replace(lastClass, 'closed_dialog');
+        setTimeout(() => {
+          dialog.close();
+        }, 500);
+      "
+    >Cancel</button>
+    <h1>{{ header }}</h1>
+    <button
+      class="btn btn-success dialog_menu_button"
+      onclick="{{ action }}"
+    >Submit</button>
+  </div>
+  <textarea
+    name="content"
+    class="form-input dialog_textarea"
+    maxlength="1000"
+    placeholder="What's on your mind?"
+    cols="60"
+    rows="15"
+    wrap="hard"
+    required
+  ></textarea>
+  <p class="dialog_char_counter"><b>0/999</b></p>
+</dialog>

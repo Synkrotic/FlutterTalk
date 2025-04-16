@@ -16,7 +16,12 @@
     <pre cols="75">{{ post.content }}</pre>
     <div class="action_buttons_container">
       <button
-        onclick="event.stopPropagation();"
+        onclick="
+          let dialog = document.getElementById('comment_dialog');
+          dialog.showModal();
+          dialog.classList.replace('closed_dialog', 'parentID={{ post.postID }}');
+          event.stopPropagation();
+        "
         id="comment_button_{{ post.postID }}"
       >
         <i class="bi bi-chat-left"></i>

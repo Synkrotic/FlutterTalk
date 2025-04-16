@@ -17,7 +17,12 @@
       <pre cols="75">{{ comment.content }}</pre>
       <div class="action_buttons_container">
         <button
-          onclick=""
+          onclick="
+            let dialog = document.getElementById('comment_dialog');
+            dialog.showModal();
+            dialog.classList.replace('closed_dialog', 'parentID={{ comment.postID }}');
+            event.stopPropagation();
+          "
           class="comment_element"
           id="comment_button_{{ comment.postID }}"
         >

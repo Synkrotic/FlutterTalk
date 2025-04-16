@@ -13,9 +13,7 @@ const scrollUpButton = document.getElementById("scroll_up_button");
 const textAreas = document.getElementsByClassName("text_area");
 
 // Create post objects
-const createPostMenu = document.getElementById("create-post-container");
-const contentArea = document.getElementById("content-area");
-const contentCounter = document.getElementById("char-counter");
+const dialog_inputs = document.getElementsByClassName("dialog_textarea");
 
 // Popup objects
 const popupContainer = document.getElementById("popups-container");
@@ -83,34 +81,39 @@ if (textAreas) {
   }
 }
 
-if (contentArea) {
-  contentArea.addEventListener("input", function () {
-    console.log(Math.ceil(this.scrollHeight / parseFloat(getComputedStyle(this).lineHeight)));
-    contentArea.scrollTop = contentArea.scrollHeight;
-    const rows = Math.ceil(this.scrollHeight / parseFloat(getComputedStyle(this).lineHeight));
-    if (rows > 16) {
-      contentArea.value = this.value.slice(0, -1);
-    }
+for (let i = 0; i < dialog_inputs.length; i++) {
+  let input = dialog_inputs[i];
+  if (input) {
+    input.addEventListener("input", function () {
+      input.scrollTop = input.scrollHeight;
+      const rows = Math.ceil(this.scrollHeight / parseFloat(getComputedStyle(this).lineHeight));
+      maxChars = 999;
+      if (rows > 16) {
+        input.value = this.value.slice(0, -1);
+        maxChars = this.value.length;
+      }
 
-    // Update the counter
-    const content = this.value;
-    const contentLength = content.length;
+      // Update the counter
+      const content = this.value;
+      const contentLength = content.length;
+      const dialog_counter = input.nextElementSibling;
 
-    if (!contentCounter) return;
-    contentCounter.innerText = `${contentLength.toString()}/1000`;
+      if (!dialog_counter) return;
+      dialog_counter.innerText = `${contentLength.toString()}/${maxChars}`;
 
 
-    if (contentLength > 980) {
-      contentCounter.style.color = "#ff4d4d";
-      contentCounter.style.fontWeight = "bold";
-    } else if (contentLength > 900) {
-      contentCounter.style.color = "#ff8888";
-      contentCounter.style.fontWeight = "800";
-    } else {
-      contentCounter.style.color = "snow";
-      contentCounter.style.fontWeight = "600";
-    }
-  });
+      if (contentLength > (maxChars - 20)) {
+        dialog_counter.style.color = "#ff4d4d";
+        dialog_counter.style.fontWeight = "bold";
+      } else if (contentLength > (maxChars - 100)) {
+        dialog_counter.style.color = "#ff8888";
+        dialog_counter.style.fontWeight = "800";
+      } else {
+        dialog_counter.style.color = "snow";
+        dialog_counter.style.fontWeight = "600";
+      }
+    });
+  }
 }
 
 if (accountActionButtons && accountButton) {
@@ -177,12 +180,6 @@ function showPassword() {
   } else {
     passwordInput.type = "password";
   }
-}
-
-function toggleCreatePost() {
-  if (!createPostMenu || !contentArea) return;
-  createPostMenu.classList.toggle("hide-menu");
-  contentArea.focus();
 }
 
 async function goToUserPage() {

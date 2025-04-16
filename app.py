@@ -14,7 +14,7 @@ from tables import User, Authentication
 errors = [] #* [id, {"type": "", "text": ""}]
 
 
-@app.route('/getHTMLFile/<string:filename>', methods=['POST'])
+@app.route('/getHTMLFile/<string:filename>', methods=['GET'])
 def getHTMLFile(filename: str):
     with open(f"templates/{filename}", 'r', encoding="utf-8") as file:
         return file.read(), 200
