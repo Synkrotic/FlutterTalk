@@ -11,6 +11,7 @@ const scrollUpButton = document.getElementById("scroll_up_button");
 
 // Profile objects
 const textAreas = document.getElementsByClassName("text_area");
+const pfpInput = document.getElementById("pfp-input");
 
 // Create post objects
 const dialog_inputs = document.getElementsByClassName("dialog_textarea");
@@ -23,12 +24,29 @@ const searchBar = document.getElementById("main_search_bar");
 
 
 
+
+// Event listeners
 if (scrollUpButton && mainSection) {
   scrollUpButton.addEventListener("click", function () {
     mainSection.scrollTo({
       top: 0,
       behavior: "smooth",
     });
+  });
+}
+
+if (pfpInput) {
+  pfpInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const image = document.getElementById("pfp-preview");
+      if (image) {
+        image.src = e.target.result;
+      }
+    };
+    reader.readAsDataURL(file);
   });
 }
 

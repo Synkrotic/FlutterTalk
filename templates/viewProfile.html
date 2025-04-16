@@ -15,38 +15,44 @@
   <main>
     {% if user is defined and user != None %}
       <h2>Hello {{ user.displayName }}</h2>
-      <form action="/saveProfile" method="post" id="profile-form">
-        <div class="input-container">
-          <label for="username" class="form-label">Displayname</label>
-          <input type="text" name="name" class="form-control username-input" value="{{ user.displayName }}">
+      <form action="/saveProfile" method="POST" enctype="multipart/form-data" id="profile-form">
+        <div id="pfp-container">
+          {{ form.pfp.label(class="form-label") }}
+          <img src="{{ user.pfp }}"" alt="profile picture" id="pfp-preview">
+          {{ form.pfp(id="pfp-input", value=user.pfp) }}
         </div>
+
         <div class="input-container">
-          <label for="accountname" class="form-label">Accountname</label>
-          <input type="text" name="accountname" id="accountname-input" class="form-control" value="{{ user.accountName }}">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control username-input", value=user.displayName) }}
         </div>
+
         <div class="input-container">
-          <label for="location" class="form-label">Location</label>
+          {{ form.accountname.label(class="form-label") }}
+          {{ form.accountname(class="form-control", id="accountname-input", value=user.accountName) }}
+        </div>
+
+        <div class="input-container">
+          {{ form.location.label(class="form-label") }}
           {% if user.location %}
             {% set location=user.location %}
           {% else %}
             {% set location="" %}
           {% endif %}
-          <input type="text" name="location" id="location-input" class="form-control" value="{{ location }}">
+          {{ form.location(class="form-control", id="location-input", value=location) }}
         </div>
+
         <div class="input-container">
-          <label for="bio" class="form-label">Biography</label>
-          {% if user.bio %}
-            {% set bio=user.bio %}
-          {% else %}
-            {% set bio="" %}
-          {% endif %}
-          <textarea name="bio" class="form-control text_area" maxlength="500" id="bio-area">{{ bio }}</textarea>
+          {{ form.bio.label(class="form-label") }}
+          {{ form.bio(class="form-control text_area", id="bio-area", value=user.bio) }}
         </div>
+
         <div class="input-container">
-          <label for="banner_color" class="form-label" id="banner_color_label">Banner Colour</label>
-          <input type="color" name="banner_color" id="banner_color" class="form-control" value="{{ user.banner_color }}">
+          {{ form.banner_color.label(class="form-label", id="banner_color_label") }}
+          {{ form.banner_color(class="form-control", id="banner_color", value=user.banner_color) }}
         </div>
-        <button type="submit" class="btn btn-primary save-button">Save</button>
+
+        {{ form.savebutton(class="btn btn-primary save-button") }}
       </form>
     {% else %}
       <h2>Please {{ action|lower }}</h2>

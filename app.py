@@ -11,8 +11,7 @@ from posts import postmanager, postData
 from posts.postData import getLike
 from search import search
 from tables import User, Authentication
-
-errors = [] #* [id, {"type": "", "text": ""}]
+from forms import UpdateProfileForm
 
 
 @app.route('/getHTMLFile/<string:filename>', methods=['GET'])
@@ -148,7 +147,8 @@ def viewProfile(action="login", displayData:dict=None):
     else:
         account = userData.getUserDict(user)
     
-    response.set_data(getFullPage(render_template("viewProfile.html", user=account), 6))
+    form = UpdateProfileForm()
+    response.set_data(getFullPage(render_template("viewProfile.html", user=account, form=form), 6))
     return response
 
 
@@ -307,6 +307,7 @@ def getFullPage(renderedPage, activePageID=-1):
 
 if __name__ == '__main__':
     dummyData.checkVersion()
+    app.config['SECRET_KEY'] = 'FLUTTERTALK_ADMIN_KEY'
     app.config['SQLALCHEMY_POOL_SIZE'] = 300
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 500
     app.run(debug=True, host='0.0.0.0', port=3000)
