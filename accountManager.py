@@ -11,6 +11,7 @@ from werkzeug.exceptions import BadRequest
 
 import database
 import globals
+import mediaManager
 import tables
 from globals import ADMIN
 from tables import Authentication
@@ -153,6 +154,8 @@ def updateProfile(request: Request):
             user.account_name = request.form["accountname"]
             user.location = request.form["location"]
             user.banner_color = request.form["banner_color"]
+            url, _ = mediaManager.postMedia(request.files.get('pfp'), user, 'MEDIA')
+            user.profile_pic = url if url is not None else user.profile_pic
         except BadRequest as e:
             return 'bad_request', None
         session.commit()
@@ -164,5 +167,5 @@ def updateProfile(request: Request):
             "bio": user.bio,
             "location": user.location,
             "bannerColor": user.banner_color,
-            "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+            "pfp": "media/999999999999999999.png",
         }

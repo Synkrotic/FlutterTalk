@@ -9,7 +9,7 @@ ADMIN = data = {
     "password": "_",
     "display_name": "ADMIN",
     "bio": "ADMIN",
-    "profile_pic": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+    "profile_pic": 999999999999999999,
     "location": "ADMIN"
 }
 ADMIN_TOKEN = "ADMIN"

@@ -4,6 +4,7 @@ from sqlalchemy import not_, union_all
 from sqlalchemy import not_, and_
 from sqlalchemy.orm import Session, Query
 
+import mediaManager
 import userData
 from globals import *
 from search import search
@@ -31,10 +32,12 @@ def __postClassToDict(posts: list[Type[Post]] | list[Post] | Post | Type[Post], 
 
             comments = getComments(post, session)
             commentsView = __postClassToDict(comments, user)
+            pfp = mediaManager.getMediaURL(post.user.profile_pic, "png")
             return {
                 "postID": post.id,
                 "accountName": post.user.account_name,
                 "displayName": post.user.account_name,
+                "pfp": pfp if pfp is not None else "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
                 "content": post.content,
                 "age": _getFormattedTime(post.time_created.replace(tzinfo=pytz.UTC)),
                 "likeAmount": post.likes,

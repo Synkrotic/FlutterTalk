@@ -4,6 +4,7 @@ import dummyData
 
 import accountManager
 import database
+import mediaManager
 import userData
 from globals import *
 from posts import postmanager, postData
@@ -242,9 +243,19 @@ def settings():
     return getFullPage(render_template("settings.html"), 7)
 
 
-@app.route("/postMedia")
+@app.route("/media", methods=['POST'])
 def postMedia():
-    postMedia(request)
+    response = mediaManager.postMedia(request.files.get('file'), accountManager.getUser(request), 'MEDIA')
+    if response[1] == 200:
+        return json.dumps({'id':response[0], 'success':True}), 200
+    return json.dumps({'id':response[0], 'success':False}), 400
+
+
+@app.route("/media/<string:url>", methods=['GET'])
+def getMedia(url):
+    response = mediaManager.getMedia(url, 'MEDIA', request)
+    return response if response is not None else json.dumps({'success':False}), 400
+
     
 @app.route("/saveProfile", methods=['POST'])
 def updateProfile():
@@ -279,11 +290,13 @@ def addPopup(errorType, error, response=None):
 
 
 def getFullPage(renderedPage, activePageID=-1):
-
     page = render_template("siteInitialization.html")
+    user = accountManager.getUser(request)
+    pfp = mediaManager.getMediaURL(user.profile_pic if user is not None else None, "png")
     page += render_template(
         "navbar.html",
         displayName=accountManager.getOrDefaultDisplayName(accountManager.getUser(request)),
+        pfp=pfp if pfp is not None else "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
         accountName=f'{accountManager.getOrDefaultUserName(accountManager.getUser(request))}',
         activeID=activePageID
     )

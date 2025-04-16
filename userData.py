@@ -4,6 +4,7 @@ from sqlalchemy import and_, delete
 from sqlalchemy.orm import Query
 
 import accountManager
+import mediaManager
 from accountManager import getUserByName
 
 import database
@@ -18,7 +19,7 @@ def getUserDict(user: tables.User) -> dict:
         "accountName": accountManager.getOrDefaultUserName(user),
         "bio": user.bio,
         "location": user.location,
-        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
+        "pfp": mediaManager.getMediaURL(user.profile_pic, "png") if user.profile_pic is not None else "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
         "banner_color": user.banner_color,
         "likedAmount": user.likes,
         "followersAmount": user.followers

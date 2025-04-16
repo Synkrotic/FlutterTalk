@@ -19,7 +19,7 @@ class User(Base):
     likes = Column(Integer, default=0)
     followers = Column(Integer, default=0)
     bio = Column(Text)
-    profile_pic = Column(String)
+    profile_pic = Column(Integer, nullable=True)
     location = Column(String)
     banner_color = Column(String, default="#529AFF")
     
