@@ -289,7 +289,7 @@ def page_not_found(e):
 
 def getFullPage(renderedPage, activePageID=-1):
 
-    page = render_template("siteInitialization.html", errors=errors)
+    page = render_template("siteInitialization.html")
     page += render_template(
         "navbar.html",
         displayName=accountManager.getOrDefaultDisplayName(accountManager.getUser(request)),

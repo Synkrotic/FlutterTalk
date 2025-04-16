@@ -69,10 +69,4 @@
     {% with header="Add Comment", id="comment_dialog", action="addComment(this);" %}
       {% include('dialog.html') %}
     {% endwith %}
-    <section id="popups-container">
-      {% for index in range(errors|length) %}
-        {% with errorID=errors[index][0], popupType=errors[index][-1].type, errorText=errors[index][-1].text %}
-          {% include "popup.html" %}
-        {% endwith %}
-      {% endfor %}
-    </section>
+    <section id="popups-container"></section>
