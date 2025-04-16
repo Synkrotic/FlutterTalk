@@ -22,7 +22,6 @@ def getHTMLFile(filename: str):
 
 @app.route('/')
 def index():
-    print("index")
     posts, _ = postmanager.getPosts(10, request)
     response = Response(getFullPage(render_template("index.html", posts=posts), 0))
     response.set_cookie("current_post", '10')
@@ -57,15 +56,7 @@ def viewPost(postId):
     if user is None:
         return render_template("errorPage.html", error="404 post not found!")
 
-    account = {
-        "displayName": accountManager.getOrDefaultUserName(user),
-        "accountName": accountManager.getOrDefaultUserName(user),
-        "bio": user.bio,
-        "location": user.location,
-        "likedAmount": 0,
-        "followersAmount": 0,
-        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
-    }
+    account = userData.getUserDict(user)
 
     return getFullPage(
         render_template(
@@ -86,16 +77,7 @@ def viewAccount(accountName):
     if user is None:
         return render_template("errorPage.html", error="404 user not found!")
     
-    account = {
-        "displayName": accountManager.getOrDefaultDisplayName(user),
-        "accountName": accountManager.getOrDefaultUserName(user),
-        "bio": user.bio,
-        "location": user.location,
-        "likedAmount": user.likes,
-        "followersAmount": user.followers,
-        "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
-        "banner_color": user.banner_color,
-    }
+    account = userData.getUserDict(user)
 
     posts, _ = postmanager.getPostsOfUserByID(user.id, 10, request)
     response = Response(getFullPage(render_template("viewAccount.html", account=account, posts=posts)))
@@ -163,14 +145,7 @@ def viewProfile(action="login", displayData:dict=None):
     if displayData is not None:
         account = displayData
     else:
-        account = {
-            "displayName": accountManager.getOrDefaultDisplayName(user),
-            "accountName": accountManager.getOrDefaultUserName(user),
-            "bio": user.bio,
-            "location": user.location,
-            "pfp": "https://i.pinimg.com/736x/c0/27/be/c027bec07c2dc08b9df60921dfd539bd.jpg",
-            "banner_color": user.banner_color,
-        }
+        account = userData.getUserDict(user)
     
     response.set_data(getFullPage(render_template("viewProfile.html", user=account), 6))
     return response

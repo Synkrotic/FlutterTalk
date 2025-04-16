@@ -5,6 +5,7 @@ import json
 from sqlalchemy import and_
 
 import tables
+import userData
 from posts import postmanager
 from tables import PostLike, User, Post
 
@@ -59,7 +60,7 @@ def addLike(postID: int, user: User):
             session.flush()
             current_likes = session.query(PostLike).filter(PostLike.post_id == postID).count()
             post.likes = current_likes
-
+            userData.updateLikes(post.user, session)
             session.commit()
             current_likes = session.query(PostLike).filter(PostLike.post_id == postID).count()
 

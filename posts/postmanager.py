@@ -95,7 +95,6 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
         if len(posts) == 0:
             return [], cookies
         
-        print(__postClassToDict(posts, accountManager.getUser(request)))
         return __postClassToDict(posts, accountManager.getUser(request)), cookies
 
 

@@ -16,7 +16,6 @@ from globals import ADMIN
 from tables import Authentication
 
 
-
 TOKEN_DURATION = timedelta(7)
 
 
@@ -28,10 +27,8 @@ def __getAuthToken(userid):
     
     query = session.query(tables.Authentication).where(tables.Authentication.user_id == userid)
     auth: Type[Authentication] | None = query.first()
-    
     if auth is None:
         token: str
-
         while True:
             token = secrets.token_hex()
             if session.query(tables.Authentication).where(tables.Authentication.token == token).first() is None:
