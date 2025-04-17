@@ -1,6 +1,5 @@
 // Global object
 const mainSection = document.getElementById("main_post_section");
-let eventListener = false;
 
 // Navbar objects
 const navbar = document.getElementById("main-nav");
@@ -22,9 +21,7 @@ const popupContainer = document.getElementById("popups-container");
 
 // Search objects
 const searchBar = document.getElementById("main_search_bar");
-
-// Account objects
-const accountPosts = document.getElementById("main_post_section");
+let searchListener = false;
 
 
 
@@ -53,24 +50,10 @@ if (pfpInput) {
   });
 }
 
-// if (accountPosts) {
-//   if (window.location.href.includes("/users/@")) {
-//     document.cookie = "current_post=0; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;";
-//     const user = window.location.href.split("/").pop();
-//     accountPosts.innerHTML = "";
-//     loadNewPosts(0, user, accountPosts);
-//     if (!eventListener) {
-//       accountPosts.addEventListener("scroll", function () {
-//         eventListener = true;
-//         loadNewPosts(0, user, accountPosts);
-//       });
-//     }
-//   }
-// }
-
 if (searchBar) {
   searchBar.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
+      console.log("BEANS");
       event.preventDefault();
       const searchValue = this.value.trim();
       if (searchValue.length < 1) return;

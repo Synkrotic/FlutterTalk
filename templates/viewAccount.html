@@ -1,11 +1,8 @@
-<main>
+<main style="overflow-y: scroll !important;">
   {% include "accountBanner.html" %}
-  <section id="main_post_section">
-    <div
-      id="posts_loading_spinner"
-      class="loading_spinner_container"
-    >
-      <span class="loading_spinner center"></span>
-    </div>
+  <section id="main_section">
+    {% for post in posts %}
+      {% include "post.html" %}
+    {% endfor %}
   </section>
 </main>
