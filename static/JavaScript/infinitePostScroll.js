@@ -17,8 +17,8 @@ async function loadNewPosts(recursionLevel = 0, query = null, container = postsC
   lastTime = now;
 
   let url = `/getPosts/10`;
-  if (query == "following") url += '?following=true';
-  else if (query) url += `?query=${query}`;
+  if (window.location.href.includes("?following=true")) url += `?following=true`;
+  if (query) url += `?query=${query}`;
   const posts = await fetch(url).then((response) => {
     if (response.ok) { return response; }
     else return null;
@@ -69,7 +69,4 @@ function addInfiniteScrollToContainer(container=postsContainer) {
 }
 
 window.addEventListener("load", loadNewPosts)
-if (window.location.href.includes("?following=true"))
-  addInfiniteScrollToContainer(query="following");
-else
-  addInfiniteScrollToContainer();
+addInfiniteScrollToContainer();

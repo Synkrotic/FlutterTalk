@@ -63,7 +63,6 @@ if (searchBar) {
       if (!postsContainer) return;
 
       postsContainer.removeEventListener("scroll", loadNewPosts);
-      console.log(postsContainer.children.length);
       for (let childIndex = 0; childIndex < postsContainer.children.length; childIndex++) {
         let child = postsContainer.children[childIndex];
         console.log(childIndex, child);
