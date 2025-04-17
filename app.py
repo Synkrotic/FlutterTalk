@@ -241,11 +241,6 @@ def feedback():
     return redirect("mailto:topscrech@icloud.com")
 
 
-@app.route("/help")
-def help():
-    return render_template("help.html")
-
-
 @app.route("/settings")
 def settings():
     return getFullPage(render_template("settings.html"), 7)

@@ -8,9 +8,7 @@ function sharePost(accountName, postID) {
   }).then(async (response) => {
     if (response.status === 200) {
       if (location.protocol !== 'https:') {
-        // const shareUrl = encodeURIComponent(`flutter-sucks.topscrech.dev/users/@${accountName}/${postID}`);
-        // addPopup(false, `You're not on https, no link copied to clipboard. Link to post is ${shareUrl}`);
-        alert(`You're not on https, no link copied to clipboard. Link to post is https://flutter-sucks.topscrech.dev/users/@${accountName}/${postID}`);
+        addPopup(false, `You're not on https, no link copied to clipboard.\nLink to post is ${location.protocol}//${window.location.host}/users/@${accountName}/${postID}`)
       } else
         copyShareLinkToClipboard(accountName, postID);
       const share_button = document.getElementById(`share_button_${postID}`);
@@ -19,6 +17,8 @@ function sharePost(accountName, postID) {
         /(\d+)/,
         (match) => (parseInt(match) + 1).toString()
       );
+      share_button.classList.add("active")
+      setTimeout(() => { share_button.classList.remove("active"); }, 2000);
     } else {
       const msg = await response.json();
       addPopup(false, `Failed to share post.${msg.error}`);
