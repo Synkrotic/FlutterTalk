@@ -70,7 +70,7 @@ def viewPost(postId):
 
 @app.route('/users/@<string:accountName>')
 def viewAccount(accountName):
-    if not accountManager._checkExists(accountName):
+    if not accountManager.checkExists(accountName):
         return render_template("errorPage.html", error="404 user not found!")
     
     user: User = accountManager.getUserByName(accountName)
@@ -97,19 +97,19 @@ def follow(accountName):
     user: User = accountManager.getUser(request)
     if user is None:
         return render_template("errorPage.html", error="You need to be logged in!"), 404
-    toFollow = accountManager.getUserByName(accountName)
-    if toFollow is None:
+    userToFollow = accountManager.getUserByName(accountName)
+    if userToFollow is None:
         return render_template("errorPage.html", error="Tried to follow a non existing user!"), 401
-    if user.id == toFollow.id:
+    if user.id == userToFollow.id:
         return render_template("errorPage.html", error="You cannot follow yourself!"), 403
 
     match request.method:
         case 'DELETE':
-            return json.dumps(userData.removeFollowing(user, toFollow))
+            return json.dumps(userData.removeFollowing(user, userToFollow))
         case 'POST':
-            return json.dumps(userData.addFollowing(user, toFollow))
+            return json.dumps(userData.addFollowing(user, userToFollow))
         case 'GET':
-            return json.dumps(userData.getFollowing(user, toFollow))
+            return json.dumps(userData.getFollowing(user, userToFollow))
         case _:
             return render_template("errorPage.html", error="Invalid method used")
 
@@ -303,5 +303,3 @@ if __name__ == '__main__':
     app.config['SQLALCHEMY_POOL_SIZE'] = 300
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 500
     app.run(debug=True, host='0.0.0.0', port=3000)
-
-
