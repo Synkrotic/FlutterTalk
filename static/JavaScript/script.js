@@ -58,6 +58,7 @@ if (searchBar) {
       const searchValue2 = this.value;
       if (searchValue !== searchValue2) return;
 
+      // document.cookie = 
       const postsContainer = document.getElementById("search_results_container");
       if (!postsContainer) return;
 

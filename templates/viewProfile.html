@@ -15,7 +15,7 @@
   <main>
     {% if user is defined and user != None %}
       <h2>Hello {{ user.displayName }}</h2>
-      <form action="/saveProfile" method="POST" enctype="multipart/form-data" id="profile-form">
+      <form action="/profile" method="POST" enctype="multipart/form-data" id="profile-form">
         <div id="pfp-container">
           {{ form.pfp.label(class="form-label") }}
           <img src="{{ user.pfp }}"" alt="profile picture" id="pfp-preview">
