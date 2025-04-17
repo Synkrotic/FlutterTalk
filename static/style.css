@@ -230,7 +230,7 @@ main div nav {
   align-items: flex-start;
   width: 100%;
   padding: 1rem;
-  margin-top: 3vh;
+  margin-top: 1.5vh;
   background-color: color-mix(in srgb, var(--ctaColor), transparent 80%);
   border-radius: 3rem;
 }
@@ -421,9 +421,10 @@ main div nav {
   align-items: flex-end;
   position: relative;
   margin-top: 0px !important;
+  margin-bottom: 0.5vh;
 }
 
-.comment_container { margin-top: 1vh !important; }
+.comment_container { margin-top: 0.5vh !important; }
 
 .comments_container {
   width: calc(100% - 4rem);
