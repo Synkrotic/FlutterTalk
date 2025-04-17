@@ -83,17 +83,19 @@ def getPosts(amount: int, request: Request) -> (dict, list[Cookie]):
     currentPost = 0
     if getCookie(request, 'current_post') is not None:
         currentPost = getCookie(request, 'current_post')
-    cookies = addCookie([], Cookie("current_post", currentPost + amount))
-    
+
     with database.getSession() as session:
         posts = getSubset(request, session)\
             .where(not_(Post.has_parent))\
             .offset(currentPost)\
             .limit(amount)\
             .all()
+        print(currentPost, posts)
+
         if len(posts) == 0:
-            return [], cookies
-        
+            return [], []
+
+        cookies = addCookie([], Cookie("current_post", currentPost + len(posts)))
         return __postClassToDict(posts, session, accountManager.getUser(request)), cookies
 
 
@@ -105,8 +107,10 @@ def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, lis
     
     with database.getSession() as session:
         posts = session.query(Post).where(Post.user_id == userID).offset(currentPost).limit(amount).all()
+
         if len(posts) == 0:
             return [], cookies
+
         return __postClassToDict(posts, session, accountManager.getUser(request)), cookies
 
 

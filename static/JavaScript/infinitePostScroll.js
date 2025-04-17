@@ -1,9 +1,16 @@
 let postsContainer = document.getElementById('main_post_section');
 // if (document.getElementById('search_results_container')) postsContainer = document.getElementById('search_results_container');
 const postLoadingIcon = document.getElementById('posts_loading_spinner');
+let lastTime = new Date().getTime();
+let waiting = false
 
 async function loadNewPosts(recursionLevel = 0, query = null, container=postsContainer) {
+  if (waiting)
+    return false;
   if (!container || !postLoadingIcon) return false;
+  if (new Date().getTime() - lastTime < 500) return false;
+  lastTime = new Date().getTime();
+
 
   if (container.scrollTop + container.clientHeight < container.scrollHeight * 0.9) return false;
   if (recursionLevel > 5) {
@@ -14,7 +21,9 @@ async function loadNewPosts(recursionLevel = 0, query = null, container=postsCon
   let url = `/getPosts/10`;
   if (window.location.href.includes("?following=true")) url += `?following=true`;
   if (query) url += `?query=${query}`;
-  const posts = await fetch(url).then((response) => {
+  waiting = true
+  const posts = await fetch(url, { method: "POST" }, ).then((response) => {
+    waiting = false
     if (response.ok) { return response; }
     else return null;
   });
