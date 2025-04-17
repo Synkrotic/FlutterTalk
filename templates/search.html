@@ -1,14 +1,13 @@
-<main style="overflow-y: hidden; height: 100vh;">
+<main class="scroll_y">
   <div class="search_bar_container wide_search_bar sticky">
     <i class="bi bi-search search_bar_icon"></i>
     <input type="text" class="search_bar" id="main_search_bar" placeholder="Search..." />
   </div>
-  <section id="main_post_section" class="scroll_y">
-    <div
+  <section id="search_results_container"></section>
+  <div
       id="posts_loading_spinner"
       class="loading_spinner_container"
-    >
-      <span class="loading_spinner center"></span>
-    </div>
-  </section>
+  >
+    <span class="loading_spinner center"></span>
+  </div>
 </main>

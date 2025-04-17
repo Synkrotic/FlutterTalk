@@ -39,8 +39,10 @@ def getMediaURL(mediaId: int, fileType: str):
     with database.getSession() as session:
         media = session.query(tables.MediaEntry).filter(tables.MediaEntry.id == mediaId).first()
         if media is None:
+            print("media not found", mediaId, fileType)
             return None
         if media.media_type not in ALLOWED_EXTENSIONS[fileType]:
+            print("media type not allowed")
             return None
         return f"/media/{mediaId}.{media.media_type}"
     
@@ -49,6 +51,8 @@ def getMedia(url: str, fileType: str, request: Request):
     if not allowed_file(url, fileType):
         return None
     if os.path.exists(f"media/" +url):
+        print(f"media/{url}")
         return send_file(f"media/" +url, environ=request.environ)
-
+    print(os.path.exists(f"/media/" +url))
+    
     return None

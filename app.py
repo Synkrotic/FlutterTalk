@@ -221,6 +221,29 @@ def createPost(parentId=None):
     return redirect('/'), 200 # TODO miss redirecten naar de post zelf (/users/@<accountName>/<postID>)
 
 
+@app.route("/test")
+def test():
+    return render_template("test.html")
+
+
+@app.route("/privacy")
+def privacy():
+    return redirect("https://bisquit.host/policy.pdf")
+
+
+@app.route("/terms")
+def tos():
+    return redirect("https://bisquit.host/terms.pdf")
+
+
+@app.route("/feedback")
+def feedback():
+    return redirect("mailto:topscrech@icloud.com")
+
+
+@app.route("/settings")
+def settings():
+    return getFullPage(render_template("settings.html"), 7)
 
 
 @app.route("/media", methods=['POST'])
@@ -235,6 +258,8 @@ def postMedia():
 def getMedia(url):
     response = mediaManager.getMedia(url, 'MEDIA', request)
     return (response, 200) if response is not None else (json.dumps({'success':False}), 400)
+
+    
 
 
 @app.errorhandler(404)
@@ -271,37 +296,9 @@ def getFullPage(renderedPage, activePageID=-1):
     # page += render_template("sidebar.html")
     return page
 
-
-@app.route("/test")
-def test():
-    return render_template("test.html")
-
-
-@app.route("/privacy")
-def privacy():
-    return redirect("https://bisquit.host/policy.pdf")
-
-
-@app.route("/terms")
-def tos():
-    return redirect("https://bisquit.host/terms.pdf")
-
-
-@app.route("/feedback")
-def feedback():
-    return redirect("mailto:topscrech@icloud.com")
-
-
-@app.route("/settings")
-def settings():
-    return getFullPage(render_template("settings.html"), 7)
-
-
 if __name__ == '__main__':
     dummyData.checkVersion()
     app.config['SECRET_KEY'] = 'FLUTTERTALK_ADMIN_KEY'
     app.config['SQLALCHEMY_POOL_SIZE'] = 300
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 500
     app.run(debug=True, host='0.0.0.0', port=3000)
-
-
