@@ -21,6 +21,7 @@ const popupContainer = document.getElementById("popups-container");
 
 // Search objects
 const searchBar = document.getElementById("main_search_bar");
+let searchListener = false;
 
 
 
@@ -50,43 +51,76 @@ if (pfpInput) {
 }
 
 if (searchBar) {
-  searchBar.addEventListener("input", function () {
-    const searchValue = this.value;
-    if (searchValue.length < 1) return;
-
-    setTimeout(async () => {
-      const searchValue2 = this.value;
-      if (searchValue !== searchValue2) return;
-
-      document.cookie = "current_post=0; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;"
-      const postsContainer = document.getElementById("search_results_container");
+  searchBar.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      console.log("BEANS");
+      event.preventDefault();
+      const searchValue = this.value.trim();
+      if (searchValue.length < 1) return;
+      
+      const postsContainer = document.getElementById("main_post_section");
       if (!postsContainer) return;
-
-      postsContainer.removeEventListener("scroll", loadNewPosts);
-      for (let childIndex = 0; childIndex < postsContainer.children.length; childIndex++) {
-        let child = postsContainer.children[childIndex];
-        console.log(childIndex, child);
-        if (!child) continue;
-
-        if (child.classList.contains("loading_spinner_container")) continue;
-        postsContainer.removeChild(child);
+      if (!searchListener) {
+        document.cookie = "current_post=0; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;";
+        postsContainer.innerHTML = "";
       }
 
       loadNewPosts(0, searchValue, postsContainer);
-      const status = await fetch(`/getPosts/10?query=${searchValue}`).then((response) => {
-        if (response.ok) { return response.json(); }
-        return false;
-      });
-      console.log(status, status.length)
-      if (status.length > 0) addInfiniteScrollToContainer();
-      else {
-        const noResults = document.createElement("div");
-        noResults.className = "no_results";
-        noResults.innerText = "No results found!";
-        postsContainer.appendChild(noResults);
-      }
-    }, 1000);
+      fetch(`/getPosts/10?query=${encodeURIComponent(searchValue)}`)
+        .then(response => {
+          if (response.ok) return response.json();
+          return false;
+        })
+        .then(status => {
+          if (status && status.length > 0) {
+            searchListener = true;
+            if (searchListener)
+              postsContainer.removeEventListener("scroll", loadNewPosts);
+            postsContainer.addEventListener("scroll", function () {
+              console.log("test");
+              loadNewPosts(0, searchValue, postsContainer);
+            });
+          } else {
+            const noResults = document.createElement("div");
+            noResults.className = "no_results";
+            noResults.innerText = "No results found!";
+            postsContainer.appendChild(noResults);
+          }
+        });
+    }
   });
+  // searchBar.addEventListener("input", function () {
+  //   const searchValue = this.value;
+  //   if (searchValue.length < 1) return;
+
+  //   setTimeout(async () => {
+  //     const searchValue2 = this.value;
+  //     if (searchValue !== searchValue2) return;
+
+  //     document.cookie = "current_post=0; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;"
+  //     const postsContainer = document.getElementById("search_results_container");
+  //     if (!postsContainer) return;
+
+  //     // postsContainer.removeEventListener("scroll", loadNewPosts);
+  //     postsContainer.innerHTML = "";
+
+  //     loadNewPosts(0, searchValue, postsContainer);
+  //     const status = await fetch(`/getPosts/10?query=${searchValue}`).then((response) => {
+  //       if (response.ok) { return response.json(); }
+  //       return false;
+  //     });
+  //     console.log(status, status.length)
+  //     if (status.length > 0) {
+  //       addInfiniteScrollToContainer(postsContainer, searchValue);
+  //     }
+  //     else {
+  //       const noResults = document.createElement("div");
+  //       noResults.className = "no_results";
+  //       noResults.innerText = "No results found!";
+  //       postsContainer.appendChild(noResults);
+  //     }
+  //   }, 1000);
+  // });
 }
 
 if (textAreas) {
