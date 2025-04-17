@@ -1,4 +1,4 @@
-*:not(#app_name):not(#search_results_container):not(#main_post_section) {
+*:not(#app_name):not(#search_results_container):not(#main_post_section):not(#main_section) {
   overflow: hidden;
 }
 

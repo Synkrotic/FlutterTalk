@@ -1,7 +1,6 @@
 let postsContainer = document.getElementById('main_post_section');
 // if (document.getElementById('search_results_container')) postsContainer = document.getElementById('search_results_container');
 const postLoadingIcon = document.getElementById('posts_loading_spinner');
-let lastTime = new Date().getTime();
 
 async function loadNewPosts(recursionLevel = 0, query = null, container=postsContainer) {
   if (!container || !postLoadingIcon) return false;
@@ -11,11 +10,6 @@ async function loadNewPosts(recursionLevel = 0, query = null, container=postsCon
     addPopup(false, "Unable to load more posts!");
     return false;
   }
-
-  const now = new Date().getTime();
-  const timeDelta = now - lastTime;
-  if (timeDelta < 500) return false;
-  lastTime = now;
 
   let url = `/getPosts/10`;
   if (window.location.href.includes("?following=true")) url += `?following=true`;
@@ -66,14 +60,24 @@ async function loadNewPosts(recursionLevel = 0, query = null, container=postsCon
 
 function addInfiniteScrollToContainer(container, query) {
   if (!container) container = postsContainer;
-  if (!query) query = null;
-  
+  if (!query) {
+    if (window.location.href.includes("/users/@")) {
+      const user = window.location.href.split("/users/@")[1].split("/")[0]
+      query = `@${user}`;
+      window.addEventListener("load", function() { loadNewPosts(0, query, container); });
+      loadNewPosts(0, query, container)
+    } else {
+      query = null
+    }
+  }
+  console.log(query);
   if (!container) return false
+  document.cookie = "current_post=0; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;";
   container.addEventListener('scroll', function() { loadNewPosts(0, query, container); });
 }
 
 if (!window.location.href.includes("/search")) {
-  console.log("test");
-  window.addEventListener("load", loadNewPosts)
+  if (!window.location.href.includes("/users/@"))
+    window.addEventListener("load", loadNewPosts)
   addInfiniteScrollToContainer();
 }
