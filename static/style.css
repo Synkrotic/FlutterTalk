@@ -1,4 +1,4 @@
-*:not(#app_name) {
+*:not(#app_name):not(#search_results_container):not(#main_post_section) {
   overflow: hidden;
 }
 
@@ -540,10 +540,10 @@ main div nav {
 
 #search_results_container {
   width: 100%;
-  height: max-content;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow-y: scroll !important;
 }
 .no_results {
   width: 100%;
