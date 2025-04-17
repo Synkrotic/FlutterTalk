@@ -207,7 +207,7 @@ main div nav {
   background-image: radial-gradient(
     farthest-corner at 40px 40px,
     var(--attentionBlue) 0%,
-    var(--darkBlue) 50%,
+    var(--primaryColor) 50%,
     #0000 80%
   );
   animation: spin 1s linear infinite;
@@ -280,7 +280,7 @@ main div nav {
 
 .post_container div pre {
   color: var(--textColor);
-  margin-bottom: 0.5rem;
+  margin-bottom: 3rem;
   text-wrap: wrap;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -293,7 +293,6 @@ main div nav {
   align-items: center;
   width: 100%;
   height: 10vh;
-  margin-top: 5rem;
 }
 
 .action_buttons_container button {
