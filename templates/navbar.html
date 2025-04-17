@@ -33,7 +33,7 @@
     {% endif %}
     <p>Search</p>
   </button>
-  <button
+  <!-- <button
     class="nav_button"
     id="notifications_button"
     title="Go to notifications."
@@ -69,6 +69,7 @@
       <i class="bi bi-list-ul"></i>
     {% endif %}
     <p>Lists</p>
+  </button> -->
   </button>
   <button class="nav_button" id="profile_button" title="Go to profile." onclick="goToPage('/profile')">
     {% if activeID==6 %}
@@ -85,6 +86,30 @@
       <i class="bi bi-gear"></i>
     {% endif %}
     <p>Settings</p>
+  </button>
+  <button class="nav_button" id="feedback_button" title="Send feedback to the developers" onclick="goToPage('/feedback')">
+    {% if activeID==2 %}
+      <i class="bi bi-pencil-fill"></i>
+    {% else %}
+      <i class="bi bi-pencil"></i>
+    {% endif %}
+    <p>Feedback</p>
+  </button>
+  <button class="nav_button" id="privacy_button" title="Read our privacy policy (in Russian)" onclick="goToPage('/privacy')">
+    {% if activeID==3 %}
+      <i class="bi bi-shield-lock-fill"></i>
+    {% else %}
+      <i class="bi bi-shield-lock"></i>
+    {% endif %}
+    <p>Privacy</p>
+  </button>
+  <button class="nav_button" id="terms_button" title="Read our terms of service" onclick="goToPage('/terms')">
+    {% if activeID==4 %}
+      <i class="bi bi-file-earmark-font-fill"></i>
+    {% else %}
+      <i class="bi bi-file-earmark-font"></i>
+    {% endif %}
+    <p>ToS</p>
   </button>
   <button
     class="nav_button"

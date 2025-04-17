@@ -17,13 +17,13 @@ body {
   color: var(--textColor) !important;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100vh;
   transition: 0.5s;
 }
 
 body main {
-  width: calc(40vw - 4px);
+  width: 45vw;
   border-top: none;
   border-bottom: none;
 }
