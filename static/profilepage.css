@@ -26,11 +26,11 @@ div.input-container > input {
   margin: 2px 0 22px 0;
   display: inline-block;
   border: none;
-  background: var(--textColor);
-  color: var(--secondaryBackground);
+  background: var(--inputBGColor);
+  color: var(--quaternaryColor) !important;
 }
 
-input.save-button {
+.save-button {
   align-self: center;
   transform: translateX(-2vw);
   text-transform: capitalize;
@@ -64,8 +64,8 @@ input.save-button {
   max-height: 15vh;
   resize: none;
   overflow-y: scroll !important;
-  color: var(--secondaryBackground);
-  background-color: var(--textColor);
+  color: var(--quaternaryColor);
+  background-color: var(--inputBGColor);
 }
 
 #register-link {

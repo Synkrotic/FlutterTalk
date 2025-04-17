@@ -15,6 +15,7 @@ function lightMode(root) {
   root.style.setProperty("--nonaryColor", "var(--tealAccent)");
   root.style.setProperty("--ctaColor", "var(--primaryBlue)");
   root.style.setProperty("--textColor", "var(--headingText)");
+  root.style.setProperty("--inputBGColor", "var(--septenaryColor)")
 }
 
 function darkMode(root) {
@@ -31,6 +32,7 @@ function darkMode(root) {
   root.style.setProperty("--nonaryColor", "var(--eastBay)");
   root.style.setProperty("--ctaColor", "var(--attentionBlue)");
   root.style.setProperty("--textColor", "var(--whiteText)");
+  root.style.setProperty("--inputBGColor", "var(--whiteText)")
 }
 
 function switchTheme() {

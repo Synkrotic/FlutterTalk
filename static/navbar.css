@@ -49,6 +49,7 @@
   --septenaryColor: var(--grayBlue);
   --octonaryColor: var(--pickledBlueWood);
   --nonaryColor: var(--eastBay);
+  --inputBGColor: var(--whiteText);
 
   --ctaColor: var(--attentionBlue);
   --textColor: var(--whiteText);

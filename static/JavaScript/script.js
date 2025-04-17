@@ -58,7 +58,7 @@ if (searchBar) {
       const searchValue2 = this.value;
       if (searchValue !== searchValue2) return;
 
-      // document.cookie = 
+      document.cookie = "current_post=0; expires=Thu, 1 jan 2000 12:00:00 UTC;  path=/;"
       const postsContainer = document.getElementById("search_results_container");
       if (!postsContainer) return;
 
