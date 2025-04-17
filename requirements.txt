@@ -2,3 +2,5 @@ Flask~=3.1.0
 SQLAlchemy~=2.0.38
 pytz~=2025.2
 bcrypt~=4.3.0
+WTForms~=3.2.1
+Werkzeug~=3.1.3

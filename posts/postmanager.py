@@ -73,10 +73,8 @@ def getSubset(request: Request, session: Session) -> Query | None:
     if request.args.get('following') is not None:
         user = accountManager.getUser(request)
         if user is not None:
-            print('logged in')
             return userData.getFollowingPosts(user, session)
         else:
-            print('not logged in')
             return session.query(Post)
     return session.query(Post)
 
