@@ -77,8 +77,8 @@ if (searchBar) {
         if (response.ok) { return response.json(); }
         return false;
       });
-      console.log(status)
-      if (status.length > 0) addInfiniteScrollToContainer(postsContainer);
+      console.log(status, status.length)
+      if (status.length > 0) addInfiniteScrollToContainer();
       else {
         const noResults = document.createElement("div");
         noResults.className = "no_results";

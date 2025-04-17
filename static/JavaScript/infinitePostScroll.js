@@ -1,9 +1,11 @@
-const postsContainer = document.getElementById('main_post_section');
+let postsContainer = document.getElementById('main_post_section');
+if (document.getElementById('search_results_container')) postsContainer = document.getElementById('search_results_container');
 const postLoadingIcon = document.getElementById('posts_loading_spinner');
 let lastTime = new Date().getTime();
 
-async function loadNewPosts(recursionLevel = 0, query = null, container = postsContainer) {  
+async function loadNewPosts(recursionLevel = 0, query = null, container=postsContainer) {  
   if (!container || !postLoadingIcon) return false;
+  console.log(container, container.scrollHeight);
 
   if (container.scrollTop + container.clientHeight < container.scrollHeight * 0.9) return false;
   if (recursionLevel > 5) {
