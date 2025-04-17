@@ -41,9 +41,9 @@
         <button
           class="comment_element"
           id="like_button_{{ comment.postID }}"
-          onclick="likePost('{{ post.postID }}');"
+          onclick="likePost('{{ comment.postID }}');"
         >
-          {% if post.liked %}
+          {% if comment.liked %}
           <i class="bi bi-heart-fill" id="like_icon_{{ comment.postID }}"></i>
           {% else %}
           <i class="bi bi-heart" id="like_icon_{{ comment.postID }}"></i>
