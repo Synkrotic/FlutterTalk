@@ -302,7 +302,7 @@ def getFullPage(renderedPage, activePageID=-1):
     )
     
     page += renderedPage
-    page += render_template("sidebar.html")
+    # page += render_template("sidebar.html")
     return page
 
 if __name__ == '__main__':
