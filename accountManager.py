@@ -14,7 +14,7 @@ import forms
 import globals
 import mediaManager
 import tables
-from globals import ADMIN, DEFAULT_PFP
+from globals import ADMIN
 from tables import Authentication
 
 
@@ -50,10 +50,8 @@ def __getAuthToken(userid):
 def genPassword(password: str) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-
 def checkPassword(password: str, hashed: str | InstrumentedAttribute) -> bool:
     return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
-
 
 def login(username: str, password: str) -> str | None:
     if username == globals.ADMIN["account_name"]:
@@ -76,7 +74,7 @@ def login(username: str, password: str) -> str | None:
     return token
 
 
-def checkExists(username: str) -> bool:
+def _checkExists(username: str) -> bool:
     session: Session = database.getSession()
     user = session.query(tables.User).where(tables.User.account_name == username).first()
     if user is None:
@@ -86,7 +84,7 @@ def checkExists(username: str) -> bool:
 
 
 def createAccount(username: str, password: str):
-    if checkExists(username):
+    if _checkExists(username):
         return False
     else:
         session: Session = database.getSession()
@@ -141,18 +139,12 @@ def getOrDefaultDisplayName(user: tables.User) -> str:
     else:
         return user.display_name
 
-def getOrDefaultPfp(user: tables.User) -> str:
-    if user is None or user.profile_pic is None:
-        return DEFAULT_PFP
-    else:
-        return mediaManager.getMediaURL(user.profile_pic, "MEDIA")
-
 
 def updateProfile(request: Request):
     user = getUser(request)
     if user is None:
         return 'error', None
-    if user.account_name != request.form["accountname"] and checkExists(request.form["accountname"]):
+    if user.account_name != request.form["accountname"] and _checkExists(request.form["accountname"]):
         return 'name_exists', None
     
     form = forms.UpdateProfileForm(request.form)

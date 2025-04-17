@@ -104,7 +104,7 @@ def getPostsOfUserByID(userID: int, amount: int, request: Request) -> (dict, lis
     cookies = addCookie([], Cookie("current_post", currentPost + amount))
     
     with database.getSession() as session:
-        posts = session.query(Post).where(Post.user_id == userID).offset(currentPost).limit(amount).all()
+        posts = session.query(Post).where(Post.id > currentPost, Post.user_id == userID).limit(amount).all()
         if len(posts) == 0:
             return [], cookies
         return __postClassToDict(posts, session, accountManager.getUser(request)), cookies
